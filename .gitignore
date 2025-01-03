@@ -1,6 +1,10 @@
 # Compiled class file
 *.class
-
+.classpath
+.project
+dependency-reduced-pom.xml
+*.settings/
+target/
 # Log file
 *.log
 

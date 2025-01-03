@@ -1,0 +1,59 @@
+name: MusicPlayer
+version: 1.0.0
+main: net.tetram26.musicPlayerPlugin.MusicPlayerPlugin
+description: A plugin that allow you to play PCM file into plasmo voice !
+author: tetram26 A.K.A gaspardAlizand
+api-version: '1.21.1'
+depend:
+   - PlasmoVoice
+commands :
+   playmus:
+        description: "Joue une musique chargé sur un joueur"
+        usage: "/playmus  <nom de l'audio> <pseudonyme> <identifiant>"
+        permission: musicplayer.playmus
+        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   loadmus:
+        description: "Charge un fichier PCM dans la mémoire du serveur en lui donnant un nom"
+        usage: "/loadmus <chemin> <nom> "
+        permission: musicplayer.loadmus
+        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   listloaded: 
+        description: "Liste les musiques chargés dans la mémoire du serveur"
+        usage: "/listloaded"
+        permission: musicplayer.listloaded
+        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   unloadmus:
+        description: "Décharge un fichier PCM de la mémoire à partir de son nom"
+        usage: "/unloadmus <musique>"
+        permission: musicplayer.unloadmus
+        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   broadcastmus:
+        description: "Joue une musique chargé pour tout les joueurs"
+        usage: "/broadcastmus <musique> <identifiant>"
+        permission: musicplayer.broadcastmus
+        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   pausemus:
+       description: "Pause la lecture de la musique"
+       usage: "/pausemus <identifiant>"
+       permission: musicplayer.pausemus
+       permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   resumemus:
+       description: "Reprend la lecture de la musique" 
+       usage: "/resumemus <identifiant>"
+       permission: musicplayer.resumemus
+       permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   stopmus:
+       description: "Stop la lecture d'une musique"
+       usage: "/stopmus <identifiant>"
+       permission: musicplayer.stopmus
+       permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   listplaying:
+       description: "Liste les musiques en cours de lecture"
+       usage: "/listplaying"
+       permission: musicplayer.listplaying
+       permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+   repeatmus:
+       description: "Boucle la lecture de la musique"
+       usage: "/repeatmus <identifiant>"
+       permission: musicplayer.repeatmus
+       permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
