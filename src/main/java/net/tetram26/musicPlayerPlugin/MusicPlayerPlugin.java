@@ -14,6 +14,7 @@ import net.tetram26.musicPlayerPlugin.Commands.BroadcastCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListPlayingCommand;
 import net.tetram26.musicPlayerPlugin.Commands.LoadCommand;
+import net.tetram26.musicPlayerPlugin.Commands.LoadWAVCommand;
 import net.tetram26.musicPlayerPlugin.Commands.PauseCommand;
 import net.tetram26.musicPlayerPlugin.Commands.PlayCommand;
 import net.tetram26.musicPlayerPlugin.Commands.RepeatCommand;
@@ -70,6 +71,13 @@ public class MusicPlayerPlugin extends JavaPlugin{
     	getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
 
     	getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
+    	
+    	// EXPERIMENTAL
+    	
+    	getServer().getPluginCommand("loadWAV").setExecutor(new LoadWAVCommand());
+    	getServer().getPluginCommand("loadWAV").setTabCompleter(new LoadWAVCommand());
+    	
+    	
     	// Init configfiles
 
     	// Creation of the directory

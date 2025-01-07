@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import net.tetram26.musicPlayerPlugin.Audio.MusicSender;
 import net.tetram26.musicPlayerPlugin.Audio.Musicloader;
 import su.plo.voice.api.addon.AddonInitializer;
@@ -48,7 +50,17 @@ public final class MusicAddon implements AddonInitializer{
 		return PCMData;
 	}
 
+	public short[] loadAudioFromWAV(String path) throws IOException {
 
+		short[] PCMData = null;
+		try {
+			PCMData = Musicloader.loadPCMfromWAV(path);
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return PCMData;
+	}
 	public void playAudio(String username,short[] PCMdata, String threadName) {
 		MusicSender musicSender = new MusicSender();
 		ServerDirectSource musicSource = createDirectSource(music,username);
