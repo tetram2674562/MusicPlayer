@@ -1,6 +1,7 @@
 package net.tetram26.musicPlayerPlugin;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,24 +44,28 @@ public final class MusicAddon implements AddonInitializer{
 	public void onAddonShutdown() {
 		// Je le laisse au cas où...
 	}
-
+	// DEPREACATED PLEASE USE loadAudioFromWAV INSTEAD.
 	public short[] loadAudio(String path) throws IOException {
 
 		short[] PCMData = Musicloader.readPCMfromFile(path);
 		return PCMData;
 	}
 
-	public short[] loadAudioFromWAV(String path) throws IOException {
+	public short[] loadAudioFromWAV(String path) throws IOException,UnsupportedAudioFileException {
 
 		short[] PCMData = null;
-		try {
-			PCMData = Musicloader.loadPCMfromWAV(path);
-		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		PCMData = Musicloader.loadPCMfromWAV(path);
+	
 		return PCMData;
 	}
+
+	public short[] loadAudioFromURL (String URL) throws UnsupportedAudioFileException, IOException, URISyntaxException {
+		short[] PCMData = null;
+		PCMData = Musicloader.loadPCMfromURL(URL);
+		return PCMData;
+	}
+	
 	public void playAudio(String username,short[] PCMdata, String threadName) {
 		MusicSender musicSender = new MusicSender();
 		ServerDirectSource musicSource = createDirectSource(music,username);
@@ -68,7 +73,7 @@ public final class MusicAddon implements AddonInitializer{
 		MusicPlayerPlugin.activeMusicThread.put(threadName,musicSender);
 
 	}
-
+	
 	public void broadcastAudio(List<String> playerList, short[] PCMdata, String threadName) {
 		MusicSender musicSender = new MusicSender();
 		if (playerList.size() != 0) {

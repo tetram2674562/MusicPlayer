@@ -57,9 +57,8 @@ commands :
        usage: "/repeatmus <identifiant>"
        permission: musicplayer.repeatmus
        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
-   loadwav : 
-       description: "Charge un fichier WAV dans la mémoire du serveur en lui donnant un nom"
-       usage: "/loadwav <chemin> <nom>"
-       permission: musicplayer.loadwav
+   loadURL : 
+       description: "Charge un fichier WAV "
+       usage: "/loadURL <URL> <nom>"
+       permission: musicplayer.loadurl
        permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
-       

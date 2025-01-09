@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,6 +43,9 @@ public class LoadWAVCommand implements CommandExecutor,TabCompleter{
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			sender.sendMessage(Component.text("Format de fichier invalide !"));
 		}  }).run();
 		return true;
 	}

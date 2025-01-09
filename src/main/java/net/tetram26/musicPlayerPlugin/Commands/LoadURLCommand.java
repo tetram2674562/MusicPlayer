@@ -1,10 +1,9 @@
 package net.tetram26.musicPlayerPlugin.Commands;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.Stream;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,15 +16,12 @@ import net.kyori.adventure.text.Component;
 import net.tetram26.musicPlayerPlugin.MusicAddon;
 import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
 
-/*
- * DEPRECATED PLEASE USE LoadWAVCommand INSTEAD.
- */
-public class LoadCommand implements CommandExecutor,TabCompleter{
-	// Commande : /loadogg path name
+public class LoadURLCommand implements CommandExecutor, TabCompleter{
+	//    /playmus <URL> <nom>
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-
+		// TODO Auto-generated method stub
 		MusicAddon addon = MusicPlayerPlugin.getAddon();
 		// TODO Auto-generated method stub
 		if (args.length != 2) {
@@ -37,28 +33,31 @@ public class LoadCommand implements CommandExecutor,TabCompleter{
 		}
 		new Thread(() -> {
 		try {
-			String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(), args[0]).toString();
-			MusicPlayerPlugin.loadedMusic.put(args[1],addon.loadAudio(filepath));
+			MusicPlayerPlugin.loadedMusic.put(args[1],addon.loadAudioFromURL(args[0]));
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
+		} catch (UnsupportedAudioFileException e) {
+			// TODO Auto-generated catch block
+			sender.sendMessage(Component.text("Format de fichier invalide !"));
+		} catch (URISyntaxException e) {
+			sender.sendMessage(Component.text(""));
 		}  }).run();
 		return true;
 	}
-
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return Stream.of(MusicPlayerPlugin.musicPath.toFile().listFiles()).map(File::getName).toList();
+			return List.of("URL");
 		}
 
 		if (args.length == 2) {
 			return List.of("nom");
 		}
 		return List.of();
-
 	}
+
 
 }

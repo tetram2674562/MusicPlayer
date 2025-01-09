@@ -13,7 +13,7 @@ import net.tetram26.musicPlayerPlugin.Audio.StartupLoader;
 import net.tetram26.musicPlayerPlugin.Commands.BroadcastCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListPlayingCommand;
-import net.tetram26.musicPlayerPlugin.Commands.LoadCommand;
+import net.tetram26.musicPlayerPlugin.Commands.LoadURLCommand;
 import net.tetram26.musicPlayerPlugin.Commands.LoadWAVCommand;
 import net.tetram26.musicPlayerPlugin.Commands.PauseCommand;
 import net.tetram26.musicPlayerPlugin.Commands.PlayCommand;
@@ -38,8 +38,11 @@ public class MusicPlayerPlugin extends JavaPlugin{
     	// Registering commands !
     	
     	// Loading - unloading commands
-    	getServer().getPluginCommand("loadmus").setExecutor(new LoadCommand());
-    	getServer().getPluginCommand("loadmus").setTabCompleter(new LoadCommand());
+    	getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
+    	getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
+    	
+    	getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
+    	getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
 
     	getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
     	getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
@@ -72,10 +75,7 @@ public class MusicPlayerPlugin extends JavaPlugin{
 
     	getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
     	
-    	// EXPERIMENTAL
     	
-    	getServer().getPluginCommand("loadWAV").setExecutor(new LoadWAVCommand());
-    	getServer().getPluginCommand("loadWAV").setTabCompleter(new LoadWAVCommand());
     	
     	
     	// Init configfiles
