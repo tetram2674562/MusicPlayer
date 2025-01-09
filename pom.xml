@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.tetram26.musicPlayer</groupId>
   <artifactId>MusicPlayer</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>MusicPlayer</name>
   <description>A plugin that aim to allow an user to play opus sound using a command</description>
   
