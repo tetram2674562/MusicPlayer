@@ -12,7 +12,6 @@ import net.tetram26.listener.ConnectionListener;
 import net.tetram26.musicPlayerPlugin.Audio.MusicSender;
 import net.tetram26.musicPlayerPlugin.Audio.StartupLoader;
 import net.tetram26.musicPlayerPlugin.Commands.BroadcastCommand;
-import net.tetram26.musicPlayerPlugin.Commands.CreatePosCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListPlayingCommand;
 import net.tetram26.musicPlayerPlugin.Commands.LoadURLCommand;
