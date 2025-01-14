@@ -8,9 +8,11 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.tetram26.listener.ConnectionListener;
 import net.tetram26.musicPlayerPlugin.Audio.MusicSender;
 import net.tetram26.musicPlayerPlugin.Audio.StartupLoader;
 import net.tetram26.musicPlayerPlugin.Commands.BroadcastCommand;
+import net.tetram26.musicPlayerPlugin.Commands.CreatePosCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListCommand;
 import net.tetram26.musicPlayerPlugin.Commands.ListPlayingCommand;
 import net.tetram26.musicPlayerPlugin.Commands.LoadURLCommand;
@@ -28,6 +30,9 @@ public class MusicPlayerPlugin extends JavaPlugin{
 	private final static MusicAddon addon = new MusicAddon();
     public static ConcurrentHashMap<String,short[]> loadedMusic = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<String,MusicSender> activeMusicThread = new ConcurrentHashMap<>();
+    // threadName : playerName 
+    public static ConcurrentHashMap<String,String> playerThread = new ConcurrentHashMap<>();
+    
     public static Path configPath = null;
     public static Path musicPath = null;
     public static Logger LOGGER;
@@ -78,6 +83,8 @@ public class MusicPlayerPlugin extends JavaPlugin{
     	
     	
     	
+    	// Init event listener
+    	getServer().getPluginManager().registerEvents(new ConnectionListener(),this);
     	// Init configfiles
 
     	// Creation of the directory

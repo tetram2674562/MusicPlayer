@@ -36,6 +36,7 @@ public class PlayCommand implements CommandExecutor,TabCompleter{
 		MusicAddon addon = MusicPlayerPlugin.getAddon();
 		new Thread(()-> {
 			addon.playAudio(args[1], MusicPlayerPlugin.loadedMusic.get(args[0]),args[2]);
+			MusicPlayerPlugin.playerThread.put(args[2], args[1]);
 		}).run();
 		return true;
 	}

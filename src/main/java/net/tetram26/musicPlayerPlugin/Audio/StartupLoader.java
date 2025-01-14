@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -23,10 +25,28 @@ public class StartupLoader {
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(JSONpath.toString()));
 			jsonObject.forEach((name,path) -> {
 				try {
-					String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(),(String) path).toString();
-					MusicPlayerPlugin.loadedMusic.put((String) name,MusicPlayerPlugin.getAddon().loadAudio(filepath));
-					System.out.println("File :'"+name+"' loaded");
+					String filename = (String) path;
+					if (!filename.contains("{") && ! filename.contains("}")) {
+						String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(),filename).toString();
+						
+						String extension = "";
+						
+						int i = filename.lastIndexOf('.');
+						if (i > 0) {
+						    extension = filename.substring(i+1);
+						}
+						if (extension.equals("pcm")) {
+							MusicPlayerPlugin.loadedMusic.put((String) name,MusicPlayerPlugin.getAddon().loadAudio(filepath.toString()));
+						}
+						else {
+							MusicPlayerPlugin.loadedMusic.put((String) name,MusicPlayerPlugin.getAddon().loadAudioFromWAV(filepath.toString()));
+						}
+						System.out.println("File :'"+name+"' loaded");
+					}
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (UnsupportedAudioFileException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
