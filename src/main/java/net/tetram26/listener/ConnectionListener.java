@@ -22,7 +22,7 @@ public class ConnectionListener implements Listener{
 				MusicPlayerPlugin.playerThread.remove(thread);
 				// Let's get that music sender
 				MusicSender currentMusicPlayer = MusicPlayerPlugin.activeMusicThread.get(thread);
-				// SHUT THE FUCK UP.
+				// We close the music sender and remove it.
 				currentMusicPlayer.stop();
 				MusicPlayerPlugin.activeMusicThread.remove(thread);
 			}
