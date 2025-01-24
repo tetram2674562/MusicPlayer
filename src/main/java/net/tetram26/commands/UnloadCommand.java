@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import java.util.List;
 
@@ -9,34 +9,31 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.kyori.adventure.text.Component;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class ResumeCommand implements CommandExecutor,TabCompleter{
-
-
-
+public class UnloadCommand implements CommandExecutor,TabCompleter{
+	// Command : /unloadmus name
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		// TODO Auto-generated method stub
 		if (args.length != 1) {
+			sender.sendMessage(Component.text("Invalid argument, please provide a correct name"));
 			return false;
 		}
-		if (!MusicPlayerPlugin.activeMusicThread.containsKey(args[0])) {
-			sender.sendMessage("Processus '"+args[0]+"' introuvable.");
-			return true;
+		if (!MusicPlayerPlugin.loadedMusic.containsKey(args[0])) {
+			return false;
 		}
-		MusicPlayerPlugin.activeMusicThread.get(args[0]).resume();
+		MusicPlayerPlugin.loadedMusic.remove(args[0]);
+		sender.sendMessage(Component.text("Fichier '" + args[0] + "' déchargé"));
 		return true;
 	}
+
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		// TODO Auto-generated method stub
-		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.activeMusicThread.keySet());
-		}
-
-		return List.of();
+		return List.copyOf(MusicPlayerPlugin.loadedMusic.keySet());
 	}
+
+
 }

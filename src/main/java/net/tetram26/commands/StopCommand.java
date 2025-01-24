@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import java.util.List;
 
@@ -9,13 +9,16 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class RepeatCommand implements CommandExecutor,TabCompleter{
-	// Commande  : /repeat <musique>
+public class StopCommand implements CommandExecutor,TabCompleter{
+
+
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
+		// TODO Auto-generated method stub
 		if (args.length != 1) {
 			return false;
 		}
@@ -23,18 +26,19 @@ public class RepeatCommand implements CommandExecutor,TabCompleter{
 			sender.sendMessage("Processus '"+args[0]+"' introuvable.");
 			return true;
 		}
-		MusicPlayerPlugin.activeMusicThread.get(args[0]).toggleRepeat();
+		MusicPlayerPlugin.activeMusicThread.get(args[0]).stop();
+		MusicPlayerPlugin.activeMusicThread.remove(args[0]);
+
 		return true;
 	}
-
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-
+		// TODO Auto-generated method stub
 		if (args.length == 1) {
 			return List.copyOf(MusicPlayerPlugin.activeMusicThread.keySet());
 		}
+
 		return List.of();
 	}
-
 }

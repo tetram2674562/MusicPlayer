@@ -5,8 +5,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
-import net.tetram26.musicPlayerPlugin.Audio.MusicSender;
+import net.tetram26.audio.MusicSender;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class ConnectionListener implements Listener{
 	

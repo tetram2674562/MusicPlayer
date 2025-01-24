@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import net.kyori.adventure.text.Component;
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class ListPlayingCommand implements CommandExecutor{
 	// Commande  : /playmus <filename> <username> <processus>

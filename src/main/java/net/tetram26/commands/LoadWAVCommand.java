@@ -1,8 +1,11 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
+
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.bukkit.command.Command;
@@ -13,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.Component;
-import net.tetram26.musicPlayerPlugin.MusicAddon;
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.audio.MusicLoader;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class LoadURLCommand implements CommandExecutor, TabCompleter{
-	//    /playmus <URL> <nom>
+public class LoadWAVCommand implements CommandExecutor,TabCompleter{
+
+	
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		// TODO Auto-generated method stub
-		MusicAddon addon = MusicPlayerPlugin.getAddon();
-		// TODO Auto-generated method stub
+	    	MusicLoader loader = MusicPlayerPlugin.getAddon().getMusicLoader();
 		if (args.length != 2) {
 		return false;
 		}
@@ -33,24 +36,24 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter{
 		}
 		new Thread(() -> {
 		try {
-			MusicPlayerPlugin.loadedMusic.put(args[1],addon.loadAudioFromURL(args[0]));
+			String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(), args[0]).toString();
+			MusicPlayerPlugin.loadedMusic.put(args[1],loader.loadPCMfromWAV(filepath));
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
 		} catch (UnsupportedAudioFileException e) {
 			// TODO Auto-generated catch block
 			sender.sendMessage(Component.text("Format de fichier invalide !"));
-		} catch (URISyntaxException e) {
-			sender.sendMessage(Component.text(""));
 		}  }).run();
 		return true;
 	}
+	
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return List.of("URL");
+			return Stream.of(MusicPlayerPlugin.musicPath.toFile().listFiles()).map(File::getName).toList();
 		}
 
 		if (args.length == 2) {
@@ -58,6 +61,4 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter{
 		}
 		return List.of();
 	}
-
-
 }

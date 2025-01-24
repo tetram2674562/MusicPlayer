@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import java.util.List;
 
@@ -12,8 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.Component;
-import net.tetram26.musicPlayerPlugin.MusicAddon;
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.controller.Controller;
+import net.tetram26.plugin.MusicPlayerPlugin;
+import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class BroadcastCommand implements CommandExecutor,TabCompleter{
 	// Command : /broadcastmus <name> <thread> -> broadcast to all players
@@ -21,7 +22,8 @@ public class BroadcastCommand implements CommandExecutor,TabCompleter{
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
 		List<String> playerList = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-
+		Controller controller = MusicPlayerPlugin.getAddon().getController();
+		ServerSourceLine sourceLine = MusicPlayerPlugin.getAddon().getMusicSourceLine();
 		if (args.length != 2) {
 			return false;
 		}
@@ -35,9 +37,8 @@ public class BroadcastCommand implements CommandExecutor,TabCompleter{
 			return true;
 		}
 
-		MusicAddon addon = MusicPlayerPlugin.getAddon();
 		new Thread(()-> {
-			addon.broadcastAudio(playerList, MusicPlayerPlugin.loadedMusic.get(args[0]),args[1]);
+			controller.broadcastAudio(playerList, MusicPlayerPlugin.loadedMusic.get(args[0]), sourceLine,args[1]);
 		}).run();
 		return true;
 	}

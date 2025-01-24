@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class PauseCommand implements CommandExecutor,TabCompleter{
 

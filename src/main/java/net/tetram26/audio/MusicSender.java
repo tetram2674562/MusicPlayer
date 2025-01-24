@@ -1,28 +1,22 @@
-package net.tetram26.musicPlayerPlugin.Audio;
+package net.tetram26.audio;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.provider.ArrayAudioFrameProvider;
 import su.plo.voice.api.server.audio.source.AudioSender;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
 // Extracted from plasmo voice wiki (but modified by myself)
-public class MusicSender {
-	private AudioSender audioSender;
-	private ArrayAudioFrameProvider frameProvider;
-	/**
-     * Sends the audio samples to an audio source in specified distance.
-     *
-     * @param voiceServer Plasmo Voice Server API.
-     * @param source The audio source to send audio.
-     * @param samples 48kHz 16-bit mono audio samples.
-     */
+public class MusicSender implements IMusicSender {
+    private AudioSender audioSender;
+    private ArrayAudioFrameProvider frameProvider;
+	
     public void sendPacketsToDirectSource(
             PlasmoVoiceServer voiceServer,
             ServerDirectSource source,
             short[] samples,
-            String threadName
-    ) {
+            String threadName)
+    {
         frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
         audioSender = source.createAudioSender(frameProvider);
@@ -45,8 +39,8 @@ public class MusicSender {
             PlasmoVoiceServer voiceServer,
             ServerBroadcastSource source,
             short[] samples,
-            String threadName
-    ) {
+            String threadName) 
+    {
     	frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
         audioSender = source.createAudioSender(frameProvider);

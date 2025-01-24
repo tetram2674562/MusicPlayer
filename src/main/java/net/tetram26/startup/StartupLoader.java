@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Audio;
+package net.tetram26.startup;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,13 +11,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.audio.MusicLoader;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class StartupLoader {
+public class StartupLoader implements IStartupLoader{
 	// Chargement des fichiers PCM comme indiqués dans le JSON.
 	@SuppressWarnings("unchecked")
-	public static void loadPCMfromJSON(String JSONpath) {
-
+	public void loadPCMfromJSON(String JSONpath) {
+	    	MusicLoader loader = MusicPlayerPlugin.getAddon().getMusicLoader();
 		JSONParser jsonParser = new JSONParser();
 
 		try {
@@ -36,10 +37,10 @@ public class StartupLoader {
 						    extension = filename.substring(i+1);
 						}
 						if (extension.equals("pcm")) {
-							MusicPlayerPlugin.loadedMusic.put((String) name,MusicPlayerPlugin.getAddon().loadAudio(filepath.toString()));
+							MusicPlayerPlugin.loadedMusic.put((String) name,loader.loadPCMfromFile(filepath.toString()));
 						}
 						else {
-							MusicPlayerPlugin.loadedMusic.put((String) name,MusicPlayerPlugin.getAddon().loadAudioFromWAV(filepath.toString()));
+							MusicPlayerPlugin.loadedMusic.put((String) name,loader.loadPCMfromWAV(filepath.toString()));
 						}
 						System.out.println("File :'"+name+"' loaded");
 					}
@@ -56,15 +57,14 @@ public class StartupLoader {
 			e.printStackTrace();
 
 	}}
-	public static Path getStartupJSONPath(String name) throws IOException {
+	public Path getStartupJSONPath(String name) throws IOException {
 		Path startup = Paths.get(MusicPlayerPlugin.configPath.toString(),name);
 		// Si le fichier n'exite pas encore on le crée !
 		if (!startup.toFile().exists()) {
-		startup.toFile().createNewFile();
-		FileWriter startupJson = new FileWriter(startup.toFile());
-		startupJson.append("{\n}");
-		startupJson.close();
-
+        		startup.toFile().createNewFile();
+        		FileWriter startupJson = new FileWriter(startup.toFile());
+        		startupJson.append("{\n}");
+        		startupJson.close();
 		}
 		return startup;
 	}

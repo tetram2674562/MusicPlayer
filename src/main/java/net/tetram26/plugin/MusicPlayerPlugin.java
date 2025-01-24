@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin;
+package net.tetram26.plugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -8,23 +8,24 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.tetram26.addon.MusicAddon;
+import net.tetram26.audio.MusicSender;
+import net.tetram26.commands.BroadcastCommand;
+import net.tetram26.commands.ListCommand;
+import net.tetram26.commands.ListPlayingCommand;
+import net.tetram26.commands.LoadURLCommand;
+import net.tetram26.commands.LoadWAVCommand;
+import net.tetram26.commands.PauseCommand;
+import net.tetram26.commands.PlayCommand;
+import net.tetram26.commands.RepeatCommand;
+import net.tetram26.commands.ResumeCommand;
+import net.tetram26.commands.StopCommand;
+import net.tetram26.commands.UnloadCommand;
 import net.tetram26.listener.ConnectionListener;
-import net.tetram26.musicPlayerPlugin.Audio.MusicSender;
-import net.tetram26.musicPlayerPlugin.Audio.StartupLoader;
-import net.tetram26.musicPlayerPlugin.Commands.BroadcastCommand;
-import net.tetram26.musicPlayerPlugin.Commands.ListCommand;
-import net.tetram26.musicPlayerPlugin.Commands.ListPlayingCommand;
-import net.tetram26.musicPlayerPlugin.Commands.LoadURLCommand;
-import net.tetram26.musicPlayerPlugin.Commands.LoadWAVCommand;
-import net.tetram26.musicPlayerPlugin.Commands.PauseCommand;
-import net.tetram26.musicPlayerPlugin.Commands.PlayCommand;
-import net.tetram26.musicPlayerPlugin.Commands.RepeatCommand;
-import net.tetram26.musicPlayerPlugin.Commands.ResumeCommand;
-import net.tetram26.musicPlayerPlugin.Commands.StopCommand;
-import net.tetram26.musicPlayerPlugin.Commands.UnloadCommand;
+import net.tetram26.startup.StartupLoader;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 
-public class MusicPlayerPlugin extends JavaPlugin{
+public class MusicPlayerPlugin extends JavaPlugin {
 
 	private final static MusicAddon addon = new MusicAddon();
     public static ConcurrentHashMap<String,short[]> loadedMusic = new ConcurrentHashMap<>();
@@ -35,7 +36,9 @@ public class MusicPlayerPlugin extends JavaPlugin{
     public static Path configPath = null;
     public static Path musicPath = null;
     public static Logger LOGGER;
-	@Override
+    
+    private StartupLoader startupLoader = new StartupLoader();
+    @Override
     public void onEnable() {
 		LOGGER = this.getLogger();
     	PlasmoVoiceServer.getAddonsLoader().load(addon);
@@ -89,19 +92,16 @@ public class MusicPlayerPlugin extends JavaPlugin{
     	// Creation of the directory
     	this.getDataFolder().mkdir();
     	try {
-    		// Register config path
-			configPath = this.getDataPath().toRealPath();
-			// Create the dir for the music if it doesn't already exist.
-			musicPath = Paths.get(configPath.toString(),"music");
-			musicPath.toFile().mkdir();
-
-			Path startup = StartupLoader.getStartupJSONPath("startup.json");
-			StartupLoader.loadPCMfromJSON(startup.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-
+    	    // Register config path
+    	    configPath = this.getDataPath().toRealPath();
+    	    // Create the dir for the music if it doesn't already exist.
+    	    musicPath = Paths.get(configPath.toString(),"music");
+    	    musicPath.toFile().mkdir();
+    	    Path startup = startupLoader.getStartupJSONPath("startup.json");
+    	    startupLoader.loadPCMfromJSON(startup.toString());
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     	LOGGER.info("Hello Server :)");
 
     }

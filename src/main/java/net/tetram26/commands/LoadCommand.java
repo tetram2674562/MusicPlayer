@@ -1,4 +1,4 @@
-package net.tetram26.musicPlayerPlugin.Commands;
+package net.tetram26.commands;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.Component;
-import net.tetram26.musicPlayerPlugin.MusicAddon;
-import net.tetram26.musicPlayerPlugin.MusicPlayerPlugin;
+import net.tetram26.audio.MusicLoader;
+import net.tetram26.plugin.MusicPlayerPlugin;
 
 /*
  * DEPRECATED PLEASE USE LoadWAVCommand INSTEAD.
@@ -25,8 +25,7 @@ public class LoadCommand implements CommandExecutor,TabCompleter{
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-
-		MusicAddon addon = MusicPlayerPlugin.getAddon();
+	    	MusicLoader musicLoader = MusicPlayerPlugin.getAddon().getMusicLoader();
 		// TODO Auto-generated method stub
 		if (args.length != 2) {
 		return false;
@@ -38,7 +37,7 @@ public class LoadCommand implements CommandExecutor,TabCompleter{
 		new Thread(() -> {
 		try {
 			String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(), args[0]).toString();
-			MusicPlayerPlugin.loadedMusic.put(args[1],addon.loadAudio(filepath));
+			MusicPlayerPlugin.loadedMusic.put(args[1],musicLoader.loadPCMfromFile(filepath));
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
