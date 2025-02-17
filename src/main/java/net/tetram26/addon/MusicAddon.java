@@ -23,21 +23,30 @@ public final class MusicAddon implements AddonInitializer{
 	@InjectPlasmoVoice
 	private PlasmoVoiceServer voiceServer;
 	private ServerSourceLine music;
-	private MusicLoader musicLoader = new MusicLoader();
+	private MusicLoader musicLoader;
 	private SourceManager sourceManager;
 	private Controller controller;
 	@Override
 	public void onAddonInitialize() {
 	    // voiceServer is initialized now
-	    sourceManager = new SourceManager(voiceServer);
+	    musicLoader = new MusicLoader();
+	    sourceManager = new SourceManager();
 	    music = sourceManager.createSourceLine("music",this);
-	    controller = new Controller(sourceManager,voiceServer);
-	
+	    controller = new Controller();
+	   
 	}
 
 	@Override
 	public void onAddonShutdown() {
 		// Je le laisse au cas où...
+	}
+	
+	/** Get the voice server.
+	 * 
+	 * @return
+	 */
+	public PlasmoVoiceServer getVoiceServer() {
+	    return voiceServer;
 	}
 	
 	/**

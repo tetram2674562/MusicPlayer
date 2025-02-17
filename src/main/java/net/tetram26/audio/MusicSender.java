@@ -10,7 +10,8 @@ import su.plo.voice.api.server.audio.source.ServerDirectSource;
 public class MusicSender implements IMusicSender {
     private AudioSender audioSender;
     private ArrayAudioFrameProvider frameProvider;
-	
+    private ServerBroadcastSource source;
+    
     public void sendPacketsToDirectSource(
             PlasmoVoiceServer voiceServer,
             ServerDirectSource source,
@@ -24,13 +25,13 @@ public class MusicSender implements IMusicSender {
         frameProvider.addSamples(samples);
 
         audioSender.start();
-
+        
         audioSender.onStop(() -> {
             frameProvider.close();
 
             source.remove();
             // EXPERIMENTAL FEATURE seems to work? (the hell?)
-            MusicPlayerPlugin.activeMusicThread.remove(threadName);
+            MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
         });
 
     }
@@ -41,6 +42,7 @@ public class MusicSender implements IMusicSender {
             short[] samples,
             String threadName) 
     {
+	this.source = source;
     	frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
         audioSender = source.createAudioSender(frameProvider);
@@ -52,7 +54,7 @@ public class MusicSender implements IMusicSender {
             frameProvider.close();
             source.remove();
             // EXPERIMENTAL FEATURE seems to work? (the hell?)
-            MusicPlayerPlugin.activeMusicThread.remove(threadName);
+            MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
         });
 
     }

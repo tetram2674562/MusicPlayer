@@ -1,31 +1,35 @@
 package net.tetram26.listener;
 
+import java.util.List;
+import java.util.Set;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-
-import net.tetram26.audio.MusicSender;
+import org.bukkit.event.player.PlayerJoinEvent;
 import net.tetram26.plugin.MusicPlayerPlugin;
+import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
+import su.plo.voice.api.server.player.VoicePlayer;
 
 public class ConnectionListener implements Listener{
 	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onLeave(PlayerQuitEvent event) {
-		// For each thread registered
-		for (String thread : MusicPlayerPlugin.playerThread.keySet()) {
-			// if the active thread is owned by the player...
-			
-			if (MusicPlayerPlugin.playerThread.get(thread).equals(event.getPlayer().getName())) {
-				// cleanup
-				System.out.println("cleaning.");
-				MusicPlayerPlugin.playerThread.remove(thread);
-				// Let's get that music sender
-				MusicSender currentMusicPlayer = MusicPlayerPlugin.activeMusicThread.get(thread);
-				// We close the music sender and remove it.
-				currentMusicPlayer.stop();
-				MusicPlayerPlugin.activeMusicThread.remove(thread);
-			}
+	public void onJoin(PlayerJoinEvent event) {
+	    for (String thread: MusicPlayerPlugin.getInstance().broadcastPlayers.keySet()) {
+		List<String> players = (List<String>) MusicPlayerPlugin.getInstance().broadcastPlayers.get(thread).get(2);
+		if (!players.contains(event.getPlayer().getName())) {
+		    players.add(event.getPlayer().getName());
+		    Set<VoicePlayer> playersSet = (Set<VoicePlayer>) MusicPlayerPlugin.getInstance().broadcastPlayers.get(thread).get(1);
+		    playersSet.add(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
+			    	.getPlayerByName(event.getPlayer().getName())
+			    	.orElseThrow(() -> new IllegalStateException("Player not found")));
+		    
+		    ServerBroadcastSource source = (ServerBroadcastSource) MusicPlayerPlugin.getInstance().broadcastPlayers.get(0);
+		    source.setPlayers(playersSet);
+		    MusicPlayerPlugin.getInstance().broadcastPlayers.get(thread).set(1, playersSet);
+		    MusicPlayerPlugin.getInstance().broadcastPlayers.get(thread).set(2, players);
+		    
 		}
+	    }
 	}
 }

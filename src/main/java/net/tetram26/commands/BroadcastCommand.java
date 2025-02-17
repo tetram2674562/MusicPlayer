@@ -22,23 +22,24 @@ public class BroadcastCommand implements CommandExecutor,TabCompleter{
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
 		List<String> playerList = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-		Controller controller = MusicPlayerPlugin.getAddon().getController();
-		ServerSourceLine sourceLine = MusicPlayerPlugin.getAddon().getMusicSourceLine();
+		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
+		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
 		if (args.length != 2) {
 			return false;
 		}
 
-		if (!MusicPlayerPlugin.loadedMusic.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
 			sender.sendMessage(Component.text("Veuillez fournir un nom de fichier audio valide!"));
 			return true;
 		}
-		if (MusicPlayerPlugin.activeMusicThread.containsKey(args[1])){
+		if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[1])){
 			sender.sendMessage(Component.text("L'identifiant '"+args[2]+"' est déjà utilisé par un autre processus"));
 			return true;
 		}
 
 		new Thread(()-> {
-			controller.broadcastAudio(playerList, MusicPlayerPlugin.loadedMusic.get(args[0]), sourceLine,args[1]);
+			controller.broadcastAudio(playerList, MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,args[1]);
+			
 		}).run();
 		return true;
 	}
@@ -47,7 +48,7 @@ public class BroadcastCommand implements CommandExecutor,TabCompleter{
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.loadedMusic.keySet());
+			return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
 		}
 		if (args.length == 2) {
 			return List.of("identifiant");

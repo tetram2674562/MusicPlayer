@@ -16,7 +16,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 
 public class MusicLoader implements IMusicLoader {
-	private static AudioFormat plasmoVoiceFormat = new AudioFormat(Encoding.PCM_SIGNED, 48000, 16, 1, 2, 48000, false);
+	private final static AudioFormat plasmoVoiceFormat = new AudioFormat(Encoding.PCM_SIGNED, 48000, 16, 1, 2, 48000, false);
 	
 	
 	public short[] loadPCMfromWAV(String path) throws UnsupportedAudioFileException,IOException {

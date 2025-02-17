@@ -22,12 +22,12 @@ public class StopCommand implements CommandExecutor,TabCompleter{
 		if (args.length != 1) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.activeMusicThread.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
 			sender.sendMessage("Processus '"+args[0]+"' introuvable.");
 			return true;
 		}
-		MusicPlayerPlugin.activeMusicThread.get(args[0]).stop();
-		MusicPlayerPlugin.activeMusicThread.remove(args[0]);
+		MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).stop();
+		MusicPlayerPlugin.getInstance().activeMusicThread.remove(args[0]);
 
 		return true;
 	}
@@ -36,7 +36,7 @@ public class StopCommand implements CommandExecutor,TabCompleter{
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.activeMusicThread.keySet());
+			return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
 		}
 
 		return List.of();

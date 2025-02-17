@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.tetram26.addon.MusicAddon;
+import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
@@ -13,13 +14,13 @@ import su.plo.voice.api.server.player.VoicePlayer;
 
 public class SourceManager implements ISourceManager{
     
-    	private PlasmoVoiceServer voiceServer;
-    	public SourceManager(PlasmoVoiceServer server){
-    	    this.voiceServer = server;
+    	
+    	public SourceManager(){
+    	    
     	}
     	
 	public ServerSourceLine createSourceLine(String name,MusicAddon addon) {
-		ServerSourceLine sourceLine = voiceServer.getSourceLineManager().createBuilder(
+		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getSourceLineManager().createBuilder(
 			    addon,
 			    name, // name
 			    "pv.activation."+name, // translation key
@@ -30,26 +31,26 @@ public class SourceManager implements ISourceManager{
 	
 	}
 	
-	public ServerBroadcastSource createBroadcastSource (ServerSourceLine sourceLine, List<String> playerList) {
+	public ServerBroadcastSource createBroadcastSource (ServerSourceLine sourceLine, List<String> playerList,String thread) {
 		ServerBroadcastSource source = sourceLine.createBroadcastSource(false);
 		Set<VoicePlayer> voicePlayerList = new HashSet<>();
 
 		for (String each : playerList) {
-			VoicePlayer player = voiceServer.getPlayerManager()
+			VoicePlayer player = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 				    .getPlayerByName(each)
 				    .orElseThrow(() -> new IllegalStateException("Player not found"));
 			voicePlayerList.add(player);
 		}
 
 		source.setPlayers(voicePlayerList);
-
+		MusicPlayerPlugin.getInstance().broadcastPlayers.put(thread,List.of(source,voicePlayerList,playerList));
 		return source;
 
 	}
 	
 	public ServerDirectSource createDirectSource(ServerSourceLine sourceLine, String username) {
 
-		VoicePlayer voicePlayer = voiceServer.getPlayerManager()
+		VoicePlayer voicePlayer = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 		        .getPlayerByName(username)
 		        .orElseThrow(() -> new IllegalStateException("Player not found"));
 
@@ -58,8 +59,6 @@ public class SourceManager implements ISourceManager{
 		return source;
 	}
 	
-	public void setServer(PlasmoVoiceServer server) {
-	    this.voiceServer = server;
-	}
+	
 	
 }

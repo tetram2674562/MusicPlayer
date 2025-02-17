@@ -21,10 +21,10 @@ public class UnloadCommand implements CommandExecutor,TabCompleter{
 			sender.sendMessage(Component.text("Invalid argument, please provide a correct name"));
 			return false;
 		}
-		if (!MusicPlayerPlugin.loadedMusic.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
 			return false;
 		}
-		MusicPlayerPlugin.loadedMusic.remove(args[0]);
+		MusicPlayerPlugin.getInstance().loadedMusic.remove(args[0]);
 		sender.sendMessage(Component.text("Fichier '" + args[0] + "' déchargé"));
 		return true;
 	}
@@ -32,7 +32,7 @@ public class UnloadCommand implements CommandExecutor,TabCompleter{
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		return List.copyOf(MusicPlayerPlugin.loadedMusic.keySet());
+		return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
 	}
 
 

@@ -3,6 +3,7 @@ package net.tetram26.plugin;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -27,15 +28,15 @@ import su.plo.voice.api.server.PlasmoVoiceServer;
 
 public class MusicPlayerPlugin extends JavaPlugin {
 
-	private final static MusicAddon addon = new MusicAddon();
-    public static ConcurrentHashMap<String,short[]> loadedMusic = new ConcurrentHashMap<>();
-    public static ConcurrentHashMap<String,MusicSender> activeMusicThread = new ConcurrentHashMap<>();
-    // threadName : playerName 
-    public static ConcurrentHashMap<String,String> playerThread = new ConcurrentHashMap<>();
+    private MusicAddon addon = new MusicAddon();
+    public ConcurrentHashMap<String,short[]> loadedMusic = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String,MusicSender> activeMusicThread = new ConcurrentHashMap<>();
+    // threadName : ServerBroadcastSource,Set<VoicePlayer>,List<String>
     
-    public static Path configPath = null;
-    public static Path musicPath = null;
-    public static Logger LOGGER;
+    public ConcurrentHashMap<String,List<Object>> broadcastPlayers = new ConcurrentHashMap<>();
+    public Path configPath = null;
+    public Path musicPath = null;
+    public Logger LOGGER;
     
     private StartupLoader startupLoader = new StartupLoader();
     @Override
@@ -106,9 +107,11 @@ public class MusicPlayerPlugin extends JavaPlugin {
 
     }
 
-    public static MusicAddon getAddon() {
-		return addon;
-	}
-
+    public MusicAddon getAddon() {
+		return this.addon;
+    }
+    public static MusicPlayerPlugin getInstance() {
+	return getPlugin(MusicPlayerPlugin.class);
+    }
 
 }

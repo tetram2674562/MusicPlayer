@@ -25,19 +25,19 @@ public class LoadCommand implements CommandExecutor,TabCompleter{
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-	    	MusicLoader musicLoader = MusicPlayerPlugin.getAddon().getMusicLoader();
+	    	MusicLoader musicLoader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
 		// TODO Auto-generated method stub
 		if (args.length != 2) {
 		return false;
 		}
-		if (MusicPlayerPlugin.loadedMusic.containsKey(args[1])) {
+		if (MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[1])) {
 			sender.sendMessage(Component.text("Le nom '" + args[1] + "' est déjà utilisé!"));
 			return true;
 		}
 		new Thread(() -> {
 		try {
-			String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(), args[0]).toString();
-			MusicPlayerPlugin.loadedMusic.put(args[1],musicLoader.loadPCMfromFile(filepath));
+			String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
+			MusicPlayerPlugin.getInstance().loadedMusic.put(args[1],musicLoader.loadPCMfromFile(filepath));
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
@@ -50,7 +50,7 @@ public class LoadCommand implements CommandExecutor,TabCompleter{
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return Stream.of(MusicPlayerPlugin.musicPath.toFile().listFiles()).map(File::getName).toList();
+			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName).toList();
 		}
 
 		if (args.length == 2) {

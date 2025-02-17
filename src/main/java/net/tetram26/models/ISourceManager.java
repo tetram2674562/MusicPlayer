@@ -23,7 +23,7 @@ public interface ISourceManager {
      * @param playerList A list of player
      * @return The newly created broadcast source
      */
-    public ServerBroadcastSource createBroadcastSource (ServerSourceLine sourceLine, List<String> playerList);
+    public ServerBroadcastSource createBroadcastSource (ServerSourceLine sourceLine, List<String> playerList,String thread);
     
     /**
      * Create a direct source
@@ -33,9 +33,4 @@ public interface ISourceManager {
      */
     public ServerDirectSource createDirectSource(ServerSourceLine sourceLine, String username);
     
-    /**
-     * Change the voice server
-     * @param server A plasmo voice server
-     */
-    public void setServer(PlasmoVoiceServer server);
 }

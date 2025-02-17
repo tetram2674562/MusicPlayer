@@ -18,7 +18,7 @@ public class StartupLoader implements IStartupLoader{
 	// Chargement des fichiers PCM comme indiqués dans le JSON.
 	@SuppressWarnings("unchecked")
 	public void loadPCMfromJSON(String JSONpath) {
-	    	MusicLoader loader = MusicPlayerPlugin.getAddon().getMusicLoader();
+	    	MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
 		JSONParser jsonParser = new JSONParser();
 
 		try {
@@ -28,7 +28,7 @@ public class StartupLoader implements IStartupLoader{
 				try {
 					String filename = (String) path;
 					if (!filename.contains("{") && ! filename.contains("}")) {
-						String filepath = Paths.get(MusicPlayerPlugin.musicPath.toString(),filename).toString();
+						String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(),filename).toString();
 						
 						String extension = "";
 						
@@ -37,10 +37,10 @@ public class StartupLoader implements IStartupLoader{
 						    extension = filename.substring(i+1);
 						}
 						if (extension.equals("pcm")) {
-							MusicPlayerPlugin.loadedMusic.put((String) name,loader.loadPCMfromFile(filepath.toString()));
+							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,loader.loadPCMfromFile(filepath.toString()));
 						}
 						else {
-							MusicPlayerPlugin.loadedMusic.put((String) name,loader.loadPCMfromWAV(filepath.toString()));
+							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,loader.loadPCMfromWAV(filepath.toString()));
 						}
 						System.out.println("File :'"+name+"' loaded");
 					}
@@ -58,7 +58,7 @@ public class StartupLoader implements IStartupLoader{
 
 	}}
 	public Path getStartupJSONPath(String name) throws IOException {
-		Path startup = Paths.get(MusicPlayerPlugin.configPath.toString(),name);
+		Path startup = Paths.get(MusicPlayerPlugin.getInstance().configPath.toString(),name);
 		// Si le fichier n'exite pas encore on le crée !
 		if (!startup.toFile().exists()) {
         		startup.toFile().createNewFile();

@@ -13,9 +13,9 @@ public class ListCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		if (MusicPlayerPlugin.loadedMusic.size()!=0) {
+		if (MusicPlayerPlugin.getInstance().loadedMusic.size()!=0) {
 			sender.sendMessage(Component.text("Liste des fichiers chargés :"));
-			for (String each : MusicPlayerPlugin.loadedMusic.keySet()) {
+			for (String each : MusicPlayerPlugin.getInstance().loadedMusic.keySet()) {
 				sender.sendMessage(Component.text(each));
 			}
 		}

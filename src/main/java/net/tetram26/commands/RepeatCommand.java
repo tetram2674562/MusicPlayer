@@ -19,11 +19,11 @@ public class RepeatCommand implements CommandExecutor,TabCompleter{
 		if (args.length != 1) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.activeMusicThread.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
 			sender.sendMessage("Processus '"+args[0]+"' introuvable.");
 			return true;
 		}
-		MusicPlayerPlugin.activeMusicThread.get(args[0]).toggleRepeat();
+		MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();
 		return true;
 	}
 
@@ -32,7 +32,7 @@ public class RepeatCommand implements CommandExecutor,TabCompleter{
 			@NotNull String label, @NotNull String[] args) {
 
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.activeMusicThread.keySet());
+			return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
 		}
 		return List.of();
 	}

@@ -21,17 +21,17 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter{
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-	    	MusicLoader loader = MusicPlayerPlugin.getAddon().getMusicLoader();
+	    	MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
 		if (args.length != 2) {
 		    return false;
 		}
-		if (MusicPlayerPlugin.loadedMusic.containsKey(args[1])) {
+		if (MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[1])) {
 			sender.sendMessage(Component.text("Le nom '" + args[1] + "' est déjà utilisé!"));
 			return true;
 		}
 		new Thread(() -> {
 		try {
-			MusicPlayerPlugin.loadedMusic.put(args[1],loader.loadPCMfromURL(args[0]));
+			MusicPlayerPlugin.getInstance().loadedMusic.put(args[1],loader.loadPCMfromURL(args[0]));
 			sender.sendMessage(Component.text("Fichier '"+ args[0]+"' chargé en tant que '"+args[1]+"'"));
 		} catch (IOException e) {
 			sender.sendMessage(Component.text("Fichier '"+args[0]+"' introuvable"));
