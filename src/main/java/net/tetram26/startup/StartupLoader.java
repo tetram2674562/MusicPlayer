@@ -14,58 +14,62 @@ import org.json.simple.parser.JSONParser;
 import net.tetram26.audio.MusicLoader;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class StartupLoader implements IStartupLoader{
-	// Chargement des fichiers PCM comme indiqués dans le JSON.
-	@SuppressWarnings("unchecked")
-	public void loadPCMfromJSON(String JSONpath) {
-	    	MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
-		JSONParser jsonParser = new JSONParser();
+public class StartupLoader implements IStartupLoader {
+    // Chargement des fichiers PCM comme indiqués dans le JSON.
+    @SuppressWarnings("unchecked")
+    public void loadPCMfromJSON(String JSONpath) {
+	MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
+	JSONParser jsonParser = new JSONParser();
 
+	try {
+
+	    JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(JSONpath.toString()));
+	    jsonObject.forEach((name, path) -> {
 		try {
+		    String filename = (String) path;
+		    if (!filename.contains("{") && !filename.contains("}")) {
+			String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), filename)
+				.toString();
 
-			JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(JSONpath.toString()));
-			jsonObject.forEach((name,path) -> {
-				try {
-					String filename = (String) path;
-					if (!filename.contains("{") && ! filename.contains("}")) {
-						String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(),filename).toString();
-						
-						String extension = "";
-						
-						int i = filename.lastIndexOf('.');
-						if (i > 0) {
-						    extension = filename.substring(i+1);
-						}
-						if (extension.equals("pcm")) {
-							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,loader.loadPCMfromFile(filepath.toString()));
-						}
-						else {
-							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,loader.loadPCMfromWAV(filepath.toString()));
-						}
-						System.out.println("File :'"+name+"' loaded");
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (UnsupportedAudioFileException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			String extension = "";
 
-			});
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-	}}
-	public Path getStartupJSONPath(String name) throws IOException {
-		Path startup = Paths.get(MusicPlayerPlugin.getInstance().configPath.toString(),name);
-		// Si le fichier n'exite pas encore on le crée !
-		if (!startup.toFile().exists()) {
-        		startup.toFile().createNewFile();
-        		FileWriter startupJson = new FileWriter(startup.toFile());
-        		startupJson.append("{\n}");
-        		startupJson.close();
+			int i = filename.lastIndexOf('.');
+			if (i > 0) {
+			    extension = filename.substring(i + 1);
+			}
+			if (extension.equals("pcm")) {
+			    MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,
+				    loader.loadPCMfromFile(filepath.toString()));
+			} else {
+			    MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,
+				    loader.loadPCMfromWAV(filepath.toString()));
+			}
+			System.out.println("File :'" + name + "' loaded");
+		    }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
 		}
-		return startup;
+
+	    });
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+
 	}
+    }
+
+    public Path getStartupJSONPath(String name) throws IOException {
+	Path startup = Paths.get(MusicPlayerPlugin.getInstance().configPath.toString(), name);
+	// Si le fichier n'exite pas encore on le crée !
+	if (!startup.toFile().exists()) {
+	    startup.toFile().createNewFile();
+	    FileWriter startupJson = new FileWriter(startup.toFile());
+	    startupJson.append("{\n}");
+	    startupJson.close();
+	}
+	return startup;
+    }
 }

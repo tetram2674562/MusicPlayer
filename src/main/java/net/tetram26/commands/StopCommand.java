@@ -11,34 +11,33 @@ import org.jetbrains.annotations.Nullable;
 
 import net.tetram26.plugin.MusicPlayerPlugin;
 
-public class StopCommand implements CommandExecutor,TabCompleter{
+public class StopCommand implements CommandExecutor, TabCompleter {
 
-
-
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-			@NotNull String[] args) {
-		// TODO Auto-generated method stub
-		if (args.length != 1) {
-			return false;
-		}
-		if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-			sender.sendMessage("Processus '"+args[0]+"' introuvable.");
-			return true;
-		}
-		MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).stop();
-		MusicPlayerPlugin.getInstance().activeMusicThread.remove(args[0]);
-
-		return true;
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+	    @NotNull String[] args) {
+	// TODO Auto-generated method stub
+	if (args.length != 1) {
+	    return false;
 	}
-	@Override
-	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-			@NotNull String label, @NotNull String[] args) {
-		// TODO Auto-generated method stub
-		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
-		}
-
-		return List.of();
+	if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
+	    sender.sendMessage("Processus '" + args[0] + "' introuvable.");
+	    return true;
 	}
+	MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).stop();
+	MusicPlayerPlugin.getInstance().activeMusicThread.remove(args[0]);
+
+	return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+	    @NotNull String label, @NotNull String[] args) {
+	// TODO Auto-generated method stub
+	if (args.length == 1) {
+	    return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+	}
+
+	return List.of();
+    }
 }

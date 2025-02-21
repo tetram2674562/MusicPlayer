@@ -29,87 +29,87 @@ import su.plo.voice.api.server.PlasmoVoiceServer;
 public class MusicPlayerPlugin extends JavaPlugin {
 
     private MusicAddon addon = new MusicAddon();
-    public ConcurrentHashMap<String,short[]> loadedMusic = new ConcurrentHashMap<>();
-    public ConcurrentHashMap<String,MusicSender> activeMusicThread = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, short[]> loadedMusic = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
     // threadName : ServerBroadcastSource,Set<VoicePlayer>,List<String>
-    
-    public ConcurrentHashMap<String,List<Object>> broadcastPlayers = new ConcurrentHashMap<>();
+
+    // public ConcurrentHashMap<String,List<Object>> broadcastPlayers = new
+    // ConcurrentHashMap<>();
     public Path configPath = null;
     public Path musicPath = null;
     public Logger LOGGER;
-    
+
     private StartupLoader startupLoader = new StartupLoader();
+
     @Override
     public void onEnable() {
-		LOGGER = this.getLogger();
-    	PlasmoVoiceServer.getAddonsLoader().load(addon);
-    	// Registering commands !
-    	
-    	// Loading - unloading commands
-    	getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
-    	getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
-    	
-    	getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
-    	getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
+	LOGGER = this.getLogger();
+	PlasmoVoiceServer.getAddonsLoader().load(addon);
+	// Registering commands !
 
-    	getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
-    	getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
+	// Loading - unloading commands
+	getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
+	getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
 
-    	// Playing commands
+	getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
+	getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
 
-    	getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
-    	getServer().getPluginCommand("playmus").setTabCompleter(new PlayCommand());
+	getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
+	getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
 
-    	getServer().getPluginCommand("broadcastmus").setExecutor(new BroadcastCommand());
-    	getServer().getPluginCommand("broadcastmus").setTabCompleter(new BroadcastCommand());
+	// Playing commands
 
-    	// Control commands
+	getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
+	getServer().getPluginCommand("playmus").setTabCompleter(new PlayCommand());
 
-    	getServer().getPluginCommand("pausemus").setExecutor(new PauseCommand());
-    	getServer().getPluginCommand("pausemus").setTabCompleter(new PauseCommand());
+	getServer().getPluginCommand("broadcastmus").setExecutor(new BroadcastCommand());
+	getServer().getPluginCommand("broadcastmus").setTabCompleter(new BroadcastCommand());
 
-    	getServer().getPluginCommand("resumemus").setExecutor(new ResumeCommand());
-    	getServer().getPluginCommand("resumemus").setTabCompleter(new ResumeCommand());
+	// Control commands
 
-    	getServer().getPluginCommand("stopmus").setExecutor(new StopCommand());
-    	getServer().getPluginCommand("stopmus").setTabCompleter(new StopCommand());
+	getServer().getPluginCommand("pausemus").setExecutor(new PauseCommand());
+	getServer().getPluginCommand("pausemus").setTabCompleter(new PauseCommand());
 
-    	getServer().getPluginCommand("repeatmus").setExecutor(new RepeatCommand());
-    	getServer().getPluginCommand("repeatmus").setTabCompleter(new RepeatCommand());
+	getServer().getPluginCommand("resumemus").setExecutor(new ResumeCommand());
+	getServer().getPluginCommand("resumemus").setTabCompleter(new ResumeCommand());
 
-    	// Listing commands
+	getServer().getPluginCommand("stopmus").setExecutor(new StopCommand());
+	getServer().getPluginCommand("stopmus").setTabCompleter(new StopCommand());
 
-    	getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
+	getServer().getPluginCommand("repeatmus").setExecutor(new RepeatCommand());
+	getServer().getPluginCommand("repeatmus").setTabCompleter(new RepeatCommand());
 
-    	getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
-    	
-    	
-    	
-    	
-    	// Init event listener
-    	getServer().getPluginManager().registerEvents(new ConnectionListener(),this);
-    	// Init configfiles
+	// Listing commands
 
-    	// Creation of the directory
-    	this.getDataFolder().mkdir();
-    	try {
-    	    // Register config path
-    	    configPath = this.getDataPath().toRealPath();
-    	    // Create the dir for the music if it doesn't already exist.
-    	    musicPath = Paths.get(configPath.toString(),"music");
-    	    musicPath.toFile().mkdir();
-    	    Path startup = startupLoader.getStartupJSONPath("startup.json");
-    	    startupLoader.loadPCMfromJSON(startup.toString());
+	getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
+
+	getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
+
+	// Init event listener
+	getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
+	// Init configfiles
+
+	// Creation of the directory
+	this.getDataFolder().mkdir();
+	try {
+	    // Register config path
+	    configPath = this.getDataPath().toRealPath();
+	    // Create the dir for the music if it doesn't already exist.
+	    musicPath = Paths.get(configPath.toString(), "music");
+	    musicPath.toFile().mkdir();
+	    Path startup = startupLoader.getStartupJSONPath("startup.json");
+	    startupLoader.loadPCMfromJSON(startup.toString());
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-    	LOGGER.info("Hello Server :)");
+	LOGGER.info("Hello Server :)");
 
     }
 
     public MusicAddon getAddon() {
-		return this.addon;
+	return this.addon;
     }
+
     public static MusicPlayerPlugin getInstance() {
 	return getPlugin(MusicPlayerPlugin.class);
     }

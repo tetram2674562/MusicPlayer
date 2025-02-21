@@ -1,75 +1,102 @@
 package net.tetram26.audio;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.provider.ArrayAudioFrameProvider;
 import su.plo.voice.api.server.audio.source.AudioSender;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
+import su.plo.voice.api.server.player.VoicePlayer;
+
 // Extracted from plasmo voice wiki (but modified by myself)
 public class MusicSender implements IMusicSender {
     private AudioSender audioSender;
     private ArrayAudioFrameProvider frameProvider;
+    private Set<String> listPlayers;
+    private Set<VoicePlayer> playersVoice;
     private ServerBroadcastSource source;
-    
-    public void sendPacketsToDirectSource(
-            PlasmoVoiceServer voiceServer,
-            ServerDirectSource source,
-            short[] samples,
-            String threadName)
-    {
-        frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
-        audioSender = source.createAudioSender(frameProvider);
+    public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList) {
+	this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
+	this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
+    }
 
-        frameProvider.addSamples(samples);
+    public MusicSender(List<String> playerList) {
+	this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
+    }
 
-        audioSender.start();
-        
-        audioSender.onStop(() -> {
-            frameProvider.close();
+    public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source, short[] samples,
+	    String threadName) {
+	frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
-            source.remove();
-            // EXPERIMENTAL FEATURE seems to work? (the hell?)
-            MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
-        });
+	audioSender = source.createAudioSender(frameProvider);
+
+	frameProvider.addSamples(samples);
+
+	audioSender.start();
+
+	audioSender.onStop(() -> {
+	    frameProvider.close();
+
+	    source.remove();
+	    // EXPERIMENTAL FEATURE seems to work? (the hell?)
+	    MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
+	});
 
     }
 
-    public void sendPacketsToBroadcastSource(
-            PlasmoVoiceServer voiceServer,
-            ServerBroadcastSource source,
-            short[] samples,
-            String threadName) 
-    {
+    public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
+	    short[] samples, String threadName) {
 	this.source = source;
-    	frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
+	frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
-        audioSender = source.createAudioSender(frameProvider);
+	audioSender = source.createAudioSender(frameProvider);
 
-        frameProvider.addSamples(samples);
+	frameProvider.addSamples(samples);
 
-        audioSender.start();
-        audioSender.onStop(() -> {
-            frameProvider.close();
-            source.remove();
-            // EXPERIMENTAL FEATURE seems to work? (the hell?)
-            MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
-        });
+	audioSender.start();
+	audioSender.onStop(() -> {
+	    frameProvider.close();
+	    source.remove();
+	    // EXPERIMENTAL FEATURE seems to work? (the hell?)
+	    MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
+	});
 
     }
 
     public void stop() {
-    	audioSender.stop();
+	audioSender.stop();
     }
+
     public void pause() {
-    	audioSender.pause();
+	audioSender.pause();
     }
+
     public void resume() {
-    	audioSender.resume();
+	audioSender.resume();
     }
+
     public void toggleRepeat() {
-    	frameProvider.setLoop(!frameProvider.getLoop());
+	frameProvider.setLoop(!frameProvider.getLoop());
     }
+
+    public void addPlayer(String playerName) {
+	if (!listPlayers.contains(playerName)) {
+	    listPlayers.add(playerName);
+	    playersVoice.add(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
+		    .getPlayerByName(playerName).orElseThrow(() -> new IllegalStateException("Player not found")));
+	    source.setPlayers(playersVoice);
+	}
+    }
+
 
 }
