@@ -1,5 +1,6 @@
 package net.tetram26.plugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.tetram26.addon.MusicAddon;
@@ -94,6 +96,19 @@ public class MusicPlayerPlugin extends JavaPlugin {
 	try {
 	    // Register config path
 	    configPath = this.getDataPath().toRealPath();
+	    File config = new File(Paths.get(configPath.toString(), "config.yml").toString());
+	    // If the file doesn't already exist.
+	    if (config.createNewFile()) {
+		
+	    }
+	    YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(config);
+	    File message = new File(Paths.get(configPath.toString(), "message.yml").toString());
+	    // If the file doesn't already exist.
+	    if (message.createNewFile()) {
+		
+	    }
+	    YamlConfiguration messageYaml = YamlConfiguration.loadConfiguration(message);
+	    
 	    // Create the dir for the music if it doesn't already exist.
 	    musicPath = Paths.get(configPath.toString(), "music");
 	    musicPath.toFile().mkdir();

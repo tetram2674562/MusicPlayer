@@ -39,7 +39,7 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 		// TODO Auto-generated catch block
 		sender.sendMessage(Component.text("Format de fichier invalide !"));
 	    } catch (URISyntaxException e) {
-		sender.sendMessage(Component.text(""));
+		sender.sendMessage(Component.text("URL Invalide"));
 	    }
 	}).run();
 	return true;

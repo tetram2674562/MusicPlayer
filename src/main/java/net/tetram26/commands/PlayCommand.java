@@ -36,6 +36,8 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 	    sender.sendMessage("La musique '" + args[0] + "' est introuvable!");
 	    return true;
 	}
+	// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
+	sender.sendMessage(Component.text(String.format("<green>Lecture en cours du fichier %s en tant que %s</green>",args[0],args[2])));
 	new Thread(() -> {
 	    controller.playAudio(args[1], MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
 		    args[2]);
