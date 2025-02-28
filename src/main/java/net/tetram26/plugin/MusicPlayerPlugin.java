@@ -85,8 +85,10 @@ public class MusicPlayerPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
         // Init configfiles
 
+        saveDefaultConfig();
+
         // Creation of the directory
-        this.getDataFolder().mkdir();
+//        this.getDataFolder().mkdir(); folder automatiquely created with savedefaultconfig
         try {
             // Register config path
             configPath = this.getDataPath().toRealPath();
