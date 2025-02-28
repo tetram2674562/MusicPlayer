@@ -26,17 +26,17 @@ public class Controller implements IController {
 
     public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
 	    String threadName) {
-	if (playerList.size() != 0) {
-	    Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
-		    .createPlayerVoiceSet(playerList);
-	    MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
-	    ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
-		    .createBroadcastSource(sourceLine, voicePlayerList, threadName);
-	    musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
-		    broadcastSource, PCMdata, threadName);
-	    MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
+		if (playerList.size() != 0) {
+		    Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
+			    .createPlayerVoiceSet(playerList);
+		    MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
+		    ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
+			    .createBroadcastSource(sourceLine, voicePlayerList, threadName);
+		    musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
+			    broadcastSource, PCMdata, threadName);
+		    MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
 
-	}
+		}
 
     }
 }

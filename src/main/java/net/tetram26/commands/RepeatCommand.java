@@ -15,26 +15,26 @@ public class RepeatCommand implements CommandExecutor, TabCompleter {
     // Commande : /repeat <musique>
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	if (args.length != 1) {
-	    return false;
-	}
-	if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-	    sender.sendMessage("Processus '" + args[0] + "' introuvable.");
-	    return true;
-	}
-	MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();
-	return true;
+                             @NotNull String[] args) {
+        if (args.length != 1) {
+            return false;
+        }
+        if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
+            sender.sendMessage("Processus '" + args[0] + "' introuvable.");
+            return true;
+        }
+        MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();
+        return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
+                                                @NotNull String label, @NotNull String[] args) {
 
-	if (args.length == 1) {
-	    return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
-	}
-	return List.of();
+        if (args.length == 1) {
+            return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+        }
+        return List.of();
     }
 
 }

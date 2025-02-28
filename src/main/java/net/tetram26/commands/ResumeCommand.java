@@ -15,27 +15,27 @@ public class ResumeCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	// TODO Auto-generated method stub
-	if (args.length != 1) {
-	    return false;
-	}
-	if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-	    sender.sendMessage("Processus '" + args[0] + "' introuvable.");
-	    return true;
-	}
-	MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).resume();
-	return true;
+                             @NotNull String[] args) {
+        // TODO Auto-generated method stub
+        if (args.length != 1) {
+            return false;
+        }
+        if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
+            sender.sendMessage("Processus '" + args[0] + "' introuvable.");
+            return true;
+        }
+        MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).resume();
+        return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
-	// TODO Auto-generated method stub
-	if (args.length == 1) {
-	    return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
-	}
+                                                @NotNull String label, @NotNull String[] args) {
+        // TODO Auto-generated method stub
+        if (args.length == 1) {
+            return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+        }
 
-	return List.of();
+        return List.of();
     }
 }

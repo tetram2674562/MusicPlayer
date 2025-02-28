@@ -13,15 +13,16 @@ public class ListCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 	    @NotNull String[] args) {
-	if (MusicPlayerPlugin.getInstance().loadedMusic.size() != 0) {
-	    sender.sendMessage(Component.text("Liste des fichiers chargés :"));
-	    for (String each : MusicPlayerPlugin.getInstance().loadedMusic.keySet()) {
-		sender.sendMessage(Component.text(each));
-	    }
-	} else {
-	    sender.sendMessage(Component.text("Aucun fichier n'est actuellement chargé."));
-	}
-	return true;
+		if (MusicPlayerPlugin.getInstance().loadedMusic.size() != 0) {
+		    sender.sendMessage(Component.text("Liste des fichiers chargés :"));
+		    for (String each : MusicPlayerPlugin.getInstance().loadedMusic.keySet()) {
+				sender.sendMessage(Component.text(each));
+		    }
+		}
+		else {
+		    sender.sendMessage(Component.text("Aucun fichier n'est actuellement chargé."));
+		}
+		return true;
     }
 
 }

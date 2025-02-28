@@ -13,15 +13,16 @@ public class ListPlayingCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 	    @NotNull String[] args) {
-	if (MusicPlayerPlugin.getInstance().activeMusicThread.size() != 0) {
+		if (MusicPlayerPlugin.getInstance().activeMusicThread.size() != 0) {
 
-	    sender.sendMessage(Component.text("Liste des musiques en cours de lecture :"));
-	    for (String each : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
-		sender.sendMessage(Component.text(each));
-	    }
-	} else {
-	    sender.sendMessage(Component.text("Aucune musique n'est actuellement en cours d'écoute"));
-	}
+		    sender.sendMessage(Component.text("Liste des musiques en cours de lecture :"));
+		    for (String each : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
+				sender.sendMessage(Component.text(each));
+		    }
+		}
+		else {
+		    sender.sendMessage(Component.text("Aucune musique n'est actuellement en cours d'écoute"));
+		}
 	return true;
     }
 

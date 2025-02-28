@@ -16,23 +16,23 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
     // Command : /unloadmus name
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	if (args.length != 1) {
-	    sender.sendMessage(Component.text("Invalid argument, please provide a correct name"));
-	    return false;
-	}
-	if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-	    return false;
-	}
-	MusicPlayerPlugin.getInstance().loadedMusic.remove(args[0]);
-	sender.sendMessage(Component.text("Fichier '" + args[0] + "' déchargé"));
-	return true;
+                             @NotNull String[] args) {
+        if (args.length != 1) {
+            sender.sendMessage(Component.text("Invalid argument, please provide a correct name"));
+            return false;
+        }
+        if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
+            return false;
+        }
+        MusicPlayerPlugin.getInstance().loadedMusic.remove(args[0]);
+        sender.sendMessage(Component.text("Fichier '" + args[0] + "' déchargé"));
+        return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
-	return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+                                                @NotNull String label, @NotNull String[] args) {
+        return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
     }
 
 }
