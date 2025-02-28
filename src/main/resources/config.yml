@@ -17,3 +17,4 @@ message:
   fileBeingPlayed: "<green>Lecture en cours du fichier '%s0' en tant que '%s1'</green>"
   invalidArgument: "Argument invalide, veuillez rentrer un argument valide"
   unloadedFile: "Fichier '%s' déchargé"
+  reloadConfig: "<red>Config reload"

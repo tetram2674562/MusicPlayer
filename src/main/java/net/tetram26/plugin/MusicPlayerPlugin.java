@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.tetram26.addon.MusicAddon;
@@ -22,6 +24,7 @@ import net.tetram26.commands.StopCommand;
 import net.tetram26.commands.UnloadCommand;
 import net.tetram26.listener.ConnectionListener;
 import net.tetram26.startup.StartupLoader;
+import org.jetbrains.annotations.NotNull;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 
 public class MusicPlayerPlugin extends JavaPlugin {
@@ -81,6 +84,8 @@ public class MusicPlayerPlugin extends JavaPlugin {
 
         getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
 
+        getServer().getPluginCommand("reloadMusicPlayerConfig").setExecutor(this);
+
         // Init event listener
         getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
         // Init configfiles
@@ -113,4 +118,10 @@ public class MusicPlayerPlugin extends JavaPlugin {
         return getPlugin(MusicPlayerPlugin.class);
     }
 
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        reloadConfig();
+        sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
+        return true;
+    }
 }
