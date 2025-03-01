@@ -24,7 +24,7 @@ public class ListCommand implements CommandExecutor {
 		    }
 		}
 		else {
-		    sender.sendMessage(miniMessage.deserialize(config.getString("message.noFileLoaded")));
+		    sender.sendMessage(miniMessage.deserialize(config.getConfigurationSection("message").getString("noFileLoaded")));
 		}
 		return true;
     }

@@ -25,7 +25,6 @@ import net.tetram26.plugin.MusicPlayerPlugin;
 public class LoadCommand implements CommandExecutor, TabCompleter {
 	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 	MiniMessage minimessage = MiniMessage.miniMessage();
-    // Commande : /loadogg path name
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 	    @NotNull String[] args) {
@@ -35,17 +34,17 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 		    return false;
 		}
 		if (MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[1])) {
-		    sender.sendMessage(minimessage.deserialize(config.getString("message.musicNameAlreadyInUse").replace("%s", args[1])));
+		    sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("musicNameAlreadyInUse").replace("%s", args[1])));
 		    return true;
 		}
 		new Thread(() -> {
 		    try {
 				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
 				MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], musicLoader.loadPCMfromFile(filepath));
-				sender.sendMessage(minimessage.deserialize(config.getString("message.fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+				sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
 		    }
 			catch (IOException e) {
-				sender.sendMessage(minimessage.deserialize(config.getString("message.fileNotFound").replace("%s", args[0])));
+				sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
 		    }
 		}).run();
 		return true;

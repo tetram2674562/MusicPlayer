@@ -32,15 +32,15 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
         }
 
         if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[2])) {
-            sender.sendMessage(minimessage.deserialize(config.getString("message.alreadyUsedThread").replace("%s", args[2])));
+            sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
                         return true;
         }
         if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-            sender.sendMessage(minimessage.deserialize(config.getString("message.musicNotFound").replace("%s", args[0])));
+            sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
             return true;
         }
         // <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-        sender.sendMessage(minimessage.deserialize(config.getString("message.fileBeingLoaded")
+        sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileBeingLoaded")
                 .replace("%s0", args[0])
                 .replace("%s1", args[2])));
         new Thread(() -> {

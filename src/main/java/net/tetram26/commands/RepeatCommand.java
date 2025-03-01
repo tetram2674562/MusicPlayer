@@ -24,7 +24,7 @@ public class RepeatCommand implements CommandExecutor, TabCompleter {
             return false;
         }
         if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-            sender.sendMessage(minimessage.deserialize(config.getString("messages.threadNotFound")));
+            sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
             return true;
         }
         MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();

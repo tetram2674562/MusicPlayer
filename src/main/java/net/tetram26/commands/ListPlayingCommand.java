@@ -25,7 +25,7 @@ public class ListPlayingCommand implements CommandExecutor {
 		    }
 		}
 		else {
-		    sender.sendMessage(miniMessage.deserialize(config.getString("message.noMusicCurrentlyBeingPlayed")));
+		    sender.sendMessage(miniMessage.deserialize(config.getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
 		}
 	return true;
     }

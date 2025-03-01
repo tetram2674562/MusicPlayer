@@ -37,13 +37,13 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
         new Thread(() -> {
             try {
                 MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], loader.loadPCMfromURL(args[0]));
-                sender.sendMessage(minimessage.deserialize(config.getString("message.fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+                sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
             } catch (IOException e) {
-                sender.sendMessage(minimessage.deserialize(config.getString("message.fileNotFound").replace("%s", args[0])));
+                sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
             } catch (UnsupportedAudioFileException e) {
-                sender.sendMessage(minimessage.deserialize(config.getString("message.invalidFileFormat")));
+                sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("invalidFileFormat")));
             } catch (URISyntaxException e) {
-                sender.sendMessage(minimessage.deserialize(config.getString("message.invalidURL")));
+                sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("invalidURL")));
             }
         }).run();
         return true;

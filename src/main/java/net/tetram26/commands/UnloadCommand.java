@@ -22,14 +22,14 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
                              @NotNull String[] args) {
         if (args.length != 1) {
-            sender.sendMessage(minimessage.deserialize(config.getString("messages.invalidArgument")));
+            sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("invalidArgument")));
             return false;
         }
         if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
             return false;
         }
         MusicPlayerPlugin.getInstance().loadedMusic.remove(args[0]);
-        sender.sendMessage(minimessage.deserialize(config.getString("messages.unloadedFile").replace("%s", args[0])));
+        sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("unloadedFile").replace("%s", args[0])));
         return true;
     }
 

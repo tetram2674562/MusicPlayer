@@ -19,10 +19,11 @@ public class MusicSender implements IMusicSender {
     private Set<String> listPlayers;
     private Set<VoicePlayer> playersVoice;
     private ServerBroadcastSource source;
-
+    public boolean isPrivate = true;
     public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList) {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 		this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
+		if (voicePlayerList.size() > 1) isPrivate = false;
     }
 
     public MusicSender(List<String> playerList) {
@@ -85,7 +86,7 @@ public class MusicSender implements IMusicSender {
     }
 
     public void addPlayer(String playerName) {
-		if (!listPlayers.contains(playerName)) {
+		if (!listPlayers.contains(playerName) && !isPrivate) {
 		    listPlayers.add(playerName);
 		    playersVoice.add(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 			    .getPlayerByName(playerName).orElseThrow(() -> new IllegalStateException("Player not found")));

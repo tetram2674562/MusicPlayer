@@ -35,11 +35,11 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 		}
 
 		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-		    sender.sendMessage(minimessage.deserialize(config.getString("message.badFilename")));
+		    sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("message.badFilename")));
 		    return true;
 		}
 		if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[1])) {
-		    sender.sendMessage(minimessage.deserialize(config.getString("message.alreadyUsedThread").replace("%s", args[1])));
+		    sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
 		    return true;
 		}
 
