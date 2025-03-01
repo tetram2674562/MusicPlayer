@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.tetram26.musicPlayer</groupId>
   <artifactId>MusicPlayer</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <name>MusicPlayer</name>
   <description>A plugin that aim to allow an user to play opus sound using a command</description>
   
@@ -38,12 +38,24 @@
         
         
     </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
             <groupId>su.plo.voice.api</groupId>
             <artifactId>server</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>
@@ -53,29 +65,6 @@
             <scope>provided</scope>
         </dependency>
         
-
-
-        
     </dependencies>
- <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.4.1</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <minimizeJar>true</minimizeJar>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
 
 </project>
