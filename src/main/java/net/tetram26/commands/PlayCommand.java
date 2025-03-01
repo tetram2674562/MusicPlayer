@@ -40,7 +40,7 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         // <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-        sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileBeingLoaded")
+        sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message").getString("fileBeingPlayed")
                 .replace("%s0", args[0])
                 .replace("%s1", args[2])));
         new Thread(() -> {
