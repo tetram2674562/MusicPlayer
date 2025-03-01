@@ -1,14 +1,12 @@
 package net.tetram26.plugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-
-import org.bukkit.configuration.file.YamlConfiguration;
+import net.kyori.adventure.text.Component;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.tetram26.addon.MusicAddon;
@@ -26,6 +24,7 @@ import net.tetram26.commands.StopCommand;
 import net.tetram26.commands.UnloadCommand;
 import net.tetram26.listener.ConnectionListener;
 import net.tetram26.startup.StartupLoader;
+import org.jetbrains.annotations.NotNull;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 
 public class MusicPlayerPlugin extends JavaPlugin {
@@ -39,94 +38,90 @@ public class MusicPlayerPlugin extends JavaPlugin {
     // ConcurrentHashMap<>();
     public Path configPath = null;
     public Path musicPath = null;
-    public Logger LOGGER;
 
     private StartupLoader startupLoader = new StartupLoader();
 
     @Override
     public void onEnable() {
-	LOGGER = this.getLogger();
-	PlasmoVoiceServer.getAddonsLoader().load(addon);
-	// Registering commands !
+        PlasmoVoiceServer.getAddonsLoader().load(addon);
+        // Registering commands !
 
-	// Loading - unloading commands
-	getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
-	getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
+        // Loading - unloading commands
+        getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
+        getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
 
-	getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
-	getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
+        getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
+        getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
 
-	getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
-	getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
+        getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
+        getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
 
-	// Playing commands
+        // Playing commands
 
-	getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
-	getServer().getPluginCommand("playmus").setTabCompleter(new PlayCommand());
+        getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
+        getServer().getPluginCommand("playmus").setTabCompleter(new PlayCommand());
 
-	getServer().getPluginCommand("broadcastmus").setExecutor(new BroadcastCommand());
-	getServer().getPluginCommand("broadcastmus").setTabCompleter(new BroadcastCommand());
+        getServer().getPluginCommand("broadcastmus").setExecutor(new BroadcastCommand());
+        getServer().getPluginCommand("broadcastmus").setTabCompleter(new BroadcastCommand());
 
-	// Control commands
+        // Control commands
 
-	getServer().getPluginCommand("pausemus").setExecutor(new PauseCommand());
-	getServer().getPluginCommand("pausemus").setTabCompleter(new PauseCommand());
+        getServer().getPluginCommand("pausemus").setExecutor(new PauseCommand());
+        getServer().getPluginCommand("pausemus").setTabCompleter(new PauseCommand());
 
-	getServer().getPluginCommand("resumemus").setExecutor(new ResumeCommand());
-	getServer().getPluginCommand("resumemus").setTabCompleter(new ResumeCommand());
+        getServer().getPluginCommand("resumemus").setExecutor(new ResumeCommand());
+        getServer().getPluginCommand("resumemus").setTabCompleter(new ResumeCommand());
 
-	getServer().getPluginCommand("stopmus").setExecutor(new StopCommand());
-	getServer().getPluginCommand("stopmus").setTabCompleter(new StopCommand());
+        getServer().getPluginCommand("stopmus").setExecutor(new StopCommand());
+        getServer().getPluginCommand("stopmus").setTabCompleter(new StopCommand());
 
-	getServer().getPluginCommand("repeatmus").setExecutor(new RepeatCommand());
-	getServer().getPluginCommand("repeatmus").setTabCompleter(new RepeatCommand());
+        getServer().getPluginCommand("repeatmus").setExecutor(new RepeatCommand());
+        getServer().getPluginCommand("repeatmus").setTabCompleter(new RepeatCommand());
 
-	// Listing commands
+        // Listing commands
 
-	getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
+        getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
 
-	getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
+        getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
 
-	// Init event listener
-	getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
-	// Init configfiles
+        getServer().getPluginCommand("reloadMusicPlayerConfig").setExecutor(this);
 
-	// Creation of the directory
-	this.getDataFolder().mkdir();
-	try {
-	    // Register config path
-	    configPath = this.getDataPath().toRealPath();
-	    File config = new File(Paths.get(configPath.toString(), "config.yml").toString());
-	    // If the file doesn't already exist.
-	    if (config.createNewFile()) {
-		
-	    }
-	    YamlConfiguration configYaml = YamlConfiguration.loadConfiguration(config);
-	    File message = new File(Paths.get(configPath.toString(), "message.yml").toString());
-	    // If the file doesn't already exist.
-	    if (message.createNewFile()) {
-		
-	    }
-	    YamlConfiguration messageYaml = YamlConfiguration.loadConfiguration(message);
-	    
-	    // Create the dir for the music if it doesn't already exist.
-	    musicPath = Paths.get(configPath.toString(), "music");
-	    musicPath.toFile().mkdir();
-	    Path startup = startupLoader.getStartupJSONPath("startup.json");
-	    startupLoader.loadPCMfromJSON(startup.toString());
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	LOGGER.info("Hello Server :)");
+        // Init event listener
+        getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
+        // Init configfiles
+
+        saveDefaultConfig();
+
+        // Creation of the directory
+//        this.getDataFolder().mkdir(); folder automatiquely created with savedefaultconfig
+        try {
+            // Register config path
+            configPath = this.getDataPath().toRealPath();
+
+            // Create the dir for the music if it doesn't already exist.
+            musicPath = Paths.get(configPath.toString(), "music");
+            musicPath.toFile().mkdir();
+            Path startup = startupLoader.getStartupJSONPath("startup.json");
+            startupLoader.loadPCMfromJSON(startup.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        getComponentLogger().info(Component.text("Hello Server :)"));
 
     }
 
     public MusicAddon getAddon() {
-	return this.addon;
+        return this.addon;
     }
 
     public static MusicPlayerPlugin getInstance() {
-	return getPlugin(MusicPlayerPlugin.class);
+        return getPlugin(MusicPlayerPlugin.class);
     }
 
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        reloadConfig();
+        sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
+        return true;
+    }
 }
