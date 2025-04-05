@@ -7,7 +7,7 @@ public interface IStartupLoader {
 
     /**
      * Load Audio file from a given JSON file
-     * 
+     *
      * @param JSONpath the path of the JSON file
      */
     public void loadPCMfromJSON(String JSONpath);
@@ -15,7 +15,7 @@ public interface IStartupLoader {
     /**
      * Try to find a correct path for a given JSON filename, if the file doesn't
      * exist : create it.
-     * 
+     *
      * @param name The filename
      * @return The path of the file
      * @throws IOException if the file doesn't exist (It should not throw)

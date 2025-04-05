@@ -11,6 +11,7 @@ import su.plo.voice.api.server.player.VoicePlayer;
 
 public class Controller implements IController {
 
+    @Override
     public void playAudio(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName) {
 	Set<VoicePlayer> voicePlayerList = Set
 		.of(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
@@ -24,19 +25,20 @@ public class Controller implements IController {
 	MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
     }
 
+    @Override
     public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
 	    String threadName) {
-		if (playerList.size() != 0) {
-		    Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
-			    .createPlayerVoiceSet(playerList);
-		    MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
-		    ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
-			    .createBroadcastSource(sourceLine, voicePlayerList, threadName);
-		    musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
-			    broadcastSource, PCMdata, threadName);
-		    MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
+	if (playerList.size() != 0) {
+	    Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
+		    .createPlayerVoiceSet(playerList);
+	    MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
+	    ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getAddon().getSourceManager()
+		    .createBroadcastSource(sourceLine, voicePlayerList, threadName);
+	    musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
+		    broadcastSource, PCMdata, threadName);
+	    MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
 
-		}
+	}
 
     }
 }

@@ -19,7 +19,7 @@ public interface IMusicSender {
 
     /**
      * Sends the audio samples to everyone.
-     * 
+     *
      *
      * @param voiceServer Plasmo Voice Server API.
      * @param source      The audio source to send audio.
@@ -31,31 +31,31 @@ public interface IMusicSender {
 
     /**
      * Stop the music sender
-     * 
+     *
      */
     public void stop();
 
     /**
      * Pause the music sender
-     * 
+     *
      */
     public void pause();
 
     /**
      * Resume the music sender
-     * 
+     *
      */
     public void resume();
 
     /**
      * Toggle the repeat mode
-     * 
+     *
      */
     public void toggleRepeat();
 
     /**
      * Add a player to the source.
-     * 
+     *
      * @param playerName
      */
     public void addPlayer(String playerName);

@@ -1,8 +1,8 @@
 package net.tetram26.addon;
 
+import net.tetram26.audio.MusicLoader;
 import net.tetram26.controller.Controller;
 import net.tetram26.models.SourceManager;
-import net.tetram26.audio.MusicLoader;
 import su.plo.voice.api.addon.AddonInitializer;
 import su.plo.voice.api.addon.InjectPlasmoVoice;
 import su.plo.voice.api.addon.annotation.Addon;
@@ -25,22 +25,22 @@ public final class MusicAddon implements AddonInitializer {
 
     @Override
     public void onAddonInitialize() {
-	    // voiceServer is initialized now
-	    musicLoader = new MusicLoader();
-	    sourceManager = new SourceManager();
-	    music = sourceManager.createSourceLine("music", this);
-	    controller = new Controller();
+	// voiceServer is initialized now
+	musicLoader = new MusicLoader();
+	sourceManager = new SourceManager();
+	music = sourceManager.createSourceLine("music", this);
+	controller = new Controller();
 
     }
 
     @Override
     public void onAddonShutdown() {
-	    // Je le laisse au cas où...
+	// Je le laisse au cas où...
     }
 
     /**
      * Get the voice server.
-     * 
+     *
      * @return
      */
     public PlasmoVoiceServer getVoiceServer() {
@@ -49,7 +49,7 @@ public final class MusicAddon implements AddonInitializer {
 
     /**
      * Get the music source line
-     * 
+     *
      * @return The music source line
      */
     public ServerSourceLine getMusicSourceLine() {
@@ -58,7 +58,7 @@ public final class MusicAddon implements AddonInitializer {
 
     /**
      * Get the music loader
-     * 
+     *
      * @return The music loader
      */
     public MusicLoader getMusicLoader() {
@@ -67,7 +67,7 @@ public final class MusicAddon implements AddonInitializer {
 
     /**
      * Get the music controller
-     * 
+     *
      * @return The music controller
      */
     public Controller getController() {
@@ -76,7 +76,7 @@ public final class MusicAddon implements AddonInitializer {
 
     /**
      * Get the source manager
-     * 
+     *
      * @return The source manager
      */
     public SourceManager getSourceManager() {

@@ -9,7 +9,7 @@ public interface IMusicLoader {
 
     /**
      * Load PCM data from a WAV file
-     * 
+     *
      * @param path The path of the WAV file
      * @return A short array containing the PCM data
      * @throws UnsupportedAudioFileException If It isn't a WAV file
@@ -20,7 +20,7 @@ public interface IMusicLoader {
 
     /**
      * Load PCM data from a PCM file
-     * 
+     *
      * @param path The path of the PCM file
      * @return A short array containing the PCM data
      * @throws IOException If there isn't any PCM file at the given location.
@@ -29,7 +29,7 @@ public interface IMusicLoader {
 
     /**
      * Load PCM data from a distant WAV file
-     * 
+     *
      * @param link The direct URL to the file
      * @return A short array containing the PCM data of the file
      * @throws UnsupportedAudioFileException If the distant file isn't a WAV file
@@ -41,7 +41,7 @@ public interface IMusicLoader {
 
     /**
      * Convert a byte array into a short array
-     * 
+     *
      * @param byteData A byte array
      * @return A short array
      */

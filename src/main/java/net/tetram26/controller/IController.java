@@ -7,7 +7,7 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 public interface IController {
     /**
      * Play an audio at a player
-     * 
+     *
      * @param username   The username of the player
      * @param PCMdata    The PCM data of the audio
      * @param sourceLine the source line to play the audio on
@@ -17,7 +17,7 @@ public interface IController {
 
     /**
      * Play an audio on a given group of player
-     * 
+     *
      * @param playerList A list of player
      * @param PCMdata    The PCM data of the audio
      * @param sourceLine the source line to play the audio on
