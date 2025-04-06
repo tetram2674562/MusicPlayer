@@ -22,50 +22,50 @@ import net.tetram26.plugin.MusicPlayerPlugin;
  * DEPRECATED PLEASE USE LoadWAVCommand INSTEAD.
  */
 public class LoadCommand implements CommandExecutor, TabCompleter {
-    FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
-    MiniMessage minimessage = MiniMessage.miniMessage();
+	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
+	MiniMessage minimessage = MiniMessage.miniMessage();
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	MusicLoader musicLoader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
-	// TODO Auto-generated method stub
-	if (args.length != 2) {
-	    return false;
-	}
-	if (MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[1])) {
-	    sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
-		    .getString("musicNameAlreadyInUse").replace("%s", args[1])));
-	    return true;
-	}
-	new Thread(() -> {
-	    try {
-		String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
-		MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], musicLoader.loadPCMfromFile(filepath));
-		sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
-			.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
-	    } catch (IOException e) {
-		sender.sendMessage(minimessage.deserialize(
-			config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
-	    }
-	}).run();
-	return true;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
-	// TODO Auto-generated method stub
-	if (args.length == 1) {
-	    return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
-		    .toList();
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		MusicLoader musicLoader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
+		// TODO Auto-generated method stub
+		if (args.length != 2) {
+			return false;
+		}
+		if (MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[1])) {
+			sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+					.getString("musicNameAlreadyInUse").replace("%s", args[1])));
+			return true;
+		}
+		new Thread(() -> {
+			try {
+				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
+				MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], musicLoader.loadPCMfromFile(filepath));
+				sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+						.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+			} catch (IOException e) {
+				sender.sendMessage(minimessage.deserialize(
+						config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+			}
+		}).run();
+		return true;
 	}
 
-	if (args.length == 2) {
-	    return List.of("nom");
-	}
-	return List.of();
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
+		// TODO Auto-generated method stub
+		if (args.length == 1) {
+			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
+					.toList();
+		}
 
-    }
+		if (args.length == 2) {
+			return List.of("nom");
+		}
+		return List.of();
+
+	}
 
 }

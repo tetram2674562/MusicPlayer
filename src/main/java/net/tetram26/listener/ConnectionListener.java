@@ -11,8 +11,8 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(PlayerJoinEvent event) {
-	for (String thread : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
-	    MusicPlayerPlugin.getInstance().activeMusicThread.get(thread).addPlayer(event.getPlayer().getName());
-	}
+        for (String thread : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
+            MusicPlayerPlugin.getInstance().activeMusicThread.get(thread).addPlayer(event.getPlayer().getName());
+        }
     }
 }

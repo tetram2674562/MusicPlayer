@@ -10,10 +10,10 @@ import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 @Addon(
-	// An addon id must start with a lowercase letter and may contain only lowercase
-	// letters, digits, hyphens, and underscores.
-	// It should be between 4 and 32 characters long.
-	id = "pv-addon-music", name = "Music addon", version = "1.0.2", authors = { "tetram26" })
+        // An addon id must start with a lowercase letter and may contain only lowercase
+        // letters, digits, hyphens, and underscores.
+        // It should be between 4 and 32 characters long.
+        id = "pv-addon-music", name = "Music addon", version = "1.0.2", authors = { "tetram26" })
 public final class MusicAddon implements AddonInitializer {
 
     @InjectPlasmoVoice
@@ -25,17 +25,17 @@ public final class MusicAddon implements AddonInitializer {
 
     @Override
     public void onAddonInitialize() {
-	// voiceServer is initialized now
-	musicLoader = new MusicLoader();
-	sourceManager = new SourceManager();
-	music = sourceManager.createSourceLine("music", this);
-	controller = new Controller();
+        // voiceServer is initialized now
+        musicLoader = new MusicLoader();
+        sourceManager = new SourceManager();
+        music = sourceManager.createSourceLine("music", this);
+        controller = new Controller();
 
     }
 
     @Override
     public void onAddonShutdown() {
-	// Je le laisse au cas où...
+        // Je le laisse au cas où...
     }
 
     /**
@@ -44,7 +44,7 @@ public final class MusicAddon implements AddonInitializer {
      * @return
      */
     public PlasmoVoiceServer getVoiceServer() {
-	return voiceServer;
+        return voiceServer;
     }
 
     /**
@@ -53,7 +53,7 @@ public final class MusicAddon implements AddonInitializer {
      * @return The music source line
      */
     public ServerSourceLine getMusicSourceLine() {
-	return music;
+        return music;
     }
 
     /**
@@ -62,7 +62,7 @@ public final class MusicAddon implements AddonInitializer {
      * @return The music loader
      */
     public MusicLoader getMusicLoader() {
-	return musicLoader;
+        return musicLoader;
     }
 
     /**
@@ -71,7 +71,7 @@ public final class MusicAddon implements AddonInitializer {
      * @return The music controller
      */
     public Controller getController() {
-	return controller;
+        return controller;
     }
 
     /**
@@ -80,7 +80,7 @@ public final class MusicAddon implements AddonInitializer {
      * @return The source manager
      */
     public SourceManager getSourceManager() {
-	return sourceManager;
+        return sourceManager;
     }
 
 }

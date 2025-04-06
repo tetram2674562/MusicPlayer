@@ -30,3 +30,4 @@ replay_pid*
 #Intellij file
 .idea/
 *.iml
+.vscode/settings.json

@@ -11,24 +11,24 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class ListPlayingCommand implements CommandExecutor {
-    MiniMessage miniMessage = MiniMessage.miniMessage();
-    FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
+	MiniMessage miniMessage = MiniMessage.miniMessage();
+	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 
-    // Commande : /playmus <filename> <username> <processus>
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	if (MusicPlayerPlugin.getInstance().activeMusicThread.size() != 0) {
+	// Commande : /playmus <filename> <username> <processus>
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		if (MusicPlayerPlugin.getInstance().activeMusicThread.size() != 0) {
 
-	    sender.sendMessage(miniMessage.deserialize(config.getString("message.listCurrentlyPlayingMusic")));
-	    for (String each : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
-		sender.sendMessage(Component.text(each));
-	    }
-	} else {
-	    sender.sendMessage(miniMessage
-		    .deserialize(config.getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
+			sender.sendMessage(miniMessage.deserialize(config.getString("message.listCurrentlyPlayingMusic")));
+			for (String each : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
+				sender.sendMessage(Component.text(each));
+			}
+		} else {
+			sender.sendMessage(miniMessage
+					.deserialize(config.getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
+		}
+		return true;
 	}
-	return true;
-    }
 
 }

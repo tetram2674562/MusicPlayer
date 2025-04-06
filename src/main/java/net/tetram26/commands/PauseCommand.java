@@ -14,32 +14,32 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class PauseCommand implements CommandExecutor, TabCompleter {
-    FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
-    MiniMessage minimessage = MiniMessage.miniMessage();
+	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
+	MiniMessage minimessage = MiniMessage.miniMessage();
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	if (args.length != 1) {
-	    return false;
-	}
-	if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-	    sender.sendMessage(
-		    minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
-	    return true;
-	}
-	MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).pause();
-	return true;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
-	// TODO Auto-generated method stub
-	if (args.length == 1) {
-	    return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		if (args.length != 1) {
+			return false;
+		}
+		if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
+			sender.sendMessage(
+					minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
+			return true;
+		}
+		MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).pause();
+		return true;
 	}
 
-	return List.of();
-    }
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
+		// TODO Auto-generated method stub
+		if (args.length == 1) {
+			return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+		}
+
+		return List.of();
+	}
 }

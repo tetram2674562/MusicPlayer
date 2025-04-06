@@ -14,33 +14,33 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class RepeatCommand implements CommandExecutor, TabCompleter {
-    FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
-    MiniMessage minimessage = MiniMessage.miniMessage();
+	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
+	MiniMessage minimessage = MiniMessage.miniMessage();
 
-    // Commande : /repeat <musique>
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	if (args.length != 1) {
-	    return false;
+	// Commande : /repeat <musique>
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		if (args.length != 1) {
+			return false;
+		}
+		if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
+			sender.sendMessage(
+					minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
+			return true;
+		}
+		MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();
+		return true;
 	}
-	if (!MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[0])) {
-	    sender.sendMessage(
-		    minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
-	    return true;
-	}
-	MusicPlayerPlugin.getInstance().activeMusicThread.get(args[0]).toggleRepeat();
-	return true;
-    }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
 
-	if (args.length == 1) {
-	    return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+		if (args.length == 1) {
+			return List.copyOf(MusicPlayerPlugin.getInstance().activeMusicThread.keySet());
+		}
+		return List.of();
 	}
-	return List.of();
-    }
 
 }

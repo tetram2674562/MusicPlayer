@@ -19,50 +19,50 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class BroadcastCommand implements CommandExecutor, TabCompleter {
 
-    FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
-    MiniMessage minimessage = MiniMessage.miniMessage();
+	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
+	MiniMessage minimessage = MiniMessage.miniMessage();
 
-    // Command : /broadcastmus <name> <thread> -> broadcast to all players
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-	    @NotNull String[] args) {
-	List<String> playerList = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-	Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
-	ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-	if (args.length != 2) {
-	    return false;
+	// Command : /broadcastmus <name> <thread> -> broadcast to all players
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		List<String> playerList = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
+		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
+		if (args.length != 2) {
+			return false;
+		}
+
+		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
+			sender.sendMessage(minimessage
+					.deserialize(config.getConfigurationSection("message").getString("message.badFilename")));
+			return true;
+		}
+		if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[1])) {
+			sender.sendMessage(minimessage.deserialize(
+					config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
+			return true;
+		}
+
+		new Thread(() -> {
+			controller.broadcastAudio(playerList, MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
+					args[1]);
+
+		}).run();
+		return true;
 	}
 
-	if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-	    sender.sendMessage(minimessage
-		    .deserialize(config.getConfigurationSection("message").getString("message.badFilename")));
-	    return true;
-	}
-	if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[1])) {
-	    sender.sendMessage(minimessage.deserialize(
-		    config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
-	    return true;
-	}
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
+		if (args.length == 1) {
+			return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+		}
+		if (args.length == 2) {
+			return List.of("identifiant");
+		}
 
-	new Thread(() -> {
-	    controller.broadcastAudio(playerList, MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
-		    args[1]);
-
-	}).run();
-	return true;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-	    @NotNull String label, @NotNull String[] args) {
-	if (args.length == 1) {
-	    return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+		return List.of();
 	}
-	if (args.length == 2) {
-	    return List.of("identifiant");
-	}
-
-	return List.of();
-    }
 
 }

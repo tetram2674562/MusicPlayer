@@ -47,16 +47,12 @@ public class StartupLoader implements IStartupLoader {
 			}
 			System.out.println("File :'" + name + "' loaded");
 		    }
-		} catch (IOException e) {
-		    e.printStackTrace();
-		} catch (UnsupportedAudioFileException e) {
-		    // TODO Auto-generated catch block
+		} catch (IOException | UnsupportedAudioFileException e) {
 		    e.printStackTrace();
 		}
 
 	    });
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 
 	}
