@@ -31,3 +31,5 @@ replay_pid*
 .idea/
 *.iml
 .vscode/settings.json
+/.apt_generated/
+/.apt_generated_tests/
