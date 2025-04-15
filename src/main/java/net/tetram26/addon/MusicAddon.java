@@ -13,7 +13,7 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
         // An addon id must start with a lowercase letter and may contain only lowercase
         // letters, digits, hyphens, and underscores.
         // It should be between 4 and 32 characters long.
-        id = "pv-addon-music", name = "Music addon", version = "1.0.2", authors = { "tetram26" })
+        id = "pv-addon-music", name = "Music addon", version = "1.0.3", authors = { "tetram26" })
 public final class MusicAddon implements AddonInitializer {
 
     @InjectPlasmoVoice
