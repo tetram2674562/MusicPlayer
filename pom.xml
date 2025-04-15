@@ -53,11 +53,36 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                  <execution>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                      <relocations>
+                        <relocation>
+                          <pattern>javazoom.jl</pattern>
+                          <shadedPattern>javazoom.jl</shadedPattern>
+                        </relocation>
+                      </relocations>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
         </plugins>
     </build>
 
     <dependencies>
-    
+        <dependency>
+            <groupId>javazoom</groupId>
+            <artifactId>jlayer</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 		<dependency>
 		    <groupId>net.Indyuce</groupId>
 		    <artifactId>MMOCore-API</artifactId>
@@ -78,5 +103,5 @@
         </dependency>
         
     </dependencies>
-
+    
 </project>

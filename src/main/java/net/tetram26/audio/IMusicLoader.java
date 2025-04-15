@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import javazoom.jl.decoder.JavaLayerException;
+
 public interface IMusicLoader {
 
     /**
@@ -46,4 +48,15 @@ public interface IMusicLoader {
      * @return A short array
      */
     public short[] byteToShort(byte[] byteData);
+
+
+    /** 
+     * Load PCM data from an mp3 file
+     * 
+     * @param path The file path
+     * @return A short array containing the PCM data of the file
+     * @throws IOException If the file doesn't exist.
+     * @throws JavaLayerException 
+     */
+    public short[] loadPCMfromMP3(String path) throws IOException, JavaLayerException;
 }

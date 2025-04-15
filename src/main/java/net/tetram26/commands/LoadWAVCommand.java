@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javazoom.jl.decoder.JavaLayerException;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.tetram26.audio.MusicLoader;
 import net.tetram26.plugin.MusicPlayerPlugin;
@@ -38,16 +39,30 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 		}
 		new Thread(() -> {
 			try {
+
 				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
-				MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], loader.loadPCMfromWAV(filepath));
+				String extension = "";
+
+				int i = args[0].lastIndexOf('.');
+				if (i > 0) {
+					extension = args[0].substring(i + 1);
+				}
+				if (extension.equals("pcm")) {
+					MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], loader.loadPCMfromFile(filepath));
+				} else if (extension.equals("mp3")) {
+					MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], loader.loadPCMfromMP3(filepath));
+				} else {
+					MusicPlayerPlugin.getInstance().loadedMusic.put(args[1], loader.loadPCMfromWAV(filepath));
+				}
 				sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
 						.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
 			} catch (IOException e) {
 				sender.sendMessage(minimessage.deserialize(
 						config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
-			} catch (UnsupportedAudioFileException e) {
+			} catch (UnsupportedAudioFileException | JavaLayerException e) {
 				sender.sendMessage(minimessage
 						.deserialize(config.getConfigurationSection("message").getString("invalidFileFormat")));
+				e.printStackTrace();
 			}
 		}).run();
 		return true;
