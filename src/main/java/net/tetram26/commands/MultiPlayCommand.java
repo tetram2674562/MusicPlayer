@@ -35,7 +35,7 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
             @NotNull String[] args) {
-        if (args.length < 2) {
+        if (args.length < 3) {
             return false;
         }
         if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {

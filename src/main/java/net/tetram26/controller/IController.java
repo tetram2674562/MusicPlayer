@@ -25,4 +25,15 @@ public interface IController {
      */
     public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
             String threadName);
+
+    /** 
+     * Play an audio on a player and everyone near him
+     * 
+     * @param username The username of the player
+     * @param PCMdata The PCM data of the audio
+     * @param sourceLine the source line to play the audio on
+     * @param threadName the name of the thread
+     * @param distance the distance you want people to hear it
+     */
+    public void playAudioOn(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName,int distance);
 }

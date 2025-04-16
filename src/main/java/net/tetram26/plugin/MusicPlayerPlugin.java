@@ -24,6 +24,7 @@ import net.tetram26.commands.MultiPlayCommand;
 import net.tetram26.commands.MusicPlayerCommand;
 import net.tetram26.commands.PauseCommand;
 import net.tetram26.commands.PlayCommand;
+import net.tetram26.commands.PlayMusOnCommand;
 import net.tetram26.commands.RepeatCommand;
 import net.tetram26.commands.ResumeCommand;
 import net.tetram26.commands.StopCommand;
@@ -97,6 +98,8 @@ public class MusicPlayerPlugin extends JavaPlugin {
 		getCommand("musicplayer").setTabCompleter(new MusicPlayerCommand());
 		getCommand("multiplaymus").setExecutor(new MultiPlayCommand());
 		getCommand("multiplaymus").setTabCompleter(new MultiPlayCommand());
+		getCommand("playmuson").setExecutor(new PlayMusOnCommand());
+		getCommand("playmuson").setTabCompleter(new PlayMusOnCommand());
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
 		// Init configfiles

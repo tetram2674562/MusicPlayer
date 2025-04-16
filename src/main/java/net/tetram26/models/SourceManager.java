@@ -10,7 +10,9 @@ import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
+import su.plo.voice.api.server.audio.source.ServerPlayerSource;
 import su.plo.voice.api.server.player.VoicePlayer;
+import su.plo.voice.api.server.player.VoiceServerPlayer;
 
 public class SourceManager implements ISourceManager {
 
@@ -48,6 +50,19 @@ public class SourceManager implements ISourceManager {
 
 		ServerDirectSource source = sourceLine.createDirectSource(voicePlayer, false);
 
+		return source;
+	}
+
+	@Override
+	public ServerPlayerSource createPlayerSource(ServerSourceLine sourceLine, String username) {
+		VoiceServerPlayer voicePlayer = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
+				.getPlayerByName(username).orElseThrow(() -> new IllegalStateException("Player not found"));
+
+		ServerPlayerSource source = sourceLine.createPlayerSource(voicePlayer, false);
+		source.getFilters()
+				.stream()
+				.findFirst()
+				.ifPresent(source::removeFilter);
 		return source;
 	}
 

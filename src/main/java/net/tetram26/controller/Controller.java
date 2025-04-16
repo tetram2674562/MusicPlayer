@@ -7,6 +7,7 @@ import net.tetram26.audio.MusicSender;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
+import su.plo.voice.api.server.audio.source.ServerPlayerSource;
 import su.plo.voice.api.server.player.VoicePlayer;
 
 public class Controller implements IController {
@@ -22,6 +23,16 @@ public class Controller implements IController {
 				.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 		musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
 				musicSource, PCMdata, threadName);
+		MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
+	}
+
+	@Override
+	public void playAudioOn(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName,int distance) {
+		
+		MusicSender musicSender = new MusicSender(List.of(username), null);
+		ServerPlayerSource musicSource = MusicPlayerPlugin.getInstance().getAddon().getSourceManager().createPlayerSource(sourceLine, username);
+		musicSender.sendPacketsToPlayerSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
+				musicSource, PCMdata, threadName, (short) distance);
 		MusicPlayerPlugin.getInstance().activeMusicThread.put(threadName, musicSender);
 	}
 
