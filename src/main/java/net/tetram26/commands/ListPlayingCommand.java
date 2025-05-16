@@ -18,10 +18,10 @@ public class ListPlayingCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		if (MusicPlayerPlugin.getInstance().activeMusicThread.size() != 0) {
+		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().size() != 0) {
 
 			sender.sendMessage(miniMessage.deserialize(config.getString("message.listCurrentlyPlayingMusic")));
-			for (String each : MusicPlayerPlugin.getInstance().activeMusicThread.keySet()) {
+			for (String each : MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName()) {
 				sender.sendMessage(Component.text(each));
 			}
 		} else {

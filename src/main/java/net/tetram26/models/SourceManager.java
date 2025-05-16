@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.tetram26.addon.MusicAddon;
+import net.tetram26.api.ISourceManager;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
@@ -15,10 +16,6 @@ import su.plo.voice.api.server.player.VoicePlayer;
 import su.plo.voice.api.server.player.VoiceServerPlayer;
 
 public class SourceManager implements ISourceManager {
-
-	public SourceManager() {
-
-	}
 
 	@Override
 	public ServerSourceLine createSourceLine(String name, MusicAddon addon) {
@@ -59,10 +56,7 @@ public class SourceManager implements ISourceManager {
 				.getPlayerByName(username).orElseThrow(() -> new IllegalStateException("Player not found"));
 
 		ServerPlayerSource source = sourceLine.createPlayerSource(voicePlayer, false);
-		source.getFilters()
-				.stream()
-				.findFirst()
-				.ifPresent(source::removeFilter);
+		source.getFilters().stream().findFirst().ifPresent(source::removeFilter);
 		return source;
 	}
 

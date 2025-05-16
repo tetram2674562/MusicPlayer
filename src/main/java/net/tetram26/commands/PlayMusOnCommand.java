@@ -18,61 +18,60 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 
-    MiniMessage minimessage = MiniMessage.miniMessage();
+	MiniMessage minimessage = MiniMessage.miniMessage();
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-            @NotNull String label, @NotNull String[] args) {
-        if (args.length == 1) {
-            return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
-        }
-        if (args.length == 2) {
-            return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-        }
-        if (args.length == 3) {
-            return List.of("identifiant");
-        }
-        if (args.length == 4) {
-            return List.of("distance");
-        }
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
+		if (args.length == 1) {
+			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
+		}
+		if (args.length == 2) {
+			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+		}
+		if (args.length == 3) {
+			return List.of("identifiant");
+		}
+		if (args.length == 4) {
+			return List.of("distance");
+		}
 
-        return List.of();
-    }
+		return List.of();
+	}
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-            @NotNull String[] args) {
-        Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
-        ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-        if (args.length != 4) {
-            return false;
-        }
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
+		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
+		if (args.length != 4) {
+			return false;
+		}
 
-        if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[2])) {
-            sender.sendMessage(minimessage.deserialize(
-                    MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-                            .getString("alreadyUsedThread").replace("%s", args[2])));
-            return true;
-        }
-        if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-            sender.sendMessage(minimessage.deserialize(
-                    MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-                            .getString("musicNotFound").replace("%s", args[0])));
-            return true;
-        }
-        // <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-        sender.sendMessage(
-                minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-                        .getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", args[2])));
-        new Thread(() -> {
-            try {
-                controller.playAudioOn(args[1], MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
-                        args[2], Integer.valueOf(args[3]));
-            } catch (NumberFormatException e) {
-                sender.sendMessage(minimessage.deserialize("<red>Please give a valid distance number"));
-            }
-        }).run();
-        return true;
-    }
+		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[2])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
+			return true;
+		}
+		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
+			return true;
+		}
+		// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
+		sender.sendMessage(
+				minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
+						.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", args[2])));
+		new Thread(() -> {
+			try {
+				controller.playAudioOn(args[1],
+						MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getPCMDATA(args[0]),
+						sourceLine, args[2], Integer.valueOf(args[3]));
+			} catch (NumberFormatException e) {
+				sender.sendMessage(minimessage.deserialize("<red>Please give a valid distance number"));
+			}
+		}).run();
+		return true;
+	}
 
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.tetram26.api.IMusicSender;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.provider.ArrayAudioFrameProvider;
@@ -21,7 +22,7 @@ public class MusicSender implements IMusicSender {
 	private Set<String> listPlayers;
 	private Set<VoicePlayer> playersVoice;
 	private ServerBroadcastSource source;
-	public boolean isPrivate = true;
+	private boolean isPrivate = true;
 	private boolean isBroadcast = true;
 
 	public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList) {
@@ -31,10 +32,10 @@ public class MusicSender implements IMusicSender {
 			this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
 			if (voicePlayerList.size() > 1) {
 				isPrivate = false;
-			}	
-		}	
+			}
+		}
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
-	
+
 	}
 
 	public MusicSender(List<String> playerList) {
@@ -56,7 +57,7 @@ public class MusicSender implements IMusicSender {
 
 			source.remove();
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
+			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
 		});
 
 	}
@@ -76,17 +77,16 @@ public class MusicSender implements IMusicSender {
 			source.remove();
 			frameProvider = null;
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
+			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
 		});
 
 	}
 
-	
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
-			short[] samples, String threadName,short distance) {
+	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source, short[] samples,
+			String threadName, short distance) {
 		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
 
-		audioSender = source.createAudioSender(frameProvider,distance);
+		audioSender = source.createAudioSender(frameProvider, distance);
 
 		frameProvider.addSamples(samples);
 
@@ -97,14 +97,11 @@ public class MusicSender implements IMusicSender {
 			frameProvider = null;
 			audioSender = null;
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().activeMusicThread.remove(threadName);
-			System.out.println(MusicPlayerPlugin.getInstance().activeMusicThread.size());
+			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
 		});
 
 	}
 
-
-	
 	public void stop() {
 		audioSender.stop();
 	}
@@ -122,13 +119,18 @@ public class MusicSender implements IMusicSender {
 	}
 
 	public void addPlayer(String playerName) {
-		if (isBroadcast && (!listPlayers.contains(playerName) && !isPrivate) ) {
+		if (isBroadcast && (!listPlayers.contains(playerName) && !isPrivate)) {
 			listPlayers.add(playerName);
 			playersVoice.add(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 					.getPlayerByName(playerName).orElseThrow(() -> new IllegalStateException("Player not found")));
 			source.setPlayers(playersVoice);
 		}
 	}
+
+	public boolean isBroadcast() {
+		return isBroadcast;
+	}
+
 	public boolean hasPlayer(String playerName) {
 		return listPlayers.contains(playerName);
 	}

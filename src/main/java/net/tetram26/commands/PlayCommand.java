@@ -27,16 +27,16 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		if (args.length != 3) {
+		if (args.length != 2) {
 			return false;
 		}
-
-		if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[2])) {
-			sender.sendMessage(minimessage.deserialize(
-					config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
+		String threadname = args[0] + args[1];
+		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(threadname)) {
+			sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+					.getString("alreadyUsedThread").replace("%s", threadname)));
 			return true;
 		}
-		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(minimessage.deserialize(
 					config.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
 			return true;
@@ -45,8 +45,9 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 		sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
 				.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", args[2])));
 		new Thread(() -> {
-			controller.playAudio(args[1], MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
-					args[2]);
+			controller.playAudio(args[1],
+					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getPCMDATA(args[0]),
+					sourceLine, threadname);
 		}).run();
 		return true;
 	}
@@ -56,13 +57,10 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
 		}
 		if (args.length == 2) {
 			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-		}
-		if (args.length == 3) {
-			return List.of("identifiant");
 		}
 
 		return List.of();

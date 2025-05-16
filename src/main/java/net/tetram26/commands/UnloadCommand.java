@@ -26,10 +26,10 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
 					minimessage.deserialize(config.getConfigurationSection("message").getString("invalidArgument")));
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
 			return false;
 		}
-		MusicPlayerPlugin.getInstance().loadedMusic.remove(args[0]);
+		MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().unloadMusic(args[0]);
 		sender.sendMessage(minimessage.deserialize(
 				config.getConfigurationSection("message").getString("unloadedFile").replace("%s", args[0])));
 		return true;
@@ -38,7 +38,7 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+		return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
 	}
 
 }

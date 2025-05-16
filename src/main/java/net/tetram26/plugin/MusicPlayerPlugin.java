@@ -5,13 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.kyori.adventure.text.Component;
 import net.tetram26.addon.MusicAddon;
 import net.tetram26.audio.MusicSender;
@@ -29,32 +27,26 @@ import net.tetram26.commands.RepeatCommand;
 import net.tetram26.commands.ResumeCommand;
 import net.tetram26.commands.StopCommand;
 import net.tetram26.commands.UnloadCommand;
+import net.tetram26.controller.Controller;
 import net.tetram26.listener.ConnectionListener;
 import net.tetram26.startup.StartupLoader;
+import net.tetram26.api.IMusicPlayerAPI;
 import su.plo.voice.api.server.PlasmoVoiceServer;
+import su.plo.voice.api.server.audio.line.ServerSourceLine;
+import su.plo.voice.proto.data.audio.line.SourceLine;
 
-public class MusicPlayerPlugin extends JavaPlugin {
+public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 	private MusicAddon addon = new MusicAddon();
-	public ConcurrentHashMap<String, short[]> loadedMusic = new ConcurrentHashMap<>();
-	public ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
-	// threadName : ServerBroadcastSource,Set<VoicePlayer>,List<String>
-
-	// public ConcurrentHashMap<String,List<Object>> broadcastPlayers = new
-	// ConcurrentHashMap<>();
 	public Path configPath = null;
 	public Path musicPath = null;
-	public MMOCoreAPI mmoCoreAPI;
 	private StartupLoader startupLoader = new StartupLoader();
 
 	@Override
 	public void onEnable() {
 		PlasmoVoiceServer.getAddonsLoader().load(addon);
 		// Registering commands !
-		if (Bukkit.getPluginManager().getPlugin("MMOCore") != null) {
-			this.mmoCoreAPI = new MMOCoreAPI((JavaPlugin) Bukkit.getPluginManager().getPlugin("MMOCore"));
 
-		}
 		// Loading - unloading commands
 		getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
 		getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
@@ -139,5 +131,13 @@ public class MusicPlayerPlugin extends JavaPlugin {
 		reloadConfig();
 		sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
 		return true;
+	}
+	
+	public Controller getController() {
+		return getAddon().getController();
+	}
+	
+	public ServerSourceLine getMusicPlayerSourceLine() {
+		return getAddon().getMusicSourceLine();
 	}
 }

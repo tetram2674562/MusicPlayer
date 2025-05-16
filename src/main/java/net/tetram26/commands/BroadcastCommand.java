@@ -33,20 +33,21 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 			return false;
 		}
 
-		if (!MusicPlayerPlugin.getInstance().loadedMusic.containsKey(args[0])) {
-			sender.sendMessage(minimessage
-					.deserialize(config.getConfigurationSection("message").getString("musicNotFound")));
+		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
+			sender.sendMessage(
+					minimessage.deserialize(config.getConfigurationSection("message").getString("musicNotFound")));
 			return true;
-		} 	
-		if (MusicPlayerPlugin.getInstance().activeMusicThread.containsKey(args[1])) {
+		}
+		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[1])) {
 			sender.sendMessage(minimessage.deserialize(
 					config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
 			return true;
 		}
 
 		new Thread(() -> {
-			controller.broadcastAudio(playerList, MusicPlayerPlugin.getInstance().loadedMusic.get(args[0]), sourceLine,
-					args[1]);
+			controller.broadcastAudio(playerList,
+					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getPCMDATA(args[0]),
+					sourceLine, args[1]);
 
 		}).run();
 		return true;
@@ -56,7 +57,7 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().loadedMusic.keySet());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
 		}
 		if (args.length == 2) {
 			return List.of("identifiant");

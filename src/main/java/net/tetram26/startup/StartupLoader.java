@@ -12,7 +12,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import javazoom.jl.decoder.JavaLayerException;
+import net.tetram26.api.IStartupLoader;
 import net.tetram26.audio.MusicLoader;
+import net.tetram26.exceptions.InvalidFileFormatException;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class StartupLoader implements IStartupLoader {
@@ -20,7 +22,7 @@ public class StartupLoader implements IStartupLoader {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void loadPCMfromJSON(String JSONpath) {
-		MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getMusicLoader();
+		MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader();
 		JSONParser jsonParser = new JSONParser();
 
 		try {
@@ -40,18 +42,18 @@ public class StartupLoader implements IStartupLoader {
 							extension = filename.substring(i + 1);
 						}
 						if (extension.equals("pcm")) {
-							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,
-									loader.loadPCMfromFile(filepath.toString()));
+							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
+									.loadMusic((String) name, loader.loadPCMfromFile(filepath.toString()));
 						} else if (extension.equals("mp3")) {
-							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,
-									loader.loadPCMfromMP3(filepath.toString()));
+							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
+									.loadMusic((String) name, loader.loadPCMfromMP3(filepath.toString()));
 						} else {
-							MusicPlayerPlugin.getInstance().loadedMusic.put((String) name,
-									loader.loadPCMfromWAV(filepath.toString()));
+							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
+									.loadMusic((String) name, loader.loadPCMfromWAV(filepath.toString()));
 						}
 						System.out.println("File :'" + name + "' loaded");
 					}
-				} catch (IOException | UnsupportedAudioFileException | JavaLayerException e) {
+				} catch (IOException | UnsupportedAudioFileException | InvalidFileFormatException e) {
 					e.printStackTrace();
 				}
 
