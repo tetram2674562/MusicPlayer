@@ -30,7 +30,7 @@ public interface IController {
 
 	/**
 	 * Play an audio on a player and everyone near him
-	 * 
+	 *
 	 * @param username   The username of the player
 	 * @param PCMdata    The PCM data of the audio
 	 * @param sourceLine the source line to play the audio on

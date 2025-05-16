@@ -32,7 +32,7 @@ public interface IMusicSender {
 
 	/**
 	 * Sends the audio samples to a player position (and stay on it)
-	 * 
+	 *
 	 * @param voiceServer Plasmo Voice Server API
 	 * @param source      The audio source to send audio.
 	 * @param samples     48kHz 16-bit mono audio samples.
@@ -75,7 +75,7 @@ public interface IMusicSender {
 
 	/**
 	 * Check if a player is having music sended to him.
-	 * 
+	 *
 	 * @param playerName The player name
 	 * @return
 	 */

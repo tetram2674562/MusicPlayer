@@ -152,17 +152,21 @@ public class MusicLoader implements IMusicLoader {
 		return pcmData;
 	}
 
+	@Override
 	public boolean loadMusic(String name, short[] PCMdata) {
 		boolean existingAlias = loadedMusic.keySet().contains(name);
-		if (!existingAlias)
+		if (!existingAlias) {
 			loadedMusic.put(name, PCMdata);
+		}
 		return !existingAlias;
 	}
 
+	@Override
 	public boolean unloadMusic(String name) {
 		boolean existingAlias = loadedMusic.keySet().contains(name);
-		if (existingAlias)
+		if (existingAlias) {
 			loadedMusic.remove(name);
+		}
 		return existingAlias;
 	}
 

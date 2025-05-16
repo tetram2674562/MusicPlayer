@@ -50,7 +50,7 @@ public interface ISourceManager {
 
 	/**
 	 * Createa set of voiceplayer for a given list of player
-	 * 
+	 *
 	 * @param playerList the list of player
 	 * @return The set of all voiceplayer
 	 */

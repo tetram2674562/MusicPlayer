@@ -39,7 +39,7 @@ public interface IMusicLoader {
 	 * @throws IOException                   If there are no such file at the give
 	 *                                       URL
 	 * @throws URISyntaxException            If an invalid URL is provided
-	 * @throws InvalidFileFormatException 
+	 * @throws InvalidFileFormatException
 	 */
 	public short[] loadPCMfromURL(String link) throws InvalidFileFormatException, IOException, URISyntaxException, InvalidFileFormatException;
 
@@ -53,7 +53,7 @@ public interface IMusicLoader {
 
 	/**
 	 * Load PCM data from an mp3 file
-	 * 
+	 *
 	 * @param path The file path
 	 * @return A short array containing the PCM data of the file
 	 * @throws IOException        If the file doesn't exist.
@@ -63,7 +63,7 @@ public interface IMusicLoader {
 
 	/**
 	 * Store PCM Data inside the memory.
-	 * 
+	 *
 	 * @param name    The alias for those pcm data
 	 * @param PCMdata The pcmdata in a short array
 	 * @return true if it was successfully stored inside the memory, false if not.
@@ -72,7 +72,7 @@ public interface IMusicLoader {
 
 	/**
 	 * Remove the PCM Data inside the memory at the given alias.
-	 * 
+	 *
 	 * @param name The alias for those pcm data
 	 * @return true if it was successfully remove from the memory, false if no music
 	 *         like that were found.

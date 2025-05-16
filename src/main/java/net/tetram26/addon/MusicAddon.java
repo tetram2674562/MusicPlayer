@@ -1,8 +1,6 @@
 package net.tetram26.addon;
 
-import net.tetram26.audio.MusicLoader;
 import net.tetram26.controller.Controller;
-import net.tetram26.models.SourceManager;
 import su.plo.voice.api.addon.AddonInitializer;
 import su.plo.voice.api.addon.InjectPlasmoVoice;
 import su.plo.voice.api.addon.annotation.Addon;

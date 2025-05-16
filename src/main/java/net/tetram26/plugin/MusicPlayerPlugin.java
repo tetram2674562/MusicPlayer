@@ -3,7 +3,6 @@ package net.tetram26.plugin;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.kyori.adventure.text.Component;
 import net.tetram26.addon.MusicAddon;
-import net.tetram26.audio.MusicSender;
+import net.tetram26.api.IMusicPlayerAPI;
 import net.tetram26.commands.BroadcastCommand;
 import net.tetram26.commands.ListCommand;
 import net.tetram26.commands.ListPlayingCommand;
@@ -30,10 +29,8 @@ import net.tetram26.commands.UnloadCommand;
 import net.tetram26.controller.Controller;
 import net.tetram26.listener.ConnectionListener;
 import net.tetram26.startup.StartupLoader;
-import net.tetram26.api.IMusicPlayerAPI;
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
-import su.plo.voice.proto.data.audio.line.SourceLine;
 
 public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
@@ -132,11 +129,13 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
 		return true;
 	}
-	
+
+	@Override
 	public Controller getController() {
 		return getAddon().getController();
 	}
-	
+
+	@Override
 	public ServerSourceLine getMusicPlayerSourceLine() {
 		return getAddon().getMusicSourceLine();
 	}

@@ -26,9 +26,9 @@ public class MusicSender implements IMusicSender {
 	private boolean isBroadcast = true;
 
 	public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList) {
-		if (listPlayers == null || voicePlayerList == null)
+		if (listPlayers == null || voicePlayerList == null) {
 			isBroadcast = false;
-		else {
+		} else {
 			this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
 			if (voicePlayerList.size() > 1) {
 				isPrivate = false;
@@ -42,6 +42,7 @@ public class MusicSender implements IMusicSender {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 	}
 
+	@Override
 	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source, short[] samples,
 			String threadName) {
 		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
@@ -62,6 +63,7 @@ public class MusicSender implements IMusicSender {
 
 	}
 
+	@Override
 	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
 			short[] samples, String threadName) {
 		this.source = source;
@@ -82,6 +84,7 @@ public class MusicSender implements IMusicSender {
 
 	}
 
+	@Override
 	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source, short[] samples,
 			String threadName, short distance) {
 		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
@@ -102,22 +105,27 @@ public class MusicSender implements IMusicSender {
 
 	}
 
+	@Override
 	public void stop() {
 		audioSender.stop();
 	}
 
+	@Override
 	public void pause() {
 		audioSender.pause();
 	}
 
+	@Override
 	public void resume() {
 		audioSender.resume();
 	}
 
+	@Override
 	public void toggleRepeat() {
 		frameProvider.setLoop(!frameProvider.getLoop());
 	}
 
+	@Override
 	public void addPlayer(String playerName) {
 		if (isBroadcast && (!listPlayers.contains(playerName) && !isPrivate)) {
 			listPlayers.add(playerName);
@@ -131,6 +139,7 @@ public class MusicSender implements IMusicSender {
 		return isBroadcast;
 	}
 
+	@Override
 	public boolean hasPlayer(String playerName) {
 		return listPlayers.contains(playerName);
 	}

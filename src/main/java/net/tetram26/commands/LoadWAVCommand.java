@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javazoom.jl.decoder.JavaLayerException;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.tetram26.audio.MusicLoader;
 import net.tetram26.exceptions.InvalidFileFormatException;

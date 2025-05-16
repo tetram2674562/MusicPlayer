@@ -11,7 +11,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javazoom.jl.decoder.JavaLayerException;
 import net.tetram26.api.IStartupLoader;
 import net.tetram26.audio.MusicLoader;
 import net.tetram26.exceptions.InvalidFileFormatException;

@@ -70,15 +70,17 @@ public class Controller implements IController {
 
 	public boolean addThread(String name, MusicSender sender) {
 		boolean existingAlias = activeMusicThread.keySet().contains(name);
-		if (!existingAlias)
+		if (!existingAlias) {
 			activeMusicThread.put(name, sender);
+		}
 		return !existingAlias;
 	}
 
 	public boolean removeThread(String name) {
 		boolean existingAlias = activeMusicThread.keySet().contains(name);
-		if (!existingAlias)
+		if (!existingAlias) {
 			activeMusicThread.remove(name);
+		}
 		return existingAlias;
 	}
 
@@ -90,10 +92,12 @@ public class Controller implements IController {
 		return activeMusicThread.keySet();
 	}
 
+	@Override
 	public MusicLoader getMusicLoader() {
 		return musicLoader;
 	}
 
+	@Override
 	public SourceManager getSourceManager() {
 		return sourceManager;
 	}
