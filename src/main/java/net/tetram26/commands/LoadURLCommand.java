@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +18,6 @@ import net.tetram26.exceptions.InvalidFileFormatException;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class LoadURLCommand implements CommandExecutor, TabCompleter {
-	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 	MiniMessage minimessage = MiniMessage.miniMessage();
 
 	// /playmus <URL> <nom>
@@ -38,17 +36,17 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 			try {
 				MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().loadMusic(args[1],
 						loader.loadPCMfromURL(args[0]));
-				sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
 						.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
 			} catch (IOException e) {
 				sender.sendMessage(minimessage.deserialize(
-						config.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+						MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
 			} catch (InvalidFileFormatException e) {
 				sender.sendMessage(minimessage
-						.deserialize(config.getConfigurationSection("message").getString("invalidFileFormat")));
+						.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("invalidFileFormat")));
 			} catch (URISyntaxException e) {
 				sender.sendMessage(
-						minimessage.deserialize(config.getConfigurationSection("message").getString("invalidURL")));
+						minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("invalidURL")));
 			}
 		}).run();
 		return true;

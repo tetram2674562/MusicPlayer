@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +18,6 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class BroadcastCommand implements CommandExecutor, TabCompleter {
 
-	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 	MiniMessage minimessage = MiniMessage.miniMessage();
 
 	// Command : /broadcastmus <name> <thread> -> broadcast to all players
@@ -35,12 +33,12 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 
 		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(
-					minimessage.deserialize(config.getConfigurationSection("message").getString("musicNotFound")));
+					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("musicNotFound")));
 			return true;
 		}
 		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[1])) {
 			sender.sendMessage(minimessage.deserialize(
-					config.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
+					MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[1])));
 			return true;
 		}
 

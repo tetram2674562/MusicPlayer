@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +17,6 @@ import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class PlayCommand implements CommandExecutor, TabCompleter {
-	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 	MiniMessage minimessage = MiniMessage.miniMessage();
 
 	// Commande : /playmus <filename> <username> <processus>
@@ -32,17 +30,17 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 		}
 		String threadname = args[0] + args[1];
 		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(threadname)) {
-			sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
 					.getString("alreadyUsedThread").replace("%s", threadname)));
 			return true;
 		}
 		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(minimessage.deserialize(
-					config.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
+					MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
 			return true;
 		}
 		// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-		sender.sendMessage(minimessage.deserialize(config.getConfigurationSection("message")
+		sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
 				.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", args[2])));
 		new Thread(() -> {
 			controller.playAudio(args[1],

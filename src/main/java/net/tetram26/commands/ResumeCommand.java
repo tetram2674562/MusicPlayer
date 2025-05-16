@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +14,6 @@ import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class ResumeCommand implements CommandExecutor, TabCompleter {
 
-	FileConfiguration config = MusicPlayerPlugin.getInstance().getConfig();
 	MiniMessage minimessage = MiniMessage.miniMessage();
 
 	@Override
@@ -26,7 +24,7 @@ public class ResumeCommand implements CommandExecutor, TabCompleter {
 		}
 		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[0])) {
 			sender.sendMessage(
-					minimessage.deserialize(config.getConfigurationSection("message").getString("threadNotFound")));
+					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("threadNotFound")));
 			return true;
 		}
 		MusicPlayerPlugin.getInstance().getAddon().getController().getThread(args[0]).resume();
