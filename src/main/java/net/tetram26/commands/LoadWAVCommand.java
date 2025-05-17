@@ -77,7 +77,7 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
 			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
-					.toList();
+					.filter(a -> a.startsWith(args[0])).toList();
 		}
 
 		if (args.length == 2) {

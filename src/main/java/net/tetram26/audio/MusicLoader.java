@@ -172,10 +172,12 @@ public class MusicLoader implements IMusicLoader {
 		return existingAlias;
 	}
 
+	@Override
 	public Set<String> getAlias() {
 		return loadedMusic.keySet();
 	}
 
+	@Override
 	public short[] getPCMDATA(String alias) {
 		return loadedMusic.get(alias);
 	}

@@ -2,7 +2,11 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package net.tetram26.plugin;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -96,7 +100,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		// Init configfiles
 
 		saveDefaultConfig();
-
+		
 		// Creation of the directory
 		// this.getDataFolder().mkdir(); folder automatiquely created with
 		// savedefaultconfig
@@ -124,9 +128,12 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		return getPlugin(MusicPlayerPlugin.class);
 	}
 
+	
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
+		saveDefaultConfig();
 		reloadConfig();
 		sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
 		return true;
@@ -141,5 +148,11 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 	public ServerSourceLine getMusicPlayerSourceLine() {
 		return getAddon().getMusicSourceLine();
 	}
+
+	public InputStream getLanguageIS() {
+		return this.getClassLoader().getResourceAsStream("language.toml");
+	}
+
+	
 
 }

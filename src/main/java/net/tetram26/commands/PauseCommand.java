@@ -37,7 +37,8 @@ public class PauseCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName().stream()
+					.filter(a -> a.startsWith(args[0])).toList());
 		}
 
 		return List.of();

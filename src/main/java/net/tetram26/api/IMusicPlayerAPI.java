@@ -14,7 +14,7 @@ public interface IMusicPlayerAPI {
 
 	/**
 	 * Get the source line from music player
-	 * 
+	 *
 	 * @return The music player dedicated server source line.
 	 */
 	public ServerSourceLine getMusicPlayerSourceLine();

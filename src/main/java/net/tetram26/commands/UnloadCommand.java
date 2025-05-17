@@ -38,7 +38,11 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
+		if (args.length == 1) {
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().stream()
+					.filter(a -> a.startsWith(args[0])).toList());
+		}
+		return List.of();
 	}
 
 }

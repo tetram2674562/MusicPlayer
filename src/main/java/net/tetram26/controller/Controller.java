@@ -78,18 +78,21 @@ public class Controller implements IController {
 		return !existingAlias;
 	}
 
+	@Override
 	public boolean removeThread(String name) {
 		boolean existingAlias = activeMusicThread.keySet().contains(name);
-		if (!existingAlias) {
+		if (existingAlias) {
 			activeMusicThread.remove(name);
 		}
 		return existingAlias;
 	}
 
+	@Override
 	public MusicSender getThread(String name) {
 		return activeMusicThread.get(name);
 	}
 
+	@Override
 	public Set<String> getThreadsName() {
 		return activeMusicThread.keySet();
 	}

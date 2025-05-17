@@ -60,7 +60,7 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
 			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
-					.toList();
+					.filter(a -> a.startsWith(args[0])).toList();
 		}
 
 		if (args.length == 2) {

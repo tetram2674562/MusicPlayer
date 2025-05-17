@@ -2,6 +2,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package net.tetram26.models;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Set;
 
 import net.tetram26.addon.MusicAddon;
 import net.tetram26.api.ISourceManager;
+import net.tetram26.languageHandler.LanguageHandler;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
@@ -16,17 +20,30 @@ import su.plo.voice.api.server.audio.source.ServerDirectSource;
 import su.plo.voice.api.server.audio.source.ServerPlayerSource;
 import su.plo.voice.api.server.player.VoicePlayer;
 import su.plo.voice.api.server.player.VoiceServerPlayer;
+import su.plo.voice.api.server.resource.ResourceLoader;
 
 public class SourceManager implements ISourceManager {
+	
+	LanguageHandler LH = new LanguageHandler(MusicPlayerPlugin.getInstance().getLanguageIS());
+	private final ResourceLoader loader = new ResourceLoader() {
+
+		@Override
+		public InputStream load(String arg0) throws IOException {
+			return new FileInputStream(LH.getLanguageFile());
+		}
+	};
 
 	@Override
 	public ServerSourceLine createSourceLine(String name, MusicAddon addon) {
+
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getSourceLineManager()
 				.createBuilder(addon, name, // name
 						"pv.activation." + name, // translation key
 						"plasmovoice:textures/icons/speaker_priority.png", // icon resource location
 						10 // weight
 				).build();
+		MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getLanguages().register(loader,
+				MusicPlayerPlugin.getInstance().getDataFolder());
 		return sourceLine;
 
 	}

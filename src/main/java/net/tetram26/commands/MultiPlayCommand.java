@@ -30,7 +30,8 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
 		if (args.length == 1) {
 			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
 		}
-		return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+		return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName)
+				.filter(a -> a.startsWith(args[args.length - 1])).toList();
 
 	}
 

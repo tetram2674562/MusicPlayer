@@ -60,21 +60,21 @@ public interface IController {
 
 	/**
 	 * Get a set a all threads name
-	 * 
+	 *
 	 * @return All active threads names
 	 */
 	public Set<String> getThreadsName();
 
 	/**
 	 * Get the music sender that is running in the thread.
-	 * 
+	 *
 	 * @param string The thread name
 	 * @return The Music Sender that is ran inside the equivalent thread
 	 */
 	public MusicSender getThread(@NotNull String string);
 
 	/**
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */

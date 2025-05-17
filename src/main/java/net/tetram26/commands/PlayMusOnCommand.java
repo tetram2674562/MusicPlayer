@@ -26,10 +26,12 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().stream()
+					.filter(a -> a.startsWith(args[0])).toList());
 		}
 		if (args.length == 2) {
-			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName)
+					.filter(a -> a.startsWith(args[1])).toList();
 		}
 		if (args.length == 3) {
 			return List.of("identifiant");

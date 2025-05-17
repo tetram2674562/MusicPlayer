@@ -39,7 +39,8 @@ public class StopCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName().stream()
+					.filter(a -> a.startsWith(args[0])).toList());
 		}
 
 		return List.of();
