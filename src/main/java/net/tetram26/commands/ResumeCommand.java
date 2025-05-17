@@ -24,12 +24,12 @@ public class ResumeCommand implements CommandExecutor, TabCompleter {
 		if (args.length != 1) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[0])) {
-			sender.sendMessage(
-					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("threadNotFound")));
+		if (!MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[0])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("threadNotFound")));
 			return true;
 		}
-		MusicPlayerPlugin.getInstance().getAddon().getController().getThread(args[0]).resume();
+		MusicPlayerPlugin.getInstance().getController().getThread(args[0]).resume();
 		return true;
 	}
 
@@ -37,7 +37,7 @@ public class ResumeCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName());
 		}
 
 		return List.of();

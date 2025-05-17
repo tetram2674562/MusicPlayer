@@ -22,23 +22,23 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
 		if (args.length != 1) {
-			sender.sendMessage(
-					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("invalidArgument")));
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("invalidArgument")));
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[0])) {
 			return false;
 		}
-		MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().unloadMusic(args[0]);
-		sender.sendMessage(minimessage.deserialize(
-				MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("unloadedFile").replace("%s", args[0])));
+		MusicPlayerPlugin.getInstance().getController().getMusicLoader().unloadMusic(args[0]);
+		sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+				.getConfigurationSection("message").getString("unloadedFile").replace("%s", args[0])));
 		return true;
 	}
 
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
+		return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
 	}
 
 }

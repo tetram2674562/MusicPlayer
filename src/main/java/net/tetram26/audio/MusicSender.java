@@ -60,7 +60,7 @@ public class MusicSender implements IMusicSender {
 
 			source.remove();
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
+			MusicPlayerPlugin.getInstance().getController().removeThread(threadName);
 		});
 
 	}
@@ -81,7 +81,7 @@ public class MusicSender implements IMusicSender {
 			source.remove();
 			frameProvider = null;
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
+			MusicPlayerPlugin.getInstance().getController().removeThread(threadName);
 		});
 
 	}
@@ -102,7 +102,7 @@ public class MusicSender implements IMusicSender {
 			frameProvider = null;
 			audioSender = null;
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
-			MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(threadName);
+			MusicPlayerPlugin.getInstance().getController().removeThread(threadName);
 		});
 
 	}

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.kyori.adventure.text.Component;
 import net.tetram26.addon.MusicAddon;
+import net.tetram26.api.IController;
 import net.tetram26.api.IMusicPlayerAPI;
 import net.tetram26.commands.BroadcastCommand;
 import net.tetram26.commands.ListCommand;
@@ -28,7 +29,6 @@ import net.tetram26.commands.RepeatCommand;
 import net.tetram26.commands.ResumeCommand;
 import net.tetram26.commands.StopCommand;
 import net.tetram26.commands.UnloadCommand;
-import net.tetram26.controller.Controller;
 import net.tetram26.listener.ConnectionListener;
 import net.tetram26.startup.StartupLoader;
 import su.plo.voice.api.server.PlasmoVoiceServer;
@@ -133,7 +133,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 	}
 
 	@Override
-	public Controller getController() {
+	public IController getController() {
 		return getAddon().getController();
 	}
 
@@ -141,4 +141,5 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 	public ServerSourceLine getMusicPlayerSourceLine() {
 		return getAddon().getMusicSourceLine();
 	}
+
 }

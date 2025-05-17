@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.tetram26.audio.MusicLoader;
+import net.tetram26.api.IMusicLoader;
 import net.tetram26.exceptions.InvalidFileFormatException;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
@@ -28,13 +28,13 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		MusicLoader loader = MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader();
+		IMusicLoader loader = MusicPlayerPlugin.getInstance().getController().getMusicLoader();
 		if (args.length != 2) {
 			return false;
 		}
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[1])) {
-			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-					.getString("musicNameAlreadyInUse").replace("%s", args[1])));
+		if (MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[1])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("musicNameAlreadyInUse").replace("%s", args[1])));
 			return true;
 		}
 		new Thread(() -> {
@@ -48,23 +48,24 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 					extension = args[0].substring(i + 1);
 				}
 				if (extension.equals("pcm")) {
-					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().loadMusic(args[1],
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 							loader.loadPCMfromFile(filepath));
 				} else if (extension.equals("mp3")) {
-					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().loadMusic(args[1],
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 							loader.loadPCMfromMP3(filepath));
 				} else {
-					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().loadMusic(args[1],
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 							loader.loadPCMfromWAV(filepath));
 				}
-				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-						.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
-			} catch (IOException e) {
-				sender.sendMessage(minimessage.deserialize(
-						MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
-			} catch (UnsupportedAudioFileException | InvalidFileFormatException e) {
 				sender.sendMessage(minimessage
-						.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("invalidFileFormat")));
+						.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
+								.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+			} catch (IOException e) {
+				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+						.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+			} catch (UnsupportedAudioFileException | InvalidFileFormatException e) {
+				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+						.getConfigurationSection("message").getString("invalidFileFormat")));
 				e.printStackTrace();
 			}
 		}).run();

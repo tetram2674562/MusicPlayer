@@ -75,17 +75,17 @@ public class MusicLoader implements IMusicLoader {
 		short[] pcmData = null;
 		URI uri = new URI(link);
 		try {
-		AudioInputStream audioIS = AudioSystem.getAudioInputStream(uri.toURL());
-		audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, audioIS);
-		ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
-		int bytesRead;
-		byte[] PCM = new byte[2];
-		while ((bytesRead = audioIS.read(PCM)) != -1) {
-			decodedPCM.write(PCM, 0, bytesRead);
-		}
-		pcmData = byteToShort(decodedPCM.toByteArray());
-		audioIS.close();
-		decodedPCM.close();
+			AudioInputStream audioIS = AudioSystem.getAudioInputStream(uri.toURL());
+			audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, audioIS);
+			ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
+			int bytesRead;
+			byte[] PCM = new byte[2];
+			while ((bytesRead = audioIS.read(PCM)) != -1) {
+				decodedPCM.write(PCM, 0, bytesRead);
+			}
+			pcmData = byteToShort(decodedPCM.toByteArray());
+			audioIS.close();
+			decodedPCM.close();
 		} catch (UnsupportedAudioFileException e) {
 			throw new InvalidFileFormatException();
 		}
@@ -109,46 +109,46 @@ public class MusicLoader implements IMusicLoader {
 
 		short[] pcmData = null;
 		try {
-		InputStream inputStream = new FileInputStream(path);
-		Bitstream bitstream = new Bitstream(inputStream);
-		Decoder decoder = new Decoder();
+			InputStream inputStream = new FileInputStream(path);
+			Bitstream bitstream = new Bitstream(inputStream);
+			Decoder decoder = new Decoder();
 
-		ByteArrayOutputStream pcmOutputStream = new ByteArrayOutputStream();
+			ByteArrayOutputStream pcmOutputStream = new ByteArrayOutputStream();
 
-		Header frameHeader;
-		while ((frameHeader = bitstream.readFrame()) != null) {
-			SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
+			Header frameHeader;
+			while ((frameHeader = bitstream.readFrame()) != null) {
+				SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
 
-			short[] pcm = output.getBuffer();
-			for (short sample : pcm) {
-				pcmOutputStream.write(sample & 0xff);
-				pcmOutputStream.write((sample >> 8) & 0xff);
+				short[] pcm = output.getBuffer();
+				for (short sample : pcm) {
+					pcmOutputStream.write(sample & 0xff);
+					pcmOutputStream.write((sample >> 8) & 0xff);
+				}
+
+				bitstream.closeFrame();
+			}
+			// Convert 44110 Khz pcm data to 48 Khz data (hell nah)
+			byte[] pcm44110 = pcmOutputStream.toByteArray();
+			pcmOutputStream = null;
+			inputStream.close();
+			ByteArrayInputStream bis = new ByteArrayInputStream(pcm44110);
+
+			AudioInputStream ais = new AudioInputStream(bis, mp3Format, pcm44110.length / mp3Format.getFrameSize());
+			AudioInputStream audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, ais);
+
+			ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
+			int bytesRead;
+			byte[] PCM = new byte[2];
+			while ((bytesRead = audioIS.read(PCM)) != -1) {
+				decodedPCM.write(PCM, 0, bytesRead);
 			}
 
-			bitstream.closeFrame();
-		}
-		// Convert 44110 Khz pcm data to 48 Khz data (hell nah)
-		byte[] pcm44110 = pcmOutputStream.toByteArray();
-		pcmOutputStream = null;
-		inputStream.close();
-		ByteArrayInputStream bis = new ByteArrayInputStream(pcm44110);
-
-		AudioInputStream ais = new AudioInputStream(bis, mp3Format, pcm44110.length / mp3Format.getFrameSize());
-		AudioInputStream audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, ais);
-
-		ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
-		int bytesRead;
-		byte[] PCM = new byte[2];
-		while ((bytesRead = audioIS.read(PCM)) != -1) {
-			decodedPCM.write(PCM, 0, bytesRead);
-		}
-
-		pcmData = byteToShort(decodedPCM.toByteArray());
-		pcm44110 = null;
-		// In case of implosion I put you to trash.
-		ais.close();
-		audioIS.close();}
-		catch (JavaLayerException e) {
+			pcmData = byteToShort(decodedPCM.toByteArray());
+			pcm44110 = null;
+			// In case of implosion I put you to trash.
+			ais.close();
+			audioIS.close();
+		} catch (JavaLayerException e) {
 			throw new InvalidFileFormatException();
 		}
 		return pcmData;

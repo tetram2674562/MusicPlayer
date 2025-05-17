@@ -21,12 +21,10 @@ public class MusicPlayerCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		MiniMessage mm = MiniMessage.miniMessage();
 		int size = 0;
-		for (String aliasMusic : MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
-				.getAlias()) {
+		for (String aliasMusic : MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias()) {
 			// Since this is short It's 2 byte per short.
 
-			size += MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
-					.getPCMDATA(aliasMusic).length * 2;
+			size += MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(aliasMusic).length * 2;
 		}
 		sender.sendMessage(mm.deserialize(
 				"Plugin by <red>tetram26</red> with the help of <blue>ht06</blue>\nMemory used by currently loaded music : <red>"

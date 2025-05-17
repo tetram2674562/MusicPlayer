@@ -23,12 +23,12 @@ public class PauseCommand implements CommandExecutor, TabCompleter {
 		if (args.length != 1) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[0])) {
-			sender.sendMessage(
-					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("threadNotFound")));
+		if (!MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[0])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("threadNotFound")));
 			return true;
 		}
-		MusicPlayerPlugin.getInstance().getAddon().getController().getThread(args[0]).pause();
+		MusicPlayerPlugin.getInstance().getController().getThread(args[0]).pause();
 		return true;
 	}
 
@@ -37,7 +37,7 @@ public class PauseCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName());
 		}
 
 		return List.of();

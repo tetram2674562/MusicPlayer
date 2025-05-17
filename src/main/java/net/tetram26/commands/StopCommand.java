@@ -24,13 +24,13 @@ public class StopCommand implements CommandExecutor, TabCompleter {
 		if (args.length != 1) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[0])) {
-			sender.sendMessage(
-					minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("threadNotFound")));
+		if (!MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[0])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("threadNotFound")));
 			return true;
 		}
-		MusicPlayerPlugin.getInstance().getAddon().getController().getThread(args[0]).stop();
-		MusicPlayerPlugin.getInstance().getAddon().getController().removeThread(args[0]);
+		MusicPlayerPlugin.getInstance().getController().getThread(args[0]).stop();
+		MusicPlayerPlugin.getInstance().getController().removeThread(args[0]);
 
 		return true;
 	}
@@ -39,7 +39,7 @@ public class StopCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getThreadsName());
 		}
 
 		return List.of();

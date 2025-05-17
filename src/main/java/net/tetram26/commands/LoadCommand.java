@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.tetram26.audio.MusicLoader;
+import net.tetram26.api.IMusicLoader;
 import net.tetram26.plugin.MusicPlayerPlugin;
 
 /*
@@ -28,26 +28,27 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		MusicLoader musicLoader = MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader();
+		IMusicLoader musicLoader = MusicPlayerPlugin.getInstance().getController().getMusicLoader();
 		// TODO Auto-generated method stub
 		if (args.length != 2) {
 			return false;
 		}
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[1])) {
-			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-					.getString("musicNameAlreadyInUse").replace("%s", args[1])));
+		if (MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[1])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("musicNameAlreadyInUse").replace("%s", args[1])));
 			return true;
 		}
 		new Thread(() -> {
 			try {
 				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
-				MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().loadMusic(args[1],
+				MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 						musicLoader.loadPCMfromFile(filepath));
-				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-						.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+				sender.sendMessage(minimessage
+						.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
+								.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
 			} catch (IOException e) {
-				sender.sendMessage(minimessage.deserialize(
-						MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+				sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+						.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
 			}
 		}).run();
 		return true;

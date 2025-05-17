@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.tetram26.controller.Controller;
+import net.tetram26.api.IController;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
@@ -26,7 +26,7 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
 		}
 		if (args.length == 2) {
 			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
@@ -44,18 +44,18 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
+		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
 		if (args.length != 4) {
 			return false;
 		}
 
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[2])) {
+		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[2])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
 					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
 			return true;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
 					.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
 			return true;
@@ -67,7 +67,7 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 		new Thread(() -> {
 			try {
 				controller.playAudioOn(args[1],
-						MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getPCMDATA(args[0]),
+						MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
 						sourceLine, args[2], Integer.valueOf(args[3]));
 			} catch (NumberFormatException e) {
 				sender.sendMessage(minimessage.deserialize("<red>Please give a valid distance number"));

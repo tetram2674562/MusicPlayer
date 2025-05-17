@@ -24,8 +24,8 @@ public final class MusicAddon implements AddonInitializer {
 	@Override
 	public void onAddonInitialize() {
 		// voiceServer is initialized now
-		music = controller.getSourceManager().createSourceLine("music", this);
 		controller = new Controller();
+		music = controller.getSourceManager().createSourceLine("music", this);
 
 	}
 

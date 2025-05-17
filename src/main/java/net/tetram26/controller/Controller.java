@@ -34,8 +34,8 @@ public class Controller implements IController {
 						.getPlayerByName(username).orElseThrow(() -> new IllegalStateException("Player not found")));
 
 		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList);
-		ServerBroadcastSource musicSource = MusicPlayerPlugin.getInstance().getAddon().getController()
-				.getSourceManager().createBroadcastSource(sourceLine, voicePlayerList, threadName);
+		ServerBroadcastSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+				.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 		musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
 				musicSource, PCMdata, threadName);
 		activeMusicThread.put(threadName, musicSender);
@@ -46,7 +46,7 @@ public class Controller implements IController {
 			int distance) {
 
 		MusicSender musicSender = new MusicSender(List.of(username), null);
-		ServerPlayerSource musicSource = MusicPlayerPlugin.getInstance().getAddon().getController().getSourceManager()
+		ServerPlayerSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createPlayerSource(sourceLine, username);
 		musicSender.sendPacketsToPlayerSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
 				PCMdata, threadName, (short) distance);
@@ -57,11 +57,11 @@ public class Controller implements IController {
 	public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
 			String threadName) {
 		if (playerList.size() != 0) {
-			Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getAddon().getController()
-					.getSourceManager().createPlayerVoiceSet(playerList);
+			Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+					.createPlayerVoiceSet(playerList);
 			MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
-			ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getAddon().getController()
-					.getSourceManager().createBroadcastSource(sourceLine, voicePlayerList, threadName);
+			ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+					.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 			musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
 					broadcastSource, PCMdata, threadName);
 			activeMusicThread.put(threadName, musicSender);

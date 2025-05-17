@@ -3,9 +3,11 @@
 package net.tetram26.api;
 
 import java.util.List;
+import java.util.Set;
 
-import net.tetram26.audio.MusicLoader;
-import net.tetram26.models.SourceManager;
+import org.jetbrains.annotations.NotNull;
+
+import net.tetram26.audio.MusicSender;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public interface IController {
@@ -47,13 +49,35 @@ public interface IController {
 	 *
 	 * @return The source manager
 	 */
-	public SourceManager getSourceManager();
+	public ISourceManager getSourceManager();
 
 	/**
 	 * Get the music loader
 	 *
 	 * @return The music loader
 	 */
-	public MusicLoader getMusicLoader();
+	public IMusicLoader getMusicLoader();
+
+	/**
+	 * Get a set a all threads name
+	 * 
+	 * @return All active threads names
+	 */
+	public Set<String> getThreadsName();
+
+	/**
+	 * Get the music sender that is running in the thread.
+	 * 
+	 * @param string The thread name
+	 * @return The Music Sender that is ran inside the equivalent thread
+	 */
+	public MusicSender getThread(@NotNull String string);
+
+	/**
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public boolean removeThread(@NotNull String string);
 
 }

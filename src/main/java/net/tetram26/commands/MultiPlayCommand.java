@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.tetram26.controller.Controller;
+import net.tetram26.api.IController;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
@@ -28,7 +28,7 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 
 		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias());
+			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias());
 		}
 		return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
 
@@ -40,17 +40,17 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
 		if (args.length < 3) {
 			return false;
 		}
-		if (!MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().contains(args[0])) {
+		if (!MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
 					.getConfigurationSection("message").getString("musicNotFound")));
 			return true;
 		}
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().contains(args[2])) {
+		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[2])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
 					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
 			return true;
 		}
-		Controller controller = MusicPlayerPlugin.getInstance().getAddon().getController();
+		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
 		int i = 1;
 		List<String> players = new ArrayList<>();
@@ -65,8 +65,8 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
 				playersMusic = playersMusic + name;
 			}
 			controller.broadcastAudio(players,
-					MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getPCMDATA(args[0]),
-					sourceLine, playersMusic);
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
+					playersMusic);
 		}).run();
 		return true;
 	}

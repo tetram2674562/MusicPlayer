@@ -83,16 +83,10 @@
             <artifactId>jlayer</artifactId>
             <version>1.0.1</version>
         </dependency>
-		<dependency>
-		    <groupId>net.Indyuce</groupId>
-		    <artifactId>MMOCore-API</artifactId>
-		    <version>1.12.1-SNAPSHOT</version>
-		    <scope>provided</scope>
-		</dependency>
         <dependency>
             <groupId>su.plo.voice.api</groupId>
             <artifactId>server</artifactId>
-            <version>2.1.2</version>
+            <version>2.1.4</version>
             <scope>provided</scope>
         </dependency>
 		<dependency>

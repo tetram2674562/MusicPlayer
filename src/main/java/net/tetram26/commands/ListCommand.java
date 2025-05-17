@@ -17,14 +17,15 @@ public class ListCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias().size() != 0) {
-			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getString("message.listOfLoadedFile")));
-			for (String each : MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader().getAlias()) {
+		if (MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().size() != 0) {
+			sender.sendMessage(miniMessage
+					.deserialize(MusicPlayerPlugin.getInstance().getConfig().getString("message.listOfLoadedFile")));
+			for (String each : MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias()) {
 				sender.sendMessage(Component.text(each));
 			}
 		} else {
-			sender.sendMessage(
-					miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("noFileLoaded")));
+			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("noFileLoaded")));
 		}
 		return true;
 	}

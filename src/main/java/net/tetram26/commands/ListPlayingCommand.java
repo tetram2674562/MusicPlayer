@@ -18,15 +18,16 @@ public class ListPlayingCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		if (MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName().size() != 0) {
+		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().size() != 0) {
 
-			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getString("message.listCurrentlyPlayingMusic")));
-			for (String each : MusicPlayerPlugin.getInstance().getAddon().getController().getThreadsName()) {
+			sender.sendMessage(miniMessage.deserialize(
+					MusicPlayerPlugin.getInstance().getConfig().getString("message.listCurrentlyPlayingMusic")));
+			for (String each : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
 				sender.sendMessage(Component.text(each));
 			}
 		} else {
-			sender.sendMessage(miniMessage
-					.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
+			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
 		}
 		return true;
 	}

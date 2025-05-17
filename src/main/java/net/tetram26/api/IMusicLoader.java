@@ -4,8 +4,11 @@ package net.tetram26.api;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Set;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.jetbrains.annotations.NotNull;
 
 import javazoom.jl.decoder.JavaLayerException;
 import net.tetram26.exceptions.InvalidFileFormatException;
@@ -43,7 +46,8 @@ public interface IMusicLoader {
 	 * @throws URISyntaxException            If an invalid URL is provided
 	 * @throws InvalidFileFormatException
 	 */
-	public short[] loadPCMfromURL(String link) throws InvalidFileFormatException, IOException, URISyntaxException, InvalidFileFormatException;
+	public short[] loadPCMfromURL(String link)
+			throws InvalidFileFormatException, IOException, URISyntaxException, InvalidFileFormatException;
 
 	/**
 	 * Convert a byte array into a short array
@@ -80,4 +84,8 @@ public interface IMusicLoader {
 	 *         like that were found.
 	 */
 	public boolean unloadMusic(String name);
+
+	public Set<String> getAlias();
+
+	public short[] getPCMDATA(@NotNull String string);
 }
