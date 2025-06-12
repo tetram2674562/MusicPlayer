@@ -31,7 +31,7 @@ import net.tetram26.api.IMusicLoader;
 import net.tetram26.exceptions.InvalidFileFormatException;
 
 public class MusicLoader implements IMusicLoader {
-	private final static AudioFormat plasmoVoiceFormat = new AudioFormat(Encoding.PCM_SIGNED, 48000, 16, 1, 2, 48000,
+	private final static AudioFormat plasmoVoiceFormat = new AudioFormat(Encoding.PCM_SIGNED, 48000, 16, 2, 4, 48000,
 			false);
 	private final static AudioFormat mp3Format = new AudioFormat(44100, 16, 2, true, false);
 
@@ -46,7 +46,7 @@ public class MusicLoader implements IMusicLoader {
 		audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, audioIS);
 		ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
 		int bytesRead;
-		byte[] PCM = new byte[2];
+		byte[] PCM = new byte[4096];
 		while ((bytesRead = audioIS.read(PCM)) != -1) {
 			decodedPCM.write(PCM, 0, bytesRead);
 		}
@@ -133,14 +133,14 @@ public class MusicLoader implements IMusicLoader {
 			inputStream.close();
 			ByteArrayInputStream bis = new ByteArrayInputStream(pcm44110);
 
-			AudioInputStream ais = new AudioInputStream(bis, mp3Format, pcm44110.length / mp3Format.getFrameSize());
+			AudioInputStream ais = new AudioInputStream(bis, mp3Format, AudioSystem.NOT_SPECIFIED);
 			AudioInputStream audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, ais);
 
 			ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
 			int bytesRead;
-			byte[] PCM = new byte[2];
-			while ((bytesRead = audioIS.read(PCM)) != -1) {
-				decodedPCM.write(PCM, 0, bytesRead);
+			byte[] buffer = new byte[4096];
+			while ((bytesRead = audioIS.read(buffer)) != -1) {
+				decodedPCM.write(buffer, 0, bytesRead);
 			}
 
 			pcmData = byteToShort(decodedPCM.toByteArray());
@@ -180,5 +180,15 @@ public class MusicLoader implements IMusicLoader {
 	@Override
 	public short[] getPCMDATA(String alias) {
 		return loadedMusic.get(alias);
+	}
+
+	public short[] stereo2mono(short[] stereoPCM) {
+		short[] monoPCM = new short[stereoPCM.length / 2];
+		for (int i = 0, j = 0; i < stereoPCM.length; i += 2, j++) {
+			int left = stereoPCM[i];
+			int right = stereoPCM[i + 1];
+			monoPCM[j] = (short) ((left + right) / 2);
+		}
+		return monoPCM;
 	}
 }

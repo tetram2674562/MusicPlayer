@@ -34,9 +34,6 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 					.filter(a -> a.startsWith(args[1])).toList();
 		}
 		if (args.length == 3) {
-			return List.of("identifiant");
-		}
-		if (args.length == 4) {
 			return List.of("distance");
 		}
 
@@ -48,13 +45,13 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		if (args.length != 4) {
+		if (args.length != 3) {
 			return false;
 		}
-
-		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(args[2])) {
+		String threadname = args[0] + "_" + args[1] + "_playerAround";
+		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(threadname)) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", args[2])));
+					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", threadname)));
 			return true;
 		}
 		if (!MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[0])) {
@@ -65,12 +62,12 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 		// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
 		sender.sendMessage(
 				minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-						.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", args[2])));
+						.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", threadname)));
 		new Thread(() -> {
 			try {
 				controller.playAudioOn(args[1],
-						MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
-						sourceLine, args[2], Integer.valueOf(args[3]));
+						() -> MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
+						sourceLine, threadname, Integer.valueOf(args[2]));
 			} catch (NumberFormatException e) {
 				sender.sendMessage(minimessage.deserialize("<red>Please give a valid distance number"));
 			}

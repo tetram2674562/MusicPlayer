@@ -9,7 +9,7 @@ depend:
 commands:
   playmus:
     description: "Joue une musique chargé sur un joueur"
-    usage: "/playmus  <nom de l'audio> <pseudonyme> <identifiant>"
+    usage: "/playmus  <nom de l'audio> <pseudonyme>"
     permission: musicplayer.playmus
     permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
   loadmus:
@@ -29,7 +29,7 @@ commands:
     permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
   broadcastmus:
     description: "Joue une musique chargé pour tout les joueurs"
-    usage: "/broadcastmus <musique> <identifiant>"
+    usage: "/broadcastmus <musique>"
     permission: musicplayer.broadcastmus
     permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
   pausemus:
@@ -71,11 +71,11 @@ commands:
   musicplayer:
     permission: musicplayer.musicplayer
   
-  playmuson:
-    description: "Joue une musique chargé à la position d'un joueur"
-    usage: "/playmuson <nom de l'audio> <pseudonyme> <identifiant> <distance>"
-    permission: musicplayer.playmuson
-    permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+  #playmuson:
+  #  description: "Joue une musique chargé à la position d'un joueur"
+  #  usage: "/playmuson <nom de l'audio> <pseudonyme> <distance>"
+  #  permission: musicplayer.playmuson
+  #  permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
   multiplaymus:
     description: "Permet de jouer une musique à un groupe de joueur"
     permission: musicplayer.multiplaymus

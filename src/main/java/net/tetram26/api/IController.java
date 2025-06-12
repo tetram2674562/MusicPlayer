@@ -4,6 +4,7 @@ package net.tetram26.api;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,7 @@ public interface IController {
 	 * @param sourceLine the source line to play the audio on
 	 * @param threadName the name of the thread
 	 */
-	public void playAudio(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName);
+	public void playAudio(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName);
 
 	/**
 	 * Play an audio on a given group of player
@@ -29,7 +30,7 @@ public interface IController {
 	 * @param sourceLine the source line to play the audio on
 	 * @param threadName the name of the thread
 	 */
-	public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
+	public void broadcastAudio(List<String> playerList, Supplier<short[]> PCMdata, ServerSourceLine sourceLine,
 			String threadName);
 
 	/**
@@ -41,7 +42,7 @@ public interface IController {
 	 * @param threadName the name of the thread
 	 * @param distance   the distance you want people to hear it
 	 */
-	public void playAudioOn(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName,
+	public void playAudioOn(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
 			int distance);
 
 	/**

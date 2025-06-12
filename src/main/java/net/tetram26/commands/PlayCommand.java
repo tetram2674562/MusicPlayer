@@ -47,8 +47,8 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 						.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", threadname)));
 		new Thread(() -> {
 			controller.playAudio(args[1],
-					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
-					threadname);
+					() -> MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
+					sourceLine, threadname);
 		}).run();
 		return true;
 	}

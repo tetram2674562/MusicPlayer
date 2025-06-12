@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package net.tetram26.api;
 
+import java.util.function.Supplier;
+
 import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
@@ -17,8 +19,8 @@ public interface IMusicSender {
 	 * @param samples     48kHz 16-bit mono audio samples.
 	 * @param threadName  the name of the thread
 	 */
-	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source, short[] samples,
-			String threadName);
+	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+			Supplier<short[]> samples, String threadName);
 
 	/**
 	 * Sends the audio samples to everyone.
@@ -30,7 +32,7 @@ public interface IMusicSender {
 	 * @param threadName  the name of the thread
 	 */
 	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
-			short[] samples, String threadName);
+			Supplier<short[]> samples, String threadName);
 
 	/**
 	 * Sends the audio samples to a player position (and stay on it)
@@ -41,8 +43,8 @@ public interface IMusicSender {
 	 * @param threadName  the name of the thread
 	 * @param distance    the distance
 	 */
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source, short[] samples,
-			String threadName, short distance);
+	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+			Supplier<short[]> samples, String threadName, short distance);
 
 	/**
 	 * Stop the music sender

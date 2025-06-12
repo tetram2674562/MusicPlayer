@@ -13,18 +13,20 @@ import net.tetram26.plugin.MusicPlayerPlugin;
 
 public class ConnectionListener implements Listener {
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent event) {
 		for (String thread : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
 			MusicPlayerPlugin.getInstance().getController().getThread(thread).addPlayer(event.getPlayer().getName());
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onLeave(PlayerQuitEvent e) {
 		for (String thread : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
+
 			MusicSender musicThread = MusicPlayerPlugin.getInstance().getController().getThread(thread);
 			if (musicThread.hasPlayer(e.getPlayer().getName()) && !musicThread.isBroadcast()) {
+
 				musicThread.stop();
 				MusicPlayerPlugin.getInstance().getController().removeThread(thread);
 			}

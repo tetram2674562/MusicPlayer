@@ -2,11 +2,8 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package net.tetram26.plugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -41,8 +38,8 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 	private MusicAddon addon = new MusicAddon();
-	public Path configPath = null;
-	public Path musicPath = null;
+	private Path configPath = null;
+	private Path musicPath = null;
 	private StartupLoader startupLoader = new StartupLoader();
 
 	@Override
@@ -93,24 +90,24 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		getCommand("musicplayer").setTabCompleter(new MusicPlayerCommand());
 		getCommand("multiplaymus").setExecutor(new MultiPlayCommand());
 		getCommand("multiplaymus").setTabCompleter(new MultiPlayCommand());
-		getCommand("playmuson").setExecutor(new PlayMusOnCommand());
-		getCommand("playmuson").setTabCompleter(new PlayMusOnCommand());
+		//getCommand("playmuson").setExecutor(new PlayMusOnCommand());
+		//getCommand("playmuson").setTabCompleter(new PlayMusOnCommand());
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
 		// Init configfiles
 
 		saveDefaultConfig();
-		
+
 		// Creation of the directory
 		// this.getDataFolder().mkdir(); folder automatiquely created with
 		// savedefaultconfig
 		try {
 			// Register config path
-			configPath = this.getDataPath().toRealPath();
+			setConfigPath(this.getDataPath().toRealPath());
 
 			// Create the dir for the music if it doesn't already exist.
-			musicPath = Paths.get(configPath.toString(), "music");
-			musicPath.toFile().mkdir();
+			setMusicPath(Paths.get(getConfigPath().toString(), "music"));
+			getMusicPath().toFile().mkdir();
 			Path startup = startupLoader.getStartupJSONPath("startup.json");
 			startupLoader.loadPCMfromJSON(startup.toString());
 		} catch (IOException e) {
@@ -127,8 +124,6 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 	public static MusicPlayerPlugin getInstance() {
 		return getPlugin(MusicPlayerPlugin.class);
 	}
-
-	
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
@@ -153,6 +148,20 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		return this.getClassLoader().getResourceAsStream("language.toml");
 	}
 
-	
+	public Path getMusicPath() {
+		return musicPath;
+	}
+
+	public void setMusicPath(Path musicPath) {
+		this.musicPath = musicPath;
+	}
+
+	public Path getConfigPath() {
+		return configPath;
+	}
+
+	public void setConfigPath(Path configPath) {
+		this.configPath = configPath;
+	}
 
 }

@@ -61,13 +61,13 @@ public class MultiPlayCommand implements CommandExecutor, TabCompleter {
 		}
 
 		new Thread(() -> {
-			String playersMusic = "";
+			String playersMusic = args[0] + "_";
 			for (String name : players) {
 				playersMusic = playersMusic + name;
 			}
 			controller.broadcastAudio(players,
-					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
-					playersMusic);
+					() -> MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
+					sourceLine, playersMusic);
 		}).run();
 		return true;
 	}

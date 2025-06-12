@@ -40,7 +40,8 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 		}
 		new Thread(() -> {
 			try {
-				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
+				String filepath = Paths.get(MusicPlayerPlugin.getInstance().getMusicPath().toString(), args[0])
+						.toString();
 				MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 						musicLoader.loadPCMfromFile(filepath));
 				sender.sendMessage(minimessage
@@ -59,7 +60,7 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 			@NotNull String label, @NotNull String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
+			return Stream.of(MusicPlayerPlugin.getInstance().getMusicPath().toFile().listFiles()).map(File::getName)
 					.filter(a -> a.startsWith(args[0])).toList();
 		}
 

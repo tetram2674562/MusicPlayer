@@ -49,8 +49,8 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 
 		new Thread(() -> {
 			controller.broadcastAudio(playerList,
-					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
-					threadname);
+					() -> MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]),
+					sourceLine, threadname);
 
 		}).run();
 		return true;
@@ -62,9 +62,6 @@ public class BroadcastCommand implements CommandExecutor, TabCompleter {
 		if (args.length == 1) {
 			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().stream()
 					.filter(a -> a.startsWith(args[0])).toList());
-		}
-		if (args.length == 2) {
-			return List.of("identifiant");
 		}
 
 		return List.of();

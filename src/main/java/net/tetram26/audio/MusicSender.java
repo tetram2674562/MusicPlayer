@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import net.tetram26.api.IMusicSender;
 import net.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.PlasmoVoiceServer;
-import su.plo.voice.api.server.audio.provider.ArrayAudioFrameProvider;
 import su.plo.voice.api.server.audio.source.AudioSender;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
@@ -20,22 +20,17 @@ import su.plo.voice.api.server.player.VoicePlayer;
 // Extracted from plasmo voice wiki (but modified by myself)
 public class MusicSender implements IMusicSender {
 	private AudioSender audioSender;
-	private ArrayAudioFrameProvider frameProvider;
+	// private ArrayAudioFrameProvider frameProvider;
+	private MusicAudioFrameProvider frameProvider;
 	private Set<String> listPlayers;
 	private Set<VoicePlayer> playersVoice;
 	private ServerBroadcastSource source;
-	private boolean isPrivate = true;
 	private boolean isBroadcast = true;
 
-	public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList) {
-		if (listPlayers == null || voicePlayerList == null) {
-			isBroadcast = false;
-		} else {
-			this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
-			if (voicePlayerList.size() > 1) {
-				isPrivate = false;
-			}
-		}
+	public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList, boolean isBroadcast) {
+
+		this.playersVoice = Collections.synchronizedSet(new HashSet<>(voicePlayerList));
+
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 
 	}
@@ -45,13 +40,11 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source, short[] samples,
-			String threadName) {
-		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
+	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+			Supplier<short[]> samples, String threadName) {
+		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
 
 		audioSender = source.createAudioSender(frameProvider);
-
-		frameProvider.addSamples(samples);
 
 		audioSender.start();
 
@@ -67,19 +60,20 @@ public class MusicSender implements IMusicSender {
 
 	@Override
 	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
-			short[] samples, String threadName) {
+			Supplier<short[]> samples, String threadName) {
 		this.source = source;
-		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
+		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
 
 		audioSender = source.createAudioSender(frameProvider);
 
-		frameProvider.addSamples(samples);
+//		frameProvider.addSamples(samples);
 
 		audioSender.start();
 		audioSender.onStop(() -> {
 			frameProvider.close();
 			source.remove();
 			frameProvider = null;
+			audioSender = null;
 			// EXPERIMENTAL FEATURE seems to work? (the hell?)
 			MusicPlayerPlugin.getInstance().getController().removeThread(threadName);
 		});
@@ -87,13 +81,13 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source, short[] samples,
-			String threadName, short distance) {
-		frameProvider = new ArrayAudioFrameProvider(voiceServer, false);
+	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+			Supplier<short[]> samples, String threadName, short distance) {
+		frameProvider = new MusicAudioFrameProvider(samples, 1, voiceServer);
 
 		audioSender = source.createAudioSender(frameProvider, distance);
 
-		frameProvider.addSamples(samples);
+		// frameProvider.addSamples(samples);
 
 		audioSender.start();
 		audioSender.onStop(() -> {
@@ -114,12 +108,12 @@ public class MusicSender implements IMusicSender {
 
 	@Override
 	public void pause() {
-		audioSender.pause();
+		frameProvider.pause();
 	}
 
 	@Override
 	public void resume() {
-		audioSender.resume();
+		frameProvider.resume();
 	}
 
 	@Override
@@ -129,7 +123,7 @@ public class MusicSender implements IMusicSender {
 
 	@Override
 	public void addPlayer(String playerName) {
-		if (isBroadcast && (!listPlayers.contains(playerName) && !isPrivate)) {
+		if (isBroadcast && !listPlayers.contains(playerName)) {
 			listPlayers.add(playerName);
 			playersVoice.add(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 					.getPlayerByName(playerName).orElseThrow(() -> new IllegalStateException("Player not found")));
@@ -138,6 +132,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	public boolean isBroadcast() {
+		System.out.println(this.isBroadcast);
 		return isBroadcast;
 	}
 

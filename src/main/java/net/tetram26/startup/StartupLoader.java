@@ -33,7 +33,7 @@ public class StartupLoader implements IStartupLoader {
 				try {
 					String filename = (String) path;
 					if (!filename.contains("{") && !filename.contains("}")) {
-						String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), filename)
+						String filepath = Paths.get(MusicPlayerPlugin.getInstance().getMusicPath().toString(), filename)
 								.toString();
 
 						String extension = "";
@@ -43,8 +43,10 @@ public class StartupLoader implements IStartupLoader {
 							extension = filename.substring(i + 1);
 						}
 						if (extension.equals("pcm")) {
-							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
-									.loadMusic((String) name, loader.loadPCMfromFile(filepath.toString()));
+							MusicPlayerPlugin.getInstance().getComponentLogger()
+									.error("PCM Loading isn't supported anymore, please use WAV loading instead !");
+							// MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
+							// .loadMusic((String) name, loader.loadPCMfromFile(filepath.toString()));
 						} else if (extension.equals("mp3")) {
 							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
 									.loadMusic((String) name, loader.loadPCMfromMP3(filepath.toString()));
@@ -52,7 +54,7 @@ public class StartupLoader implements IStartupLoader {
 							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
 									.loadMusic((String) name, loader.loadPCMfromWAV(filepath.toString()));
 						}
-						System.out.println("File :'" + name + "' loaded");
+						MusicPlayerPlugin.getInstance().getComponentLogger().info("File :'" + name + "' loaded");
 					}
 				} catch (IOException | UnsupportedAudioFileException | InvalidFileFormatException e) {
 					e.printStackTrace();
@@ -67,7 +69,7 @@ public class StartupLoader implements IStartupLoader {
 
 	@Override
 	public Path getStartupJSONPath(String name) throws IOException {
-		Path startup = Paths.get(MusicPlayerPlugin.getInstance().configPath.toString(), name);
+		Path startup = Paths.get(MusicPlayerPlugin.getInstance().getConfigPath().toString(), name);
 		// Si le fichier n'exite pas encore on le crée !
 		if (!startup.toFile().exists()) {
 			startup.toFile().createNewFile();

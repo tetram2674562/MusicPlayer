@@ -40,7 +40,8 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 		new Thread(() -> {
 			try {
 
-				String filepath = Paths.get(MusicPlayerPlugin.getInstance().musicPath.toString(), args[0]).toString();
+				String filepath = Paths.get(MusicPlayerPlugin.getInstance().getMusicPath().toString(), args[0])
+						.toString();
 				String extension = "";
 
 				int i = args[0].lastIndexOf('.');
@@ -76,7 +77,7 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
 		if (args.length == 1) {
-			return Stream.of(MusicPlayerPlugin.getInstance().musicPath.toFile().listFiles()).map(File::getName)
+			return Stream.of(MusicPlayerPlugin.getInstance().getMusicPath().toFile().listFiles()).map(File::getName)
 					.filter(a -> a.startsWith(args[0])).toList();
 		}
 

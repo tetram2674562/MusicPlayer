@@ -5,6 +5,7 @@ package net.tetram26.controller;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import net.tetram26.api.IController;
 import net.tetram26.audio.MusicLoader;
@@ -28,12 +29,10 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public void playAudio(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName) {
-		Set<VoicePlayer> voicePlayerList = Set
-				.of(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
-						.getPlayerByName(username).orElseThrow(() -> new IllegalStateException("Player not found")));
-
-		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList);
+	public void playAudio(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName) {
+		Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+				.createPlayerVoiceSet(List.of(username));
+		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, true);
 		ServerBroadcastSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 		musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
@@ -42,10 +41,11 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public void playAudioOn(String username, short[] PCMdata, ServerSourceLine sourceLine, String threadName,
+	public void playAudioOn(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
 			int distance) {
-
-		MusicSender musicSender = new MusicSender(List.of(username), null);
+		Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+				.createPlayerVoiceSet(List.of(username));
+		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, false);
 		ServerPlayerSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createPlayerSource(sourceLine, username);
 		musicSender.sendPacketsToPlayerSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
@@ -54,12 +54,12 @@ public class Controller implements IController {
 	}
 
 	@Override
-	public void broadcastAudio(List<String> playerList, short[] PCMdata, ServerSourceLine sourceLine,
+	public void broadcastAudio(List<String> playerList, Supplier<short[]> PCMdata, ServerSourceLine sourceLine,
 			String threadName) {
 		if (playerList.size() != 0) {
 			Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 					.createPlayerVoiceSet(playerList);
-			MusicSender musicSender = new MusicSender(playerList, voicePlayerList);
+			MusicSender musicSender = new MusicSender(playerList, voicePlayerList, true);
 			ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 					.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 			musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),

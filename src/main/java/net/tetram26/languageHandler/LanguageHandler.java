@@ -13,19 +13,21 @@ public class LanguageHandler {
 // REWORK THIS FCKING SHIT 
 	private InputStream languageIS;
 	private File languageFile;
-	
+
 	public LanguageHandler(InputStream IS) {
 		languageFile = writeLanguageFile(IS);
-		
+
 	}
-	
+
 	public File getLanguageFile() {
 		return languageFile;
 	}
+
 	private File writeLanguageFile(InputStream file) {
 		try {
 			byte[] data = file.readAllBytes();
-			File languageFile = new File(Paths.get(MusicPlayerPlugin.getInstance().getDataPath().toString(), "language.toml").toString());
+			File languageFile = new File(
+					Paths.get(MusicPlayerPlugin.getInstance().getDataPath().toString(), "language.toml").toString());
 			OutputStream outFile = new FileOutputStream(languageFile);
 			outFile.write(data);
 			outFile.close();
