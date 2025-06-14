@@ -70,7 +70,11 @@ commands:
       - rlMP
   musicplayer:
     permission: musicplayer.musicplayer
-  
+  stopallmus:
+    permission: musicplayer.stopallmus
+    permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+    description: "Stop all playing music of a player"
+    usage: "/stopallmus <player> <player> ... <player>"
   #playmuson:
   #  description: "Joue une musique chargé à la position d'un joueur"
   #  usage: "/playmuson <nom de l'audio> <pseudonyme> <distance>"

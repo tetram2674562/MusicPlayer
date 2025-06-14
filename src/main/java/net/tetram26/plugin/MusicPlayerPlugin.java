@@ -28,6 +28,7 @@ import net.tetram26.commands.PlayCommand;
 import net.tetram26.commands.PlayMusOnCommand;
 import net.tetram26.commands.RepeatCommand;
 import net.tetram26.commands.ResumeCommand;
+import net.tetram26.commands.StopAllCommand;
 import net.tetram26.commands.StopCommand;
 import net.tetram26.commands.UnloadCommand;
 import net.tetram26.listener.ConnectionListener;
@@ -92,6 +93,10 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		getCommand("multiplaymus").setTabCompleter(new MultiPlayCommand());
 		//getCommand("playmuson").setExecutor(new PlayMusOnCommand());
 		//getCommand("playmuson").setTabCompleter(new PlayMusOnCommand());
+		
+		getCommand("stopallmus").setExecutor(new StopAllCommand());
+		getCommand("stopallmus").setTabCompleter(new StopAllCommand());
+		
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
 		// Init configfiles
