@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.NotNull;
+import org.tetram26.plugin.MusicPlayerPlugin;
 
 import su.plo.voice.api.audio.codec.AudioEncoder;
 import su.plo.voice.api.audio.codec.CodecException;
@@ -52,8 +53,8 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 		}
 
 		int samplesPer20ms = (SAMPLE_RATE / 1000) * 20; // 960
-		int requiredSamples = samplesPer20ms * channels; // 960 or 1920
-
+		int requiredSamples = samplesPer20ms * channels; // 960 for mono ,1920 for stereo
+		
 		if (isPaused) {
 			try {
 				short[] silence = new short[requiredSamples]; // 0-filled
@@ -77,13 +78,18 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 			}
 		}
 
-		// Calculate how many real samples we can take
+		// Calculate how many real samples we can take from stereo audio
 		int remaining = audioData.length - currentPos;
-		int samplesToCopy = Math.min(requiredSamples, remaining);
-
-		short[] frameData = new short[requiredSamples]; // always exact size Opus expects
-		System.arraycopy(audioData, currentPos, frameData, 0, samplesToCopy);
-
+		int samplesToCopy = Math.min(samplesPer20ms * 2, remaining);
+		// To store the stereo audio 
+		short[] rawFrameData = new short[samplesPer20ms * 2]; 
+		System.arraycopy(audioData, currentPos, rawFrameData, 0, samplesToCopy);
+		// If the audio should be mono
+		short[] frameData = new short[requiredSamples];
+		// If It's stereo -> just give the data, if It's mono transform it into mono frame
+		frameData = channels == 2 ? rawFrameData : stereo2mono(rawFrameData);
+			
+		 
 		// If fewer than needed, rest stays 0 (silence)
 		position.addAndGet(samplesToCopy);
 
@@ -103,5 +109,20 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 
 	public void setLoop(boolean repeat) {
 		this.repeat = repeat;
+	}
+	
+	public boolean isStereo() {
+		return this.channels == 2;
+	}
+	
+	
+	public short[] stereo2mono(short[] stereoPCM) {
+		short[] monoPCM = new short[stereoPCM.length / 2];
+		for (int i = 0, j = 0; i < stereoPCM.length; i += 2, j++) {
+			int left = stereoPCM[i];
+			int right = stereoPCM[i + 1];
+			monoPCM[j] = (short) ((left + right) / 2);
+		}
+		return monoPCM;
 	}
 }

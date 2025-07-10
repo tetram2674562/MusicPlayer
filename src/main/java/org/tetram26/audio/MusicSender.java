@@ -56,7 +56,6 @@ public class MusicSender implements IMusicSender {
 	}
 
 	public boolean isBroadcast() {
-		System.out.println(this.isBroadcast);
 		return isBroadcast;
 	}
 
@@ -131,7 +130,7 @@ public class MusicSender implements IMusicSender {
 		});
 
 	}
-
+	
 	@Override
 	public void stop() {
 		audioSender.stop();

@@ -53,7 +53,6 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 						sourceLine, threadname, Integer.valueOf(args[2]));
 			} catch (NumberFormatException e) {
 				new BukkitRunnable() {
-
 					@Override
 					public void run() {
 						sender.sendMessage(minimessage.deserialize("<red>Please give a valid distance number"));

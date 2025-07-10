@@ -75,11 +75,11 @@ commands:
     permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
     description: "Stop all playing music of a player"
     usage: "/stopallmus <player> <player> ... <player>"
-  #playmuson:
-  #  description: "Joue une musique chargé à la position d'un joueur"
-  #  usage: "/playmuson <nom de l'audio> <pseudonyme> <distance>"
-  #  permission: musicplayer.playmuson
-  #  permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
+  playmuson:
+    description: "Joue une musique chargé à la position d'un joueur"
+    usage: "/playmuson <nom de l'audio> <pseudonyme> <distance>"
+    permission: musicplayer.playmuson
+    permission-message: "Vous n'avez pas la permission d'effectuer cette commande"
   multiplaymus:
     description: "Permet de jouer une musique à un groupe de joueur"
     permission: musicplayer.multiplaymus

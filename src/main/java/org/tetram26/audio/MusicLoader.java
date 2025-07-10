@@ -183,15 +183,7 @@ public class MusicLoader implements IMusicLoader {
 		return pcmData;
 	}
 
-	public short[] stereo2mono(short[] stereoPCM) {
-		short[] monoPCM = new short[stereoPCM.length / 2];
-		for (int i = 0, j = 0; i < stereoPCM.length; i += 2, j++) {
-			int left = stereoPCM[i];
-			int right = stereoPCM[i + 1];
-			monoPCM[j] = (short) ((left + right) / 2);
-		}
-		return monoPCM;
-	}
+	
 
 	@Override
 	public boolean unloadMusic(String name) {
