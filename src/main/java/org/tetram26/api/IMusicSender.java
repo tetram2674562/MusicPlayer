@@ -1,0 +1,88 @@
+// Copyright (c) 2024-2025 tetram2674562
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+package org.tetram26.api;
+
+import java.util.function.Supplier;
+
+import su.plo.voice.api.server.PlasmoVoiceServer;
+import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
+import su.plo.voice.api.server.audio.source.ServerDirectSource;
+import su.plo.voice.api.server.audio.source.ServerPlayerSource;
+
+public interface IMusicSender {
+	/**
+	 * Add a player to the source.
+	 *
+	 * @param playerName The player name
+	 */
+	public void addPlayer(String playerName);
+
+	/**
+	 * Check if a player is having music sended to him.
+	 *
+	 * @param playerName The player name
+	 * @return
+	 */
+	public boolean hasPlayer(String playerName);
+
+	/**
+	 * Pause the music sender
+	 *
+	 */
+	public void pause();
+
+	/**
+	 * Resume the music sender
+	 *
+	 */
+	public void resume();
+
+	/**
+	 * Sends the audio samples to everyone.
+	 *
+	 *
+	 * @param voiceServer Plasmo Voice Server API.
+	 * @param source      The audio source to send audio.
+	 * @param samples     48kHz 16-bit mono audio samples.
+	 * @param threadName  the name of the thread
+	 */
+	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
+			Supplier<short[]> samples, String threadName);
+
+	/**
+	 * Sends the audio samples to a player.
+	 *
+	 *
+	 * @param voiceServer Plasmo Voice Server API.
+	 * @param source      The audio source to send audio.
+	 * @param samples     48kHz 16-bit mono audio samples.
+	 * @param threadName  the name of the thread
+	 */
+	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+			Supplier<short[]> samples, String threadName);
+
+	/**
+	 * Sends the audio samples to a player position (and stay on it)
+	 *
+	 * @param voiceServer Plasmo Voice Server API
+	 * @param source      The audio source to send audio.
+	 * @param samples     48kHz 16-bit mono audio samples.
+	 * @param threadName  the name of the thread
+	 * @param distance    the distance
+	 */
+	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+			Supplier<short[]> samples, String threadName, short distance);
+
+	/**
+	 * Stop the music sender
+	 *
+	 */
+	public void stop();
+
+	/**
+	 * Toggle the repeat mode
+	 *
+	 */
+	public void toggleRepeat();
+
+}

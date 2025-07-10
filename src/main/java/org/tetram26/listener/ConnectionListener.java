@@ -1,0 +1,35 @@
+// Copyright (c) 2024-2025 tetram2674562
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+package org.tetram26.listener;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.tetram26.audio.MusicSender;
+import org.tetram26.plugin.MusicPlayerPlugin;
+
+public class ConnectionListener implements Listener {
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onJoin(PlayerJoinEvent event) {
+		for (String thread : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
+			MusicPlayerPlugin.getInstance().getController().getThread(thread).addPlayer(event.getPlayer().getName());
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onLeave(PlayerQuitEvent e) {
+		for (String thread : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
+
+			MusicSender musicThread = MusicPlayerPlugin.getInstance().getController().getThread(thread);
+			if (musicThread.hasPlayer(e.getPlayer().getName()) && !musicThread.isBroadcast()) {
+
+				musicThread.stop();
+				MusicPlayerPlugin.getInstance().getController().removeThread(thread);
+			}
+
+		}
+	}
+}

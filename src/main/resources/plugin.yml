@@ -1,6 +1,6 @@
 name: MusicPlayer
 version: 1.0.4
-main: net.tetram26.plugin.MusicPlayerPlugin
+main: org.tetram26.plugin.MusicPlayerPlugin
 description: A plugin that allow you to play PCM file into plasmo voice !
 author: tetram26 A.K.A gaspardAlizand
 api-version: '1.21.1'

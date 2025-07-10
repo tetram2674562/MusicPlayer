@@ -1,0 +1,101 @@
+// Copyright (c) 2024-2025 tetram2674562
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+package org.tetram26.commands;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Stream;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.tetram26.api.IMusicLoader;
+import org.tetram26.plugin.MusicPlayerPlugin;
+
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
+public class LoadWAVCommand implements CommandExecutor, TabCompleter {
+	MiniMessage minimessage = MiniMessage.miniMessage();
+
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+			@NotNull String[] args) {
+		IMusicLoader loader = MusicPlayerPlugin.getInstance().getController().getMusicLoader();
+		if (args.length != 2) {
+			return false;
+		}
+		if (MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[1])) {
+			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+					.getConfigurationSection("message").getString("musicNameAlreadyInUse").replace("%s", args[1])));
+			return true;
+		}
+		new Thread(() -> {
+			try {
+
+				String filepath = Paths.get(MusicPlayerPlugin.getInstance().getMusicPath().toString(), args[0])
+						.toString();
+				String extension = "";
+
+				int i = args[0].lastIndexOf('.');
+				if (i > 0) {
+					extension = args[0].substring(i + 1);
+				}
+				if (extension.equals("pcm")) {
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
+							loader.loadPCMfromFile(filepath));
+				} else if (extension.equals("mp3")) {
+					// MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
+					// loader.loadPCMfromMP3(filepath));
+				} else {
+					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
+							loader.loadPCMfromWAV(filepath));
+				}
+				new BukkitRunnable() {
+					public void run() {sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
+							.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));}
+				}.runTask(MusicPlayerPlugin.getInstance());
+						
+			} catch (IOException e) {
+				new BukkitRunnable() {
+					public void run() {
+						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+								.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+					}
+				}.runTask(MusicPlayerPlugin.getInstance());
+				
+			} catch (UnsupportedAudioFileException e) {
+				new BukkitRunnable() {
+					public void run() {
+						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+								.getConfigurationSection("message").getString("invalidFileFormat")));
+					}
+				}.runTask(MusicPlayerPlugin.getInstance());
+				
+				e.printStackTrace();
+			}
+		}).run();
+		return true;
+	}
+
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
+			@NotNull String label, @NotNull String[] args) {
+		if (args.length == 1) {
+			return Stream.of(MusicPlayerPlugin.getInstance().getMusicPath().toFile().listFiles()).map(File::getName)
+					.filter(a -> a.startsWith(args[0])).toList();
+		}
+
+		if (args.length == 2) {
+			return List.of("nom");
+		}
+		return List.of();
+	}
+}
