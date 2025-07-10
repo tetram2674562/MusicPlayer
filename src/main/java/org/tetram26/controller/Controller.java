@@ -78,7 +78,7 @@ public class Controller implements IController {
 	public void playAudio(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName) {
 		Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createPlayerVoiceSet(List.of(username));
-		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, true);
+		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, false);
 		ServerBroadcastSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createBroadcastSource(sourceLine, voicePlayerList, threadName);
 		musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
