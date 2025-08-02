@@ -7,14 +7,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Location;
 import org.tetram26.addon.MusicAddon;
 import org.tetram26.api.ISourceManager;
 import org.tetram26.plugin.MusicPlayerPlugin;
 
+import su.plo.slib.api.server.position.ServerPos3d;
+import su.plo.slib.api.server.world.McServerWorld;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
 import su.plo.voice.api.server.audio.source.ServerPlayerSource;
+import su.plo.voice.api.server.audio.source.ServerStaticSource;
 import su.plo.voice.api.server.player.VoicePlayer;
 import su.plo.voice.api.server.player.VoiceServerPlayer;
 
@@ -48,6 +52,18 @@ public class SourceManager implements ISourceManager {
 
 		ServerPlayerSource source = sourceLine.createPlayerSource(voicePlayer, false);
 		source.getFilters().stream().findFirst().ifPresent(source::removeFilter);
+		return source;
+	}
+
+	@Override
+	public ServerStaticSource createBlockSource(ServerSourceLine sourceLine, Location location) {
+
+		McServerWorld world = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getMinecraftServer()
+				.getWorlds().stream().filter(w -> w.getName().equals(location.getWorld().getName())).findAny()
+				.orElseThrow(() -> new IllegalStateException("World not found"));
+
+		ServerPos3d position = new ServerPos3d(world, location.getX(), location.getY(), location.getZ());
+		ServerStaticSource source = sourceLine.createStaticSource(position, false);
 		return source;
 	}
 

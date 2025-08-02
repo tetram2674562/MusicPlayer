@@ -5,12 +5,14 @@ package org.tetram26.api;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Location;
 import org.tetram26.addon.MusicAddon;
 
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
 import su.plo.voice.api.server.audio.source.ServerPlayerSource;
+import su.plo.voice.api.server.audio.source.ServerStaticSource;
 import su.plo.voice.api.server.player.VoicePlayer;
 
 public interface ISourceManager {
@@ -58,4 +60,6 @@ public interface ISourceManager {
 	 * @return The newly created source line
 	 */
 	public ServerSourceLine createSourceLine(String name, MusicAddon addon);
+
+	ServerStaticSource createBlockSource(ServerSourceLine sourceLine, Location location);
 }

@@ -8,6 +8,7 @@ import su.plo.voice.api.server.PlasmoVoiceServer;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerDirectSource;
 import su.plo.voice.api.server.audio.source.ServerPlayerSource;
+import su.plo.voice.api.server.audio.source.ServerStaticSource;
 
 public interface IMusicSender {
 	/**
@@ -84,5 +85,8 @@ public interface IMusicSender {
 	 *
 	 */
 	public void toggleRepeat();
+
+	void sendPacketsToStaticSource(PlasmoVoiceServer voiceServer, ServerStaticSource source, Supplier<short[]> samples,
+			String threadName, short distance);
 
 }

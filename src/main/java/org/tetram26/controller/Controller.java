@@ -3,10 +3,12 @@
 package org.tetram26.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import org.bukkit.Location;
 import org.tetram26.api.IController;
 import org.tetram26.audio.MusicLoader;
 import org.tetram26.audio.MusicSender;
@@ -16,6 +18,7 @@ import org.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 import su.plo.voice.api.server.audio.source.ServerBroadcastSource;
 import su.plo.voice.api.server.audio.source.ServerPlayerSource;
+import su.plo.voice.api.server.audio.source.ServerStaticSource;
 import su.plo.voice.api.server.player.VoicePlayer;
 
 public class Controller implements IController {
@@ -98,7 +101,16 @@ public class Controller implements IController {
 				PCMdata, threadName, (short) distance);
 		activeMusicThread.put(threadName, musicSender);
 	}
-
+	@Override
+	public void playAudioAt(Location location, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName, int distance)  {
+		MusicSender musicSender = new MusicSender(List.of(), Set.of(), false);
+		ServerStaticSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
+				.createBlockSource(sourceLine, location);
+		musicSender.sendPacketsToStaticSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
+				PCMdata, threadName, (short) distance);
+		musicSender.setLocation(location);
+		activeMusicThread.put(threadName, musicSender);
+	}
 	@Override
 	public boolean removeThread(String name) {
 		boolean existingAlias = activeMusicThread.keySet().contains(name);
@@ -107,5 +119,8 @@ public class Controller implements IController {
 		}
 		return existingAlias;
 	}
-
+	
+	public Optional<MusicSender> checkForMusicThreadAtLocation(Location location) {
+		return activeMusicThread.values().stream().filter(s -> s.isLocated()).filter(s -> location.equals(s.getLocation())).findFirst();
+	}
 }

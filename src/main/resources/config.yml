@@ -19,3 +19,5 @@ message:
   unloadedFile: "File '%s' unloaded"
   reloadConfig: "<red>Configuration reloaded"
   fileBeingBroadcast: "<green>Broadcasting music '%s0' as '%s1'</green>"
+  
+jukebox-distance: 16

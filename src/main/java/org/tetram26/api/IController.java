@@ -3,9 +3,11 @@
 package org.tetram26.api;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.tetram26.audio.MusicSender;
 
@@ -80,5 +82,8 @@ public interface IController {
 	 * @return
 	 */
 	public boolean removeThread(@NotNull String string);
+	public Optional<MusicSender> checkForMusicThreadAtLocation(Location location);
 
+	void playAudioAt(Location location, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
+			int distance);
 }
