@@ -188,7 +188,7 @@ public class MusicLoader implements IMusicLoader {
 	@Override
 	public boolean unloadMusic(String name) {
 		boolean existingAlias = loadedMusic.parallelStream().filter(track -> track.getName().equals(name))
-				.toArray().length == 0;
+				.toArray().length != 0;
 		if (existingAlias) {
 			loadedMusic.remove(
 					loadedMusic.parallelStream().filter(track -> track.getName().equals(name)).toList().getFirst());

@@ -32,10 +32,9 @@ public class ProduceDiskCommand implements CommandExecutor, TabCompleter{
 		if (args.length != 1) {
 			return true;
 		}
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			ItemStack item = player.getInventory().getItemInMainHand();
-			if (item != null && item.getType().equals(Material.MUSIC_DISC_5)) {
+		if (sender instanceof Player player) {
+            ItemStack item = player.getInventory().getItemInMainHand();
+			if (item.getType().equals(Material.MUSIC_DISC_5)) {
 				item.editMeta(meta -> {
 				    meta.getPersistentDataContainer().set(new NamespacedKey(MusicPlayerPlugin.getInstance(),"music"), PersistentDataType.STRING, args[0]);
 				});

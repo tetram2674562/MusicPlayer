@@ -4,8 +4,11 @@ package org.tetram26.exceptions;
 
 import org.tetram26.api.IInvalidFileFormatException;
 
+import java.io.Serial;
+
 public class InvalidFileFormatException extends Exception implements IInvalidFileFormatException {
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 
 }

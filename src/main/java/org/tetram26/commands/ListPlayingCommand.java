@@ -18,7 +18,7 @@ public class ListPlayingCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().size() != 0) {
+		if (!MusicPlayerPlugin.getInstance().getController().getThreadsName().isEmpty()) {
 
 			sender.sendMessage(miniMessage.deserialize(
 					MusicPlayerPlugin.getInstance().getConfig().getString("message.listCurrentlyPlayingMusic")));
