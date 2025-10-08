@@ -22,8 +22,8 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 	private final int channels;
 	private boolean repeat = false;
 	private boolean isPaused = false;
-	private AudioEncoder encoder; // false means mono
-	private Encryption encryption;
+	private final AudioEncoder encoder; // false means mono
+	private final Encryption encryption;
 
 	public MusicAudioFrameProvider(Supplier<short[]> audioDataSupplier, int channels,
 			@NotNull PlasmoVoiceServer voiceServer) {

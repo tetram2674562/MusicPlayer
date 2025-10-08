@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package org.tetram26.plugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -30,6 +31,7 @@ import org.tetram26.commands.ResumeCommand;
 import org.tetram26.commands.StopAllCommand;
 import org.tetram26.commands.StopCommand;
 import org.tetram26.commands.UnloadCommand;
+import org.tetram26.languageHandler.LanguageHandler;
 import org.tetram26.listener.ConnectionListener;
 import org.tetram26.listener.JukeboxListener;
 import org.tetram26.startup.StartupLoader;
@@ -40,14 +42,16 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
-	public static MusicPlayerPlugin getInstance() {
+    private LanguageHandler languageHandler;
+
+    public static MusicPlayerPlugin getInstance() {
 		return getPlugin(MusicPlayerPlugin.class);
 	}
-	private MusicAddon addon = new MusicAddon();
+	private final MusicAddon addon = new MusicAddon();
 	private Path configPath = null;
 	private Path musicPath = null;
 
-	private StartupLoader startupLoader = new StartupLoader();
+	private final StartupLoader startupLoader = new StartupLoader();
 
 	public MusicAddon getAddon() {
 		return this.addon;
@@ -60,10 +64,6 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 	@Override
 	public IController getController() {
 		return getAddon().getController();
-	}
-
-	public InputStream getLanguageIS() {
-		return this.getClassLoader().getResourceAsStream("language.toml");
 	}
 
 	public Path getMusicPath() {
@@ -86,6 +86,11 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 	@Override
 	public void onEnable() {
+
+        if (getServer().getPluginManager().getPlugin("PlasmoVoice") == null) {
+            getComponentLogger().error(Component.text("FATAL -- PLASMO VOICE ISN'T INSTALLED ON THIS SERVER."));
+            return;
+        }
 		PlasmoVoiceServer.getAddonsLoader().load(addon);
 		// Registering commands !
 
@@ -146,32 +151,28 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		// Init configfiles
 		
 		saveDefaultConfig();
-
-		// Creation of the directory
-		// this.getDataFolder().mkdir(); folder automatiquely created with
-		// savedefaultconfig
+        reloadConfig();
 		try {
 			// Register config path
-			setConfigPath(this.getDataPath().toRealPath());
+			this.configPath = this.getDataPath().toRealPath();
 
 			// Create the dir for the music if it doesn't already exist.
-			setMusicPath(Paths.get(getConfigPath().toString(), "music"));
+			this.musicPath = Paths.get(getConfigPath().toString(), "music");
 			getMusicPath().toFile().mkdir();
 			Path startup = startupLoader.getStartupJSONPath("startup.json");
 			startupLoader.loadPCMfromJSON(startup.toString());
+            this.languageHandler = new LanguageHandler(new File(getDataFolder(), "languages"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		getComponentLogger().info(Component.text("Hello Server :)"));
+
+
+
+        getComponentLogger().info(Component.text("Hello Server :)"));
 
 	}
 
-	public void setConfigPath(Path configPath) {
-		this.configPath = configPath;
-	}
-
-	public void setMusicPath(Path musicPath) {
-		this.musicPath = musicPath;
-	}
-
+    public LanguageHandler getLanguageHandler() {
+        return languageHandler;
+    }
 }

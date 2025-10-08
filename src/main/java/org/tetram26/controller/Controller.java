@@ -23,9 +23,9 @@ import su.plo.voice.api.server.player.VoicePlayer;
 
 public class Controller implements IController {
 
-	private MusicLoader musicLoader;
-	private SourceManager sourceManager;
-	private ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
+	private final MusicLoader musicLoader;
+	private final SourceManager sourceManager;
+	private final ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
 
 	public Controller() {
 		musicLoader = new MusicLoader();
@@ -33,7 +33,7 @@ public class Controller implements IController {
 	}
 
 	public boolean addThread(String name, MusicSender sender) {
-		boolean existingAlias = activeMusicThread.keySet().contains(name);
+		boolean existingAlias = activeMusicThread.containsKey(name);
 		if (!existingAlias) {
 			activeMusicThread.put(name, sender);
 		}
@@ -43,7 +43,7 @@ public class Controller implements IController {
 	@Override
 	public void broadcastAudio(List<String> playerList, Supplier<short[]> PCMdata, ServerSourceLine sourceLine,
 			String threadName) {
-		if (playerList.size() != 0) {
+		if (!playerList.isEmpty()) {
 			Set<VoicePlayer> voicePlayerList = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 					.createPlayerVoiceSet(playerList);
 			MusicSender musicSender = new MusicSender(playerList, voicePlayerList, true);
@@ -113,7 +113,7 @@ public class Controller implements IController {
 	}
 	@Override
 	public boolean removeThread(String name) {
-		boolean existingAlias = activeMusicThread.keySet().contains(name);
+		boolean existingAlias = activeMusicThread.containsKey(name);
 		if (existingAlias) {
 			activeMusicThread.remove(name);
 		}
@@ -121,6 +121,6 @@ public class Controller implements IController {
 	}
 	
 	public Optional<MusicSender> checkForMusicThreadAtLocation(Location location) {
-		return activeMusicThread.values().stream().filter(s -> s.isLocated()).filter(s -> location.equals(s.getLocation())).findFirst();
+		return activeMusicThread.values().stream().filter(MusicSender::isLocated).filter(s -> location.equals(s.getLocation())).findFirst();
 	}
 }

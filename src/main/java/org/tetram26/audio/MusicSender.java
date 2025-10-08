@@ -28,22 +28,10 @@ public class MusicSender implements IMusicSender {
 	private Set<String> listPlayers;
 	private Set<VoicePlayer> playersVoice;
 	private ServerBroadcastSource source;
-	private boolean isBroadcast = true;
+	private final boolean isBroadcast = true;
 	private Location location;
 	public MusicSender(List<String> playerList) {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-	
-	public Location getLocation() {
-		return this.location;
-	}
-	
-	public boolean isLocated() {
-		return this.location != null;
 	}
 	
 	public MusicSender(List<String> listPlayers, Set<VoicePlayer> voicePlayerList, boolean isBroadcast) {
@@ -53,6 +41,18 @@ public class MusicSender implements IMusicSender {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 
 	}
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public boolean isLocated() {
+        return this.location != null;
+    }
 
 	@Override
 	public void addPlayer(String playerName) {

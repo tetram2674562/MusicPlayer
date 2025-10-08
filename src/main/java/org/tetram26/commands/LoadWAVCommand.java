@@ -81,21 +81,18 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 				
 				e.printStackTrace();
 			}
-		}).run();
+		}).start();
 		return true;
 	}
 
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-		if (args.length == 1) {
-			return Stream.of(MusicPlayerPlugin.getInstance().getMusicPath().toFile().listFiles()).map(File::getName)
-					.filter(a -> a.startsWith(args[0])).toList();
-		}
-
-		if (args.length == 2) {
-			return List.of("nom");
-		}
-		return List.of();
+        return switch (args.length) {
+            case 1 -> Stream.of(MusicPlayerPlugin.getInstance().getMusicPath().toFile().listFiles()).map(File::getName)
+                    .filter(a -> a.startsWith(args[0])).toList();
+            case 2 -> List.of("nom");
+            default -> List.of();
+        };
 	}
 }

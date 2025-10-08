@@ -40,9 +40,7 @@ public class SourceManager implements ISourceManager {
 		VoicePlayer voicePlayer = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getPlayerManager()
 				.getPlayerByName(username).orElseThrow(() -> new IllegalStateException("Player not found"));
 
-		ServerDirectSource source = sourceLine.createDirectSource(voicePlayer, false);
-
-		return source;
+        return sourceLine.createDirectSource(voicePlayer, false);
 	}
 
 	@Override
@@ -63,8 +61,7 @@ public class SourceManager implements ISourceManager {
 				.orElseThrow(() -> new IllegalStateException("World not found"));
 
 		ServerPos3d position = new ServerPos3d(world, location.getX(), location.getY(), location.getZ());
-		ServerStaticSource source = sourceLine.createStaticSource(position, false);
-		return source;
+        return sourceLine.createStaticSource(position, false);
 	}
 
 	@Override
@@ -90,17 +87,16 @@ public class SourceManager implements ISourceManager {
 	@Override
 	public ServerSourceLine createSourceLine(String name, MusicAddon addon) {
 
-		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getSourceLineManager()
+        /*
+		 * MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getLanguages().
+		 * register(loader, MusicPlayerPlugin.getInstance().getDataFolder());
+		 */
+		return MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getSourceLineManager()
 				.createBuilder(addon, name, // name
 						"pv.activation." + name, // translation key
 						"plasmovoice:textures/icons/speaker_priority.png", // icon resource location
 						10 // weight
 				).build();
-		/*
-		 * MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getLanguages().
-		 * register(loader, MusicPlayerPlugin.getInstance().getDataFolder());
-		 */
-		return sourceLine;
 
 	}
 

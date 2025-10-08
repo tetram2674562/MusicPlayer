@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package org.tetram26.commands;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -27,7 +28,7 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		if (args.length != 2) {
+		if (args.length < 3 && args.length > 0) {
 			return false;
 		}
 		String threadname = args[0] + "_" + args[1];
@@ -41,32 +42,39 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 					.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
 			return true;
 		}
+
+        boolean silent = false;
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-s")) {
+                silent = true;
+                break;
+            }
+        }
 		// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-		sender.sendMessage(
-				minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-						.getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", threadname)));
-		new Thread(() -> {
+		if (!silent) {
+            sender.sendMessage(
+                    minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
+                            .getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", threadname)));
+        }
+        new Thread(() -> {
 			controller.playAudio(args[1],
 					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
 					threadname);
-		}).run();
+		}).start();
 		return true;
 	}
 
 	@Override
 	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
 			@NotNull String label, @NotNull String[] args) {
-
-		if (args.length == 1) {
-			return List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().stream()
-					.filter(a -> a.startsWith(args[0])).toList());
-		}
-		if (args.length == 2) {
-			return Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName)
-					.filter(a -> a.startsWith(args[1])).toList();
-		}
-
-		return List.of();
+        return switch (args.length ) {
+            case 1 -> List.copyOf(MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().stream()
+                    .filter(a -> a.startsWith(args[0])).toList());
+            case 2 -> Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName)
+                    .filter(a -> a.startsWith(args[1])).toList();
+            default -> List.of();
+        };
 	}
 
 }

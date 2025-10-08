@@ -58,9 +58,6 @@ public class StartupLoader implements IStartupLoader {
 									.error("PCM Loading isn't supported anymore, please use WAV loading instead !");
 							// MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
 							// .loadMusic((String) name, loader.loadPCMfromFile(filepath.toString()));
-						} else if (extension.equals("mp3")) {
-							// MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
-							// .loadMusic((String) name, loader.loadPCMfromMP3(filepath.toString()));
 						} else {
 							MusicPlayerPlugin.getInstance().getAddon().getController().getMusicLoader()
 									.loadMusic((String) name, loader.loadPCMfromWAV(filepath.toString()));

@@ -39,7 +39,7 @@ public class UnloadCommand implements CommandExecutor, TabCompleter {
 							.getConfigurationSection("message").getString("unloadedFile").replace("%s", args[0])));
 				}
 			}.runTask(MusicPlayerPlugin.getInstance());
-		}).run();
+		}).start();
 		return true;
 	}
 
