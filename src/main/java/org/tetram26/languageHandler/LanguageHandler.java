@@ -1,39 +1,16 @@
 package org.tetram26.languageHandler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Paths;
+import java.io.*;
 
 import org.tetram26.plugin.MusicPlayerPlugin;
+import su.plo.voice.api.server.resource.ResourceLoader;
 
 public class LanguageHandler {
-// REWORK THIS FCKING SHIT
-	private InputStream languageIS;
-	private File languageFile;
 
-	public LanguageHandler(InputStream IS) {
-		languageFile = writeLanguageFile(IS);
+    public LanguageHandler(File languageFolder) throws IOException {
+        ResourceLoader loader = fileName -> LanguageHandler.class.getClassLoader().getResourceAsStream(fileName); // f -> load -> new fileinputstream(f)
+        MusicPlayerPlugin.getInstance().getAddon().getVoiceServer().getLanguages().register(loader,
+                languageFolder);
 
-	}
-
-	public File getLanguageFile() {
-		return languageFile;
-	}
-
-	private File writeLanguageFile(InputStream file) {
-		try {
-			byte[] data = file.readAllBytes();
-			File languageFile = new File(
-					Paths.get(MusicPlayerPlugin.getInstance().getDataPath().toString(), "language.toml").toString());
-			OutputStream outFile = new FileOutputStream(languageFile);
-			outFile.write(data);
-			outFile.close();
-		} catch (IOException e) {
-			System.out.println("How did we got there?");
-		}
-		return languageFile;
-	}
+    }
 }
