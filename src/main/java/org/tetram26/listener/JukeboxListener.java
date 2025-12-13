@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.tetram26.audio.MusicSender;
 import org.tetram26.plugin.MusicPlayerPlugin;
-
+/* DEPRECATED AS OF NOW. */
 public class JukeboxListener implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onJukeboxInteracted(PlayerInteractEvent event) {

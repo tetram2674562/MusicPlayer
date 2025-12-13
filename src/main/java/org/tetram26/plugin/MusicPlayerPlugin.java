@@ -33,7 +33,6 @@ import org.tetram26.commands.StopCommand;
 import org.tetram26.commands.UnloadCommand;
 import org.tetram26.languageHandler.LanguageHandler;
 import org.tetram26.listener.ConnectionListener;
-import org.tetram26.listener.JukeboxListener;
 import org.tetram26.startup.StartupLoader;
 
 import net.kyori.adventure.text.Component;
@@ -104,8 +103,8 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
 		getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
 
-		getServer().getPluginCommand("producedisk").setExecutor(new ProduceDiskCommand());
-		getServer().getPluginCommand("producedisk").setTabCompleter(new ProduceDiskCommand());
+		//getServer().getPluginCommand("producedisk").setExecutor(new ProduceDiskCommand());
+		//getServer().getPluginCommand("producedisk").setTabCompleter(new ProduceDiskCommand());
 		// Playing commands
 
 		getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
@@ -147,7 +146,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
-		getServer().getPluginManager().registerEvents(new JukeboxListener(), this);
+		//getServer().getPluginManager().registerEvents(new JukeboxListener(), this);
 		// Init configfiles
 		
 		saveDefaultConfig();

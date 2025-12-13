@@ -28,9 +28,6 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		if (args.length < 3 && args.length > 0) {
-			return false;
-		}
 		String threadname = args[0] + "_" + args[1];
 		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(threadname)) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
@@ -42,21 +39,6 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 					.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
 			return true;
 		}
-
-        boolean silent = false;
-
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-s")) {
-                silent = true;
-                break;
-            }
-        }
-		// <green> Lecture en cours du fichier args[0] en tant que args[2] </green>
-		if (!silent) {
-            sender.sendMessage(
-                    minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-                            .getString("fileBeingPlayed").replace("%s0", args[0]).replace("%s1", threadname)));
-        }
         new Thread(() -> {
 			controller.playAudio(args[1],
 					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,

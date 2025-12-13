@@ -21,13 +21,12 @@ public class ListPlayingCommand implements CommandExecutor {
 		if (!MusicPlayerPlugin.getInstance().getController().getThreadsName().isEmpty()) {
 
 			sender.sendMessage(miniMessage.deserialize(
-					MusicPlayerPlugin.getInstance().getConfig().getString("message.listCurrentlyPlayingMusic")));
+					MusicPlayerPlugin.getInstance().getConfig().getString("message.listCurrentlyPlayingMusic","")));
 			for (String each : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
 				sender.sendMessage(Component.text(each));
 			}
 		} else {
-			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-					.getConfigurationSection("message").getString("noMusicCurrentlyBeingPlayed")));
+			sender.sendMessage(miniMessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getString("message.noMusicCurrentlyBeingPlayed","")));
 		}
 		return true;
 	}

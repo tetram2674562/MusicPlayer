@@ -30,10 +30,6 @@ public class LoadCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
 		IMusicLoader musicLoader = MusicPlayerPlugin.getInstance().getController().getMusicLoader();
-		// TODO Auto-generated method stub
-		if (args.length != 2) {
-			return false;
-		}
 		if (MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[1])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
 					.getConfigurationSection("message").getString("musicNameAlreadyInUse").replace("%s", args[1])));

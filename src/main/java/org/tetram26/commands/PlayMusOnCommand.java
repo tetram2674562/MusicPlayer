@@ -28,9 +28,6 @@ public class PlayMusOnCommand implements CommandExecutor, TabCompleter {
 			@NotNull String[] args) {
 		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		if (args.length != 3) {
-			return false;
-		}
 		String threadname = args[0] + "_" + args[1] + "_playerAround";
 		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(threadname)) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()

@@ -84,7 +84,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
 			Supplier<short[]> samples, String threadName) {
 		this.source = source;
 		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
@@ -106,7 +106,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
 			Supplier<short[]> samples, String threadName) {
 		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
 
@@ -125,7 +125,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
 			Supplier<short[]> samples, String threadName, short distance) {
 		frameProvider = new MusicAudioFrameProvider(samples, 1, voiceServer);
 
@@ -146,7 +146,7 @@ public class MusicSender implements IMusicSender {
 	}
 	
 	@Override
-	public void sendPacketsToStaticSource(PlasmoVoiceServer voiceServer, ServerStaticSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerStaticSource source,
 			Supplier<short[]> samples, String threadName, short distance) {
 		frameProvider = new MusicAudioFrameProvider(samples, 1, voiceServer);
 

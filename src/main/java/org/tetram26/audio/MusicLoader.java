@@ -41,7 +41,7 @@ public class MusicLoader implements IMusicLoader {
 			false);
 	private final static AudioFormat mp3Format = new AudioFormat(44100, 16, 2, true, false);
 
-	private List<Track> loadedMusic = Collections.synchronizedList(new ArrayList<>());
+	private final List<Track> loadedMusic = Collections.synchronizedList(new ArrayList<>());
 
 	@Override
 	public short[] byteToShort(byte[] byteData) {
@@ -70,9 +70,9 @@ public class MusicLoader implements IMusicLoader {
 	public boolean loadMusic(String name, short[] PCMdata) {
 		// Existing alias est égale à vrai si la musique est chargé
 		boolean existingAlias = loadedMusic.parallelStream().filter(track -> track.getName().equals(name))
-				.toList().size() != 0;
+                .toList().isEmpty();
 		
-		if (!existingAlias) {
+		if (existingAlias) {
 			loadedMusic.add(new Track(name, PCMdata));
 		}
 		return !existingAlias;

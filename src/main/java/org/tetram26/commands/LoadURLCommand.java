@@ -44,8 +44,7 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 					@Override
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(
-								MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-										.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
+								MusicPlayerPlugin.getInstance().getConfig().getString("message.fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));
 
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
@@ -56,7 +55,7 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 					@Override
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-								.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+								.getString("message.fileNotFound").replace("%s", args[0])));
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
 
@@ -65,7 +64,7 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 					@Override
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-								.getConfigurationSection("message").getString("invalidFileFormat")));
+								.getString("message.invalidFileFormat")));
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
 
@@ -75,7 +74,7 @@ public class LoadURLCommand implements CommandExecutor, TabCompleter {
 					@Override
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-								.getConfigurationSection("message").getString("invalidURL")));
+                                .getString("message.invalidURL")));
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
 

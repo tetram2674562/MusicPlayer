@@ -3,6 +3,7 @@ package org.tetram26.commands;
 import java.util.List;
 import java.util.Set;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,10 @@ public class StopAllCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
+        MiniMessage minimessage = MiniMessage.miniMessage();
 		if (args.length < 1) {
+            sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
+                    .getConfigurationSection("message").getString("invalidArgument")));
 			return false;
 		}
 		Set<String> threadsName = MusicPlayerPlugin.getInstance().getController().getThreadsName();
