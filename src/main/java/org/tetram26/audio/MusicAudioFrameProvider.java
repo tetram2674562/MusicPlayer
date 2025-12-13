@@ -20,8 +20,8 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 	private final Supplier<short[]> audioDataSupplier;
 	private final AtomicInteger position = new AtomicInteger(0);
 	private final int channels;
-	private boolean repeat = false;
-	private boolean isPaused = false;
+	private volatile boolean repeat = false;
+	private volatile boolean isPaused = false;
 	private final AudioEncoder encoder; // false means mono
 	private final Encryption encryption;
 
@@ -46,7 +46,7 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 	}
 
 	@Override
-	public AudioFrameResult provide20ms() {
+	public @NotNull AudioFrameResult provide20ms() {
 		short[] audioData = audioDataSupplier.get();
 		if (audioData == null) {
 			return AudioFrameResult.Finished.INSTANCE;
@@ -67,31 +67,31 @@ public class MusicAudioFrameProvider implements AudioFrameProvider {
 			}
 		}
 
-		int currentPos = position.get();
+		// Always build a full 20ms stereo frame, wrapping if repeat is enabled
+		short[] rawFrameData = new short[samplesPer20ms * 2];
+		int copied = 0;
 
-		if (currentPos >= audioData.length) {
-			if (!repeat) {
-				return AudioFrameResult.Finished.INSTANCE;
-			} else {
+		while (copied < rawFrameData.length) {
+			int currentPos = position.get();
+
+			if (currentPos >= audioData.length) {
+				if (!repeat) {
+					return AudioFrameResult.Finished.INSTANCE;
+				}
 				position.set(0);
 				currentPos = 0;
 			}
+
+			int remaining = audioData.length - currentPos;
+			int toCopy = Math.min(rawFrameData.length - copied, remaining);
+
+			System.arraycopy(audioData, currentPos, rawFrameData, copied, toCopy);
+			position.addAndGet(toCopy);
+			copied += toCopy;
 		}
 
-		// Calculate how many real samples we can take from stereo audio
-		int remaining = audioData.length - currentPos;
-		int samplesToCopy = Math.min(samplesPer20ms * 2, remaining);
-		// To store the stereo audio 
-		short[] rawFrameData = new short[samplesPer20ms * 2]; 
-		System.arraycopy(audioData, currentPos, rawFrameData, 0, samplesToCopy);
-		// If the audio should be mono
-		short[] frameData = new short[requiredSamples];
 		// If It's stereo -> just give the data, if It's mono transform it into mono frame
-		frameData = channels == 2 ? rawFrameData : stereo2mono(rawFrameData);
-			
-		 
-		// If fewer than needed, rest stays 0 (silence)
-		position.addAndGet(samplesToCopy);
+		short[] frameData = channels == 2 ? rawFrameData : stereo2mono(rawFrameData);
 
 		try {
 			byte[] encoded = encoder.encode(frameData);
