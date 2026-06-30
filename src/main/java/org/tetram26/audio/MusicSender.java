@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.tetram26.api.IMusicSender;
 import org.tetram26.plugin.MusicPlayerPlugin;
@@ -22,14 +24,17 @@ import su.plo.voice.api.server.player.VoicePlayer;
 
 // Extracted from plasmo voice wiki (but modified by myself)
 public class MusicSender implements IMusicSender {
-	private AudioSender audioSender;
+	private volatile AudioSender audioSender;
 	// private ArrayAudioFrameProvider frameProvider;
-	private MusicAudioFrameProvider frameProvider;
+	private volatile MusicAudioFrameProvider frameProvider;
 	private Set<String> listPlayers;
 	private Set<VoicePlayer> playersVoice;
 	private ServerBroadcastSource source;
-	private final boolean isBroadcast = true;
-	private Location location;
+	@Getter
+    private final boolean isBroadcast = true;
+	@Getter
+    @Setter
+    private volatile Location location;
 	public MusicSender(List<String> playerList) {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 	}
@@ -41,14 +46,6 @@ public class MusicSender implements IMusicSender {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 
 	}
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Location getLocation() {
-        return this.location;
-    }
 
     public boolean isLocated() {
         return this.location != null;
@@ -69,11 +66,7 @@ public class MusicSender implements IMusicSender {
 		return listPlayers.contains(playerName);
 	}
 
-	public boolean isBroadcast() {
-		return isBroadcast;
-	}
-
-	@Override
+    @Override
 	public void pause() {
 		frameProvider.pause();
 	}

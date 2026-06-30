@@ -68,25 +68,32 @@ public class MusicLoader implements IMusicLoader {
 
 	@Override
 	public boolean loadMusic(String name, short[] PCMdata) {
-		// Existing alias est égale à vrai si la musique est chargé
-		boolean existingAlias = loadedMusic.parallelStream().filter(track -> track.getName().equals(name))
+		// Check if music with this name already exists
+		boolean exists = !loadedMusic.parallelStream().filter(track -> track.getName().equals(name))
                 .toList().isEmpty();
 		
-		if (existingAlias) {
+		if (!exists) {
 			loadedMusic.add(new Track(name, PCMdata));
+			return true; // Successfully loaded
 		}
-		return !existingAlias;
+		return false; // Already exists
 	}
 
 	@Override
 	public short[] loadPCMfromFile(String path) throws IOException {
 		short[] pcmData;
-		// Read ALL bytes from the file
 		File pcmFile = new File(path);
-		byte[] pcmBytes = Files.readAllBytes(pcmFile.toPath());
-
-		// Convert byte[] to short[]
-		pcmData = byteToShort(pcmBytes);
+		
+		ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
+		try (FileInputStream fis = new FileInputStream(pcmFile)) {
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				decodedPCM.write(buffer, 0, bytesRead);
+			}
+		}
+		
+		pcmData = byteToShort(decodedPCM.toByteArray());
 		return pcmData;
 
 	}
@@ -113,6 +120,8 @@ public class MusicLoader implements IMusicLoader {
 				}
 
 				bitstream.closeFrame();
+				// Help garbage collection on large files
+				output = null;
 			}
 			// Convert 44110 Khz pcm data to 48 Khz data (hell nah)
 			byte[] pcm44110 = pcmOutputStream.toByteArray();
@@ -125,10 +134,8 @@ public class MusicLoader implements IMusicLoader {
 
 			ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
 			int bytesRead;
-			byte[] buffer = new byte[4096];
-			while ((bytesRead = audioIS.read(buffer)) != -1) {
-				decodedPCM.write(buffer, 0, bytesRead);
-			}
+		byte[] buffer = new byte[16384];		while ((bytesRead = audioIS.read(buffer)) != -1) {
+			decodedPCM.write(buffer, 0, bytesRead);			}
 
 			pcmData = byteToShort(decodedPCM.toByteArray());
 			pcm44110 = null;
@@ -150,7 +157,7 @@ public class MusicLoader implements IMusicLoader {
 			audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, audioIS);
 			ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
 			int bytesRead;
-			byte[] PCM = new byte[2];
+			byte[] PCM = new byte[16384];
 			while ((bytesRead = audioIS.read(PCM)) != -1) {
 				decodedPCM.write(PCM, 0, bytesRead);
 			}
@@ -172,7 +179,7 @@ public class MusicLoader implements IMusicLoader {
 		audioIS = AudioSystem.getAudioInputStream(plasmoVoiceFormat, audioIS);
 		ByteArrayOutputStream decodedPCM = new ByteArrayOutputStream();
 		int bytesRead;
-		byte[] PCM = new byte[4096];
+		byte[] PCM = new byte[16384];
 		while ((bytesRead = audioIS.read(PCM)) != -1) {
 			decodedPCM.write(PCM, 0, bytesRead);
 		}
