@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.tetram26.api.IMusicLoader;
+import org.tetram26.exceptions.InvalidFileFormatException;
 import org.tetram26.plugin.MusicPlayerPlugin;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -39,7 +42,6 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 		}
 		new Thread(() -> {
 			try {
-
 				String filepath = Paths.get(MusicPlayerPlugin.getInstance().getMusicPath().toString(), args[0])
 						.toString();
 				String extension = "";
@@ -52,22 +54,22 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 							loader.loadPCMfromFile(filepath));
 				} else if (extension.equals("mp3")) {
-					// MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
-					// loader.loadPCMfromMP3(filepath));
+					throw new InvalidFileFormatException();
 				} else {
+					MusicPlayerPlugin.logger().info("Attempting to load a wav file !");
 					MusicPlayerPlugin.getInstance().getController().getMusicLoader().loadMusic(args[1],
 							loader.loadPCMfromWAV(filepath));
 				}
 				new BukkitRunnable() {
 					public void run() {sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig().getConfigurationSection("message")
-							.getString("fileLoadedAs").replace("%s0", args[0]).replace("%s1", args[1])));}
+							.getString("fileLoadedAs","").replace("%s0", args[0]).replace("%s1", args[1])));}
 				}.runTask(MusicPlayerPlugin.getInstance());
 						
 			} catch (IOException e) {
 				new BukkitRunnable() {
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-								.getConfigurationSection("message").getString("fileNotFound").replace("%s", args[0])));
+								.getConfigurationSection("message").getString("fileNotFound","").replace("%s", args[0])));
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
 				
@@ -75,13 +77,19 @@ public class LoadWAVCommand implements CommandExecutor, TabCompleter {
 				new BukkitRunnable() {
 					public void run() {
 						sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-								.getConfigurationSection("message").getString("invalidFileFormat")));
+								.getConfigurationSection("message").getString("invalidFileFormat","")));
 					}
 				}.runTask(MusicPlayerPlugin.getInstance());
 				
 				e.printStackTrace();
-			}
-		}).start();
+			} catch (InvalidFileFormatException e) {
+				new BukkitRunnable() {
+					public void run() {
+						sender.sendMessage(Component.text("MP3 IS NOT SUPPORTED FOR NOW.", NamedTextColor.DARK_RED));
+					}
+				}.runTask(MusicPlayerPlugin.getInstance());
+            }
+        }).start();
 		return true;
 	}
 

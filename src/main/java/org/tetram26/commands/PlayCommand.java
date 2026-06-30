@@ -26,21 +26,26 @@ public class PlayCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
+		if (args.length < 1)
+			return false;
+
+		String username = args.length == 1 ? sender.getName() : args[1];
+
 		IController controller = MusicPlayerPlugin.getInstance().getController();
 		ServerSourceLine sourceLine = MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine();
-		String threadname = args[0] + "_" + args[1];
+		String threadname = args[0] + "_" + username;
 		if (MusicPlayerPlugin.getInstance().getController().getThreadsName().contains(threadname)) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-					.getConfigurationSection("message").getString("alreadyUsedThread").replace("%s", threadname)));
+					.getConfigurationSection("message").getString("alreadyUsedThread","%s").replace("%s", threadname)));
 			return true;
 		}
 		if (!MusicPlayerPlugin.getInstance().getController().getMusicLoader().getAlias().contains(args[0])) {
 			sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
-					.getConfigurationSection("message").getString("musicNotFound").replace("%s", args[0])));
+					.getConfigurationSection("message").getString("musicNotFound","%s").replace("%s", args[0])));
 			return true;
 		}
         new Thread(() -> {
-			controller.playAudio(args[1],
+			controller.playAudio(username,
 					MusicPlayerPlugin.getInstance().getController().getMusicLoader().getPCMDATA(args[0]), sourceLine,
 					threadname);
 		}).start();

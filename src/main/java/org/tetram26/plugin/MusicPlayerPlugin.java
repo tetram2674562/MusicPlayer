@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import lombok.Getter;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,35 +43,27 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
+    @Getter
     private LanguageHandler languageHandler;
 
     public static MusicPlayerPlugin getInstance() {
 		return getPlugin(MusicPlayerPlugin.class);
 	}
-	private final MusicAddon addon = new MusicAddon();
-	private Path configPath = null;
-	private Path musicPath = null;
+	@Getter
+    private final MusicAddon addon = new MusicAddon();
+	@Getter
+    private Path configPath = null;
+	@Getter
+    private Path musicPath = null;
 
 	private final StartupLoader startupLoader = new StartupLoader();
 
-	public MusicAddon getAddon() {
-		return this.addon;
-	}
-
-	public Path getConfigPath() {
-		return configPath;
-	}
-
-	@Override
+    @Override
 	public IController getController() {
 		return getAddon().getController();
 	}
 
-	public Path getMusicPath() {
-		return musicPath;
-	}
-
-	@Override
+    @Override
 	public ServerSourceLine getMusicPlayerSourceLine() {
 		return getAddon().getMusicSourceLine();
 	}
@@ -171,7 +165,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 	}
 
-    public LanguageHandler getLanguageHandler() {
-        return languageHandler;
-    }
+	public static ComponentLogger logger() {
+		return getInstance().getComponentLogger();
+	}
 }

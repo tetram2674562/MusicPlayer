@@ -26,15 +26,12 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import javazoom.jl.decoder.*;
+import org.jspecify.annotations.NonNull;
 import org.tetram26.api.IMusicLoader;
 import org.tetram26.exceptions.InvalidFileFormatException;
+import org.tetram26.plugin.MusicPlayerPlugin;
 import org.tetram26.track.Track;
-
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.Decoder;
-import javazoom.jl.decoder.Header;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.decoder.SampleBuffer;
 
 public class MusicLoader implements IMusicLoader {
 	private final static AudioFormat plasmoVoiceFormat = new AudioFormat(Encoding.PCM_SIGNED, 48000, 16, 2, 4, 48000,
@@ -73,9 +70,11 @@ public class MusicLoader implements IMusicLoader {
                 .toList().isEmpty();
 		
 		if (!exists) {
+            MusicPlayerPlugin.logger().info("Loaded file {}", name);
 			loadedMusic.add(new Track(name, PCMdata));
 			return true; // Successfully loaded
 		}
+		MusicPlayerPlugin.logger().info("Failed to load file {}", name);
 		return false; // Already exists
 	}
 
@@ -101,32 +100,13 @@ public class MusicLoader implements IMusicLoader {
 	@Override
 	public short[] loadPCMfromMP3(String path) throws IOException, InvalidFileFormatException {
 
-		short[] pcmData = null;
+		short[] pcmData;
 		try {
 			InputStream inputStream = new FileInputStream(path);
-			Bitstream bitstream = new Bitstream(inputStream);
-			Decoder decoder = new Decoder();
-
-			ByteArrayOutputStream pcmOutputStream = new ByteArrayOutputStream();
-
-			Header frameHeader;
-			while ((frameHeader = bitstream.readFrame()) != null) {
-				SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
-
-				short[] pcm = output.getBuffer();
-				for (short sample : pcm) {
-					pcmOutputStream.write(sample & 0xff);
-					pcmOutputStream.write((sample >> 8) & 0xff);
-				}
-
-				bitstream.closeFrame();
-				// Help garbage collection on large files
-				output = null;
-			}
+			ByteArrayOutputStream pcmOutputStream = getByteArrayOutputStream(inputStream);
 			// Convert 44110 Khz pcm data to 48 Khz data (hell nah)
 			byte[] pcm44110 = pcmOutputStream.toByteArray();
-			pcmOutputStream = null;
-			inputStream.close();
+            inputStream.close();
 			ByteArrayInputStream bis = new ByteArrayInputStream(pcm44110);
 
 			AudioInputStream ais = new AudioInputStream(bis, mp3Format, AudioSystem.NOT_SPECIFIED);
@@ -138,8 +118,7 @@ public class MusicLoader implements IMusicLoader {
 			decodedPCM.write(buffer, 0, bytesRead);			}
 
 			pcmData = byteToShort(decodedPCM.toByteArray());
-			pcm44110 = null;
-			// In case of implosion I put you to trash.
+            // In case of implosion I put you to trash.
 			ais.close();
 			audioIS.close();
 		} catch (JavaLayerException e) {
@@ -148,9 +127,31 @@ public class MusicLoader implements IMusicLoader {
 		return pcmData;
 	}
 
+	private static @NonNull ByteArrayOutputStream getByteArrayOutputStream(InputStream inputStream) throws BitstreamException, DecoderException {
+		Bitstream bitstream = new Bitstream(inputStream);
+		Decoder decoder = new Decoder();
+
+		ByteArrayOutputStream pcmOutputStream = new ByteArrayOutputStream();
+
+		Header frameHeader;
+		while ((frameHeader = bitstream.readFrame()) != null) {
+			SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
+
+			short[] pcm = output.getBuffer();
+			for (short sample : pcm) {
+				pcmOutputStream.write(sample & 0xff);
+				pcmOutputStream.write((sample >> 8) & 0xff);
+			}
+
+			bitstream.closeFrame();
+			// Help garbage collection on large files
+        }
+		return pcmOutputStream;
+	}
+
 	@Override
 	public short[] loadPCMfromURL(String link) throws InvalidFileFormatException, IOException, URISyntaxException {
-		short[] pcmData = null;
+		short[] pcmData;
 		URI uri = new URI(link);
 		try {
 			AudioInputStream audioIS = AudioSystem.getAudioInputStream(uri.toURL());
@@ -172,7 +173,7 @@ public class MusicLoader implements IMusicLoader {
 
 	@Override
 	public short[] loadPCMfromWAV(String path) throws UnsupportedAudioFileException, IOException {
-		short[] pcmData = null;
+		short[] pcmData;
 		File audioFile = new File(path);
 
 		AudioInputStream audioIS = AudioSystem.getAudioInputStream(audioFile);
