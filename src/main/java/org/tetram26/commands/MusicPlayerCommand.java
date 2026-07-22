@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.tetram26.plugin.MusicPlayerPlugin;
 
 public class MusicPlayerCommand implements CommandExecutor, TabCompleter {
 
@@ -19,10 +20,10 @@ public class MusicPlayerCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
 		MiniMessage mm = MiniMessage.miniMessage();
-		int size = 0;
+		int size = MusicPlayerPlugin.getInstance().getController().getMusicLoader().getSize();
 		sender.sendMessage(mm.deserialize(
 				"Plugin by <red>tetram26</red> with the help of <blue>ht06</blue>\nMemory used by currently loaded music : <red>"
-						+ String.valueOf(Math.round((size / 1000000) * 100) / 100) + "</red>Mo"));
+						+ Math.round((size / 1000000.) * 100) / 100 + "</red>Mo"));
 		return true;
 	}
 

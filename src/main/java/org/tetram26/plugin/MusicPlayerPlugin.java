@@ -27,7 +27,6 @@ import org.tetram26.commands.MusicPlayerCommand;
 import org.tetram26.commands.PauseCommand;
 import org.tetram26.commands.PlayCommand;
 import org.tetram26.commands.PlayMusOnCommand;
-import org.tetram26.commands.ProduceDiskCommand;
 import org.tetram26.commands.RepeatCommand;
 import org.tetram26.commands.ResumeCommand;
 import org.tetram26.commands.StopAllCommand;
@@ -97,8 +96,6 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
 		getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
 
-		//getServer().getPluginCommand("producedisk").setExecutor(new ProduceDiskCommand());
-		//getServer().getPluginCommand("producedisk").setTabCompleter(new ProduceDiskCommand());
 		// Playing commands
 
 		getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
@@ -140,7 +137,6 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
-		//getServer().getPluginManager().registerEvents(new JukeboxListener(), this);
 		// Init configfiles
 		
 		saveDefaultConfig();

@@ -89,4 +89,6 @@ public interface IMusicLoader {
 	 *         like that were found.
 	 */
 	public boolean unloadMusic(String name);
+
+	public int getSize();
 }
