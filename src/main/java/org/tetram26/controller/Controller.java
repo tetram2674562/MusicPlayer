@@ -49,7 +49,7 @@ public class Controller implements IController {
 			MusicSender musicSender = new MusicSender(playerList, voicePlayerList, true);
 			ServerBroadcastSource broadcastSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 					.createBroadcastSource(sourceLine, voicePlayerList, threadName);
-			musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
+			musicSender.sendPacketsToSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
 					broadcastSource, PCMdata, threadName);
 			activeMusicThread.put(threadName, musicSender);
 
@@ -84,7 +84,7 @@ public class Controller implements IController {
 		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, false);
 		ServerBroadcastSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createBroadcastSource(sourceLine, voicePlayerList, threadName);
-		musicSender.sendPacketsToBroadcastSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
+		musicSender.sendPacketsToSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(),
 				musicSource, PCMdata, threadName);
 		activeMusicThread.put(threadName, musicSender);
 	}
@@ -97,7 +97,7 @@ public class Controller implements IController {
 		MusicSender musicSender = new MusicSender(List.of(username), voicePlayerList, false);
 		ServerPlayerSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createPlayerSource(sourceLine, username);
-		musicSender.sendPacketsToPlayerSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
+		musicSender.sendPacketsToSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
 				PCMdata, threadName, (short) distance);
 		activeMusicThread.put(threadName, musicSender);
 	}
@@ -106,7 +106,7 @@ public class Controller implements IController {
 		MusicSender musicSender = new MusicSender(List.of(), Set.of(), false);
 		ServerStaticSource musicSource = MusicPlayerPlugin.getInstance().getController().getSourceManager()
 				.createBlockSource(sourceLine, location);
-		musicSender.sendPacketsToStaticSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
+		musicSender.sendPacketsToSource(MusicPlayerPlugin.getInstance().getAddon().getVoiceServer(), musicSource,
 				PCMdata, threadName, (short) distance);
 		musicSender.setLocation(location);
 		activeMusicThread.put(threadName, musicSender);

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.tetram26.api.IMusicSender;
 import org.tetram26.plugin.MusicPlayerPlugin;
@@ -22,14 +24,17 @@ import su.plo.voice.api.server.player.VoicePlayer;
 
 // Extracted from plasmo voice wiki (but modified by myself)
 public class MusicSender implements IMusicSender {
-	private AudioSender audioSender;
+	private volatile AudioSender audioSender;
 	// private ArrayAudioFrameProvider frameProvider;
-	private MusicAudioFrameProvider frameProvider;
+	private volatile MusicAudioFrameProvider frameProvider;
 	private Set<String> listPlayers;
 	private Set<VoicePlayer> playersVoice;
 	private ServerBroadcastSource source;
-	private final boolean isBroadcast = true;
-	private Location location;
+	@Getter
+    private final boolean isBroadcast = true;
+	@Getter
+    @Setter
+    private volatile Location location;
 	public MusicSender(List<String> playerList) {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 	}
@@ -41,14 +46,6 @@ public class MusicSender implements IMusicSender {
 		this.listPlayers = Collections.synchronizedSet(new HashSet<>(listPlayers));
 
 	}
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Location getLocation() {
-        return this.location;
-    }
 
     public boolean isLocated() {
         return this.location != null;
@@ -69,11 +66,7 @@ public class MusicSender implements IMusicSender {
 		return listPlayers.contains(playerName);
 	}
 
-	public boolean isBroadcast() {
-		return isBroadcast;
-	}
-
-	@Override
+    @Override
 	public void pause() {
 		frameProvider.pause();
 	}
@@ -84,7 +77,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
 			Supplier<short[]> samples, String threadName) {
 		this.source = source;
 		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
@@ -106,7 +99,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
 			Supplier<short[]> samples, String threadName) {
 		frameProvider = new MusicAudioFrameProvider(samples, 2, voiceServer);
 
@@ -125,7 +118,7 @@ public class MusicSender implements IMusicSender {
 	}
 
 	@Override
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
 			Supplier<short[]> samples, String threadName, short distance) {
 		frameProvider = new MusicAudioFrameProvider(samples, 1, voiceServer);
 
@@ -146,7 +139,7 @@ public class MusicSender implements IMusicSender {
 	}
 	
 	@Override
-	public void sendPacketsToStaticSource(PlasmoVoiceServer voiceServer, ServerStaticSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerStaticSource source,
 			Supplier<short[]> samples, String threadName, short distance) {
 		frameProvider = new MusicAudioFrameProvider(samples, 1, voiceServer);
 

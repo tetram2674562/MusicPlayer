@@ -47,7 +47,7 @@ public interface IMusicSender {
 	 * @param samples     48kHz 16-bit mono audio samples.
 	 * @param threadName  the name of the thread
 	 */
-	public void sendPacketsToBroadcastSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerBroadcastSource source,
 			Supplier<short[]> samples, String threadName);
 
 	/**
@@ -59,7 +59,7 @@ public interface IMusicSender {
 	 * @param samples     48kHz 16-bit mono audio samples.
 	 * @param threadName  the name of the thread
 	 */
-	public void sendPacketsToDirectSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerDirectSource source,
 			Supplier<short[]> samples, String threadName);
 
 	/**
@@ -71,7 +71,7 @@ public interface IMusicSender {
 	 * @param threadName  the name of the thread
 	 * @param distance    the distance
 	 */
-	public void sendPacketsToPlayerSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
+	public void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerPlayerSource source,
 			Supplier<short[]> samples, String threadName, short distance);
 
 	/**
@@ -86,7 +86,7 @@ public interface IMusicSender {
 	 */
 	public void toggleRepeat();
 
-	void sendPacketsToStaticSource(PlasmoVoiceServer voiceServer, ServerStaticSource source, Supplier<short[]> samples,
+	void sendPacketsToSource(PlasmoVoiceServer voiceServer, ServerStaticSource source, Supplier<short[]> samples,
 			String threadName, short distance);
 
 }
