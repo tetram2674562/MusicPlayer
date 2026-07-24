@@ -4,9 +4,10 @@ package org.tetram26.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Getter;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
@@ -17,21 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.tetram26.addon.MusicAddon;
 import org.tetram26.api.IController;
 import org.tetram26.api.IMusicPlayerAPI;
-import org.tetram26.commands.BroadcastCommand;
-import org.tetram26.commands.ListCommand;
-import org.tetram26.commands.ListPlayingCommand;
-import org.tetram26.commands.LoadURLCommand;
-import org.tetram26.commands.LoadWAVCommand;
-import org.tetram26.commands.MultiPlayCommand;
-import org.tetram26.commands.MusicPlayerCommand;
-import org.tetram26.commands.PauseCommand;
-import org.tetram26.commands.PlayCommand;
-import org.tetram26.commands.PlayMusOnCommand;
-import org.tetram26.commands.RepeatCommand;
-import org.tetram26.commands.ResumeCommand;
-import org.tetram26.commands.StopAllCommand;
-import org.tetram26.commands.StopCommand;
-import org.tetram26.commands.UnloadCommand;
+import org.tetram26.commands.basecommand.MusicCommand;
+import org.tetram26.commands.musiccommand.*;
+import org.tetram26.commands.basecommand.MusicPlayerCommand;
 import org.tetram26.languageHandler.LanguageHandler;
 import org.tetram26.listener.ConnectionListener;
 import org.tetram26.startup.StartupLoader;
@@ -44,20 +33,20 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 
     @Getter
     private LanguageHandler languageHandler;
-
-    public static MusicPlayerPlugin getInstance() {
-		return getPlugin(MusicPlayerPlugin.class);
-	}
 	@Getter
     private final MusicAddon addon = new MusicAddon();
 	@Getter
     private Path configPath = null;
 	@Getter
     private Path musicPath = null;
-
 	private final StartupLoader startupLoader = new StartupLoader();
 
-    @Override
+
+	public static MusicPlayerPlugin getInstance() {
+		return getPlugin(MusicPlayerPlugin.class);
+	}
+
+	@Override
 	public IController getController() {
 		return getAddon().getController();
 	}
@@ -67,14 +56,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		return getAddon().getMusicSourceLine();
 	}
 
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
-			@NotNull String[] args) {
-		saveDefaultConfig();
-		reloadConfig();
-		sender.sendMessage(getConfig().getRichMessage("reloadConfig"));
-		return true;
-	}
+
 
 	@Override
 	public void onEnable() {
@@ -86,54 +68,40 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		PlasmoVoiceServer.getAddonsLoader().load(addon);
 		// Registering commands !
 
+		Map<String, MusicCommand> subCommands = new HashMap<>();
+
 		// Loading - unloading commands
-		getServer().getPluginCommand("loadmus").setExecutor(new LoadWAVCommand());
-		getServer().getPluginCommand("loadmus").setTabCompleter(new LoadWAVCommand());
-
-		getServer().getPluginCommand("loadURL").setExecutor(new LoadURLCommand());
-		getServer().getPluginCommand("loadURL").setTabCompleter(new LoadURLCommand());
-
-		getServer().getPluginCommand("unloadmus").setExecutor(new UnloadCommand());
-		getServer().getPluginCommand("unloadmus").setTabCompleter(new UnloadCommand());
+		subCommands.put("loadmus", new LoadWAVCommand());
+		subCommands.put("loadURL", new LoadURLCommand());
+		subCommands.put("unloadmus", new UnloadCommand());
 
 		// Playing commands
-
-		getServer().getPluginCommand("playmus").setExecutor(new PlayCommand());
-		getServer().getPluginCommand("playmus").setTabCompleter(new PlayCommand());
-
-		getServer().getPluginCommand("broadcastmus").setExecutor(new BroadcastCommand());
-		getServer().getPluginCommand("broadcastmus").setTabCompleter(new BroadcastCommand());
+		subCommands.put("playmus",new PlayCommand());
+		subCommands.put("broadcastmus",new BroadcastCommand());
 
 		// Control commands
+		subCommands.put("pausemus",new PauseCommand());
+		subCommands.put("resumemus",new ResumeCommand());
 
-		getServer().getPluginCommand("pausemus").setExecutor(new PauseCommand());
-		getServer().getPluginCommand("pausemus").setTabCompleter(new PauseCommand());
-
-		getServer().getPluginCommand("resumemus").setExecutor(new ResumeCommand());
-		getServer().getPluginCommand("resumemus").setTabCompleter(new ResumeCommand());
-
-		getServer().getPluginCommand("stopmus").setExecutor(new StopCommand());
-		getServer().getPluginCommand("stopmus").setTabCompleter(new StopCommand());
-
-		getServer().getPluginCommand("repeatmus").setExecutor(new RepeatCommand());
-		getServer().getPluginCommand("repeatmus").setTabCompleter(new RepeatCommand());
+		subCommands.put("stopmus",new StopCommand());
+		subCommands.put("repeatmus",new RepeatCommand());
 
 		// Listing commands
 
-		getServer().getPluginCommand("listloaded").setExecutor(new ListCommand());
+		subCommands.put("listloaded",new ListCommand());
+		subCommands.put("listplaying",new ListPlayingCommand());
 
-		getServer().getPluginCommand("listplaying").setExecutor(new ListPlayingCommand());
+		// TODO remake the reload command
+		subCommands.put("reload",new ReloadCommand());
+		subCommands.put("multiplaymus",new MultiPlayCommand());
+		subCommands.put("playmuson",new PlayMusOnCommand());
+		subCommands.put("stopallmus",new StopAllCommand());
 
-		getServer().getPluginCommand("reloadMusicPlayerConfig").setExecutor(this);
-		getCommand("musicplayer").setExecutor(new MusicPlayerCommand());
-		getCommand("musicplayer").setTabCompleter(new MusicPlayerCommand());
-		getCommand("multiplaymus").setExecutor(new MultiPlayCommand());
-		getCommand("multiplaymus").setTabCompleter(new MultiPlayCommand());
-		getCommand("playmuson").setExecutor(new PlayMusOnCommand());
-	    getCommand("playmuson").setTabCompleter(new PlayMusOnCommand());
+		MusicPlayerCommand mainCommand = new MusicPlayerCommand(subCommands);
 
-		getCommand("stopallmus").setExecutor(new StopAllCommand());
-		getCommand("stopallmus").setTabCompleter(new StopAllCommand());
+		// Main command
+		getCommand("music").setExecutor(mainCommand);
+		getCommand("music").setTabCompleter(mainCommand);
 
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
@@ -154,8 +122,6 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
 
         getComponentLogger().info(Component.text("Hello Server :)"));
 

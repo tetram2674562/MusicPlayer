@@ -1,8 +1,10 @@
-package org.tetram26.commands;
+package org.tetram26.commands.musiccommand;
 
 import java.util.List;
 import java.util.Set;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -13,14 +15,21 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.tetram26.audio.MusicSender;
+import org.tetram26.commands.basecommand.MusicCommand;
 import org.tetram26.plugin.MusicPlayerPlugin;
 
-public class StopAllCommand implements CommandExecutor, TabCompleter {
+public class StopAllCommand extends MusicCommand{
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
 			@NotNull String[] args) {
-        MiniMessage minimessage = MiniMessage.miniMessage();
+
+		if (!sender.hasPermission("musicplayer.stopallmus")) {
+			sender.sendMessage(Component.text("Invalid permission", NamedTextColor.DARK_RED));
+			return true;
+		}
+
+		MiniMessage minimessage = MiniMessage.miniMessage();
 		if (args.length < 1) {
             sender.sendMessage(minimessage.deserialize(MusicPlayerPlugin.getInstance().getConfig()
                     .getConfigurationSection("message").getString("invalidArgument")));
