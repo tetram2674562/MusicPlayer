@@ -2,8 +2,10 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 package org.tetram26.addon;
 
+import lombok.Getter;
 import org.tetram26.controller.Controller;
 
+import org.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.addon.AddonInitializer;
 import su.plo.voice.api.addon.InjectPlasmoVoice;
 import su.plo.voice.api.addon.annotation.Addon;
@@ -14,24 +16,27 @@ import su.plo.voice.api.server.audio.line.ServerSourceLine;
 		// An addon id must start with a lowercase letter and may contain only lowercase
 		// letters, digits, hyphens, and underscores.
 		// It should be between 4 and 32 characters long.
-		id = "pv-addon-music", name = "Music addon", version = "1.0.5", authors = { "tetram26" })
+		id = "pv-addon-music", name = "Music addon", version = "1.0.6", authors = { "tetram26" })
 public final class MusicAddon implements AddonInitializer {
 
-	@InjectPlasmoVoice
+    /**
+     * -- GETTER --
+     *  Get the voice server.
+     *
+     */
+    @Getter
+    @InjectPlasmoVoice
 	private PlasmoVoiceServer voiceServer;
 	private ServerSourceLine music;
-	private Controller controller;
+    /**
+     * -- GETTER --
+     *  Get the music controller
+     *
+     */
+    @Getter
+    private Controller controller;
 
-	/**
-	 * Get the music controller
-	 *
-	 * @return The music controller
-	 */
-	public Controller getController() {
-		return controller;
-	}
-
-	/**
+    /**
 	 * Get the music source line
 	 *
 	 * @return The music source line
@@ -40,21 +45,11 @@ public final class MusicAddon implements AddonInitializer {
 		return music;
 	}
 
-	/**
-	 * Get the voice server.
-	 *
-	 * @return
-	 */
-	public PlasmoVoiceServer getVoiceServer() {
-		return voiceServer;
-	}
-
-	@Override
+    @Override
 	public void onAddonInitialize() {
 		// voiceServer is initialized now
 		controller = new Controller();
 		music = controller.getSourceManager().createSourceLine("music", this);
-
 	}
 
 	@Override
