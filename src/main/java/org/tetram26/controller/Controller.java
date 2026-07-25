@@ -33,6 +33,7 @@ public class Controller implements IController {
 	private final MusicLoader musicLoader;
 	private final SourceManager sourceManager;
 	private final ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
+    @Getter
     private SpeakerManager speakerManager;
 
 
@@ -141,6 +142,12 @@ public class Controller implements IController {
 		return activeMusicThread.values().stream().filter(MusicSender::isLocated).filter(s -> location.equals(s.getLocation())).findFirst();
 	}
 
+	@Override
+	public void reset() {
+		activeMusicThread.values().forEach(MusicSender::stop);
+		activeMusicThread.clear();
+	}
+
 	public void removeAllLocatedThread() {
         for (String id : activeMusicThread.keySet()) {
             MusicSender sender = activeMusicThread.get(id);
@@ -167,7 +174,4 @@ public class Controller implements IController {
 		}
 	}
 
-	public SpeakerManager getSpeakerManager() {
-		return speakerManager;
-	}
 }

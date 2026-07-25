@@ -89,4 +89,5 @@ public interface IController {
 
 	SpeakerManager getSpeakerManager();
 
+	void reset();
 }
