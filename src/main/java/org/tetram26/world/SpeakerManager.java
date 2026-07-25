@@ -3,6 +3,7 @@ package org.tetram26.world;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -45,20 +46,25 @@ public class SpeakerManager {
         synchronized (speakerYamlConfiguration) {
             // unload speakers
             unloadSpeakers();
-            // reload speakers types
-            ConfigurationSection section = speakerYamlConfiguration.getConfigurationSection("speakers");
-            if (section != null) {
-                for (String key : section.getKeys(false)) {
-                    ConfigurationSection speakerSection = section.getConfigurationSection(key);
+            try {
+                speakerYamlConfiguration.load(speakerFile);
+                // reload speakers types
+                ConfigurationSection section = speakerYamlConfiguration.getConfigurationSection("speakers");
+                if (section != null) {
+                    for (String key : section.getKeys(false)) {
+                        ConfigurationSection speakerSection = section.getConfigurationSection(key);
 
-                    if (speakerSection == null) continue;
+                        if (speakerSection == null) continue;
 
-                    String song = speakerSection.getString("song", "");
-                    int range = speakerSection.getInt("range", 16);
-                    SpeakerType type = new SpeakerType(controller, key, song, range);
-                    locations.stream().filter(location -> location.speakerType().equals(key)).forEach(location -> type.createNewInstance(location.location()));
-                    speakers.add(type);
+                        String song = speakerSection.getString("song", "");
+                        int range = speakerSection.getInt("range", 16);
+                        SpeakerType type = new SpeakerType(controller, key, song, range);
+                        locations.stream().filter(location -> location.speakerType().equals(key)).forEach(location -> type.createNewInstance(location.location()));
+                        speakers.add(type);
+                    }
                 }
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
             }
         }
     }

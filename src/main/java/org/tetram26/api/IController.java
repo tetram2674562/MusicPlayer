@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.tetram26.audio.MusicSender;
 
+import org.tetram26.world.SpeakerManager;
 import su.plo.voice.api.server.audio.line.ServerSourceLine;
 
 public interface IController {
@@ -79,10 +80,13 @@ public interface IController {
 	String playAudioAt(Location location, String trackName, ServerSourceLine sourceLine, int distance);
 
 	/**
-	 *
-	 * @param string
-	 * @return
+	 * Remove a thread from the controller (do not stop it !)
+	 * @param string The thread id
+	 * @return if the thread was found.
 	 */
     boolean removeThread(@NotNull String string);
 	Optional<MusicSender> checkForMusicThreadAtLocation(Location location);
+
+	SpeakerManager getSpeakerManager();
+
 }

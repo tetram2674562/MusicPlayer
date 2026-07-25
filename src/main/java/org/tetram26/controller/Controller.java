@@ -33,8 +33,8 @@ public class Controller implements IController {
 	private final MusicLoader musicLoader;
 	private final SourceManager sourceManager;
 	private final ConcurrentHashMap<String, MusicSender> activeMusicThread = new ConcurrentHashMap<>();
-	@Getter
     private SpeakerManager speakerManager;
+
 
 	public Controller() {
 		musicLoader = new MusicLoader();
@@ -149,7 +149,10 @@ public class Controller implements IController {
     }
 
 	public void stop(String threadName) {
-		activeMusicThread.get(threadName).stop();
+		activeMusicThread.computeIfPresent(threadName, (ignore, sender) -> {
+			sender.stop();
+			return sender;
+		});
 	}
 
 	public void initSpeakers() {
@@ -162,5 +165,9 @@ public class Controller implements IController {
 		} catch (IOException ignore) {
 			MusicPlayerPlugin.getInstance().getLogger().severe("Impossible to load speakers locations");
 		}
+	}
+
+	public SpeakerManager getSpeakerManager() {
+		return speakerManager;
 	}
 }

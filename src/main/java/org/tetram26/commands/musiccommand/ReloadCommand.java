@@ -20,7 +20,9 @@ public class ReloadCommand extends MusicCommand {
         MusicPlayerPlugin plugin = MusicPlayerPlugin.getInstance();
         plugin.saveDefaultConfig();
         plugin.reloadConfig();
+        plugin.getController().getSpeakerManager().loadTypeFromFile();
         sender.sendMessage(plugin.getConfig().getRichMessage("reloadConfig", Component.text("Reloaded config", NamedTextColor.GREEN)));
+
         return true;
     }
 
