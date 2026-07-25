@@ -157,4 +157,7 @@ public class SpeakerManager {
 
     }
 
+    public boolean isSpeaker(@NotNull Location location) {
+        return locations.stream().anyMatch(speakerLocation -> speakerLocation.location().getBlock().getLocation().equals(location));
+    }
 }
