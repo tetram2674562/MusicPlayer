@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -35,8 +36,11 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onBlockBreak(BlockPlaceEvent event) {
-
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!event.getPlayer().hasPermission("musicplayer.musicplayer")) {
+            event.setCancelled(true);
+            return;
+        }
         manager.removeSpeaker(event.getBlock().getLocation());
     }
 

@@ -15,10 +15,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.tetram26.controller.Controller;
 import org.tetram26.plugin.MusicPlayerPlugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SpeakerType {
     @Getter
@@ -37,7 +34,6 @@ public class SpeakerType {
 
 
     public void createNewInstance(Location position) {
-        System.out.println(position);
         instances.add(new Speaker(controller.playAudioAt(
                 position, song, MusicPlayerPlugin.getInstance().getAddon().getMusicSourceLine(), range), position, controller));
     }
@@ -65,7 +61,7 @@ public class SpeakerType {
     }
 
     public void removeInstance(Location location) {
-        instances.stream().filter(speaker -> speaker.getLoc().equals(location)).forEach(Speaker::unload);
-        instances.removeIf(speaker -> speaker.getLoc().equals(location));
+        instances.stream().filter(speaker -> speaker.getLoc().getBlock().getLocation().equals(location)).forEach(Speaker::unload);
+        instances.removeIf(speaker -> speaker.getLoc().getBlock().getLocation().equals(location));
     }
 }

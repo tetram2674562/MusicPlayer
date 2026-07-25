@@ -10,16 +10,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import org.tetram26.commands.basecommand.MusicCommand;
+import org.tetram26.controller.Controller;
 import org.tetram26.world.SpeakerManager;
 
 import java.util.List;
 
 public class SpeakerCommand extends MusicCommand {
 
-    private SpeakerManager manager;
+    private final Controller controller;
 
-    public SpeakerCommand(SpeakerManager speakerManager) {
-        this.manager = speakerManager;
+    public SpeakerCommand(Controller controller) {
+        this.controller = controller;
     }
 
 
@@ -39,7 +40,7 @@ public class SpeakerCommand extends MusicCommand {
             return true;
         }
 
-        ItemStack item = manager.getItem(args[0]);
+        ItemStack item = controller.getSpeakerManager().getItem(args[0]);
         ((Player) sender).getInventory().addItem(item);
         return true;
     }
@@ -47,8 +48,8 @@ public class SpeakerCommand extends MusicCommand {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NonNull @NotNull String[] args) {
         return switch (args.length) {
-            case 0 -> manager.getSpeakerTypes();
-            case 1 -> manager.getSpeakerTypes().stream().filter(speaker -> speaker.startsWith(args[0])).toList();
+            case 0 -> controller.getSpeakerManager().getSpeakerTypes();
+            case 1 -> controller.getSpeakerManager().getSpeakerTypes().stream().filter(speaker -> speaker.startsWith(args[0])).toList();
             default -> List.of();
         };
     }

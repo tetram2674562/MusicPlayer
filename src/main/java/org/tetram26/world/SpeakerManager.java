@@ -58,7 +58,6 @@ public class SpeakerManager {
                     SpeakerType type = new SpeakerType(controller, key, song, range);
                     locations.stream().filter(location -> location.speakerType().equals(key)).forEach(location -> type.createNewInstance(location.location()));
                     speakers.add(type);
-                    System.out.println(key);
                 }
             }
         }
@@ -138,7 +137,7 @@ public class SpeakerManager {
     public void removeSpeaker(Location location) {
         speakers.forEach(type -> {
             type.removeInstance(location);
-            locations.removeIf(val -> val.location().equals(location));
+            locations.removeIf(val -> val.location().getBlock().getLocation().equals(location));
         });
         try {
             saveLocationToFile();
@@ -146,7 +145,7 @@ public class SpeakerManager {
         }
     }
 
-    public @Nullable List<String> getSpeakerTypes() {
+    public List<String> getSpeakerTypes() {
         return speakers.stream().map(SpeakerType::getId).toList();
     }
 

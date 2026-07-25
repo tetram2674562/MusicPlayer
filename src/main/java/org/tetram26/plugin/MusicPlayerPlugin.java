@@ -98,7 +98,7 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		subCommands.put("multiplaymus",new MultiPlayCommand());
 		subCommands.put("playmuson",new PlayMusOnCommand());
 		subCommands.put("stopallmus",new StopAllCommand());
-		subCommands.put("speaker", new SpeakerCommand(addon.getController().getSpeakerManager()));
+		subCommands.put("speaker", new SpeakerCommand(addon.getController()));
 		MusicPlayerCommand mainCommand = new MusicPlayerCommand(subCommands);
 
 		// Main command
