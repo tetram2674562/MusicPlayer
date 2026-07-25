@@ -22,6 +22,7 @@ import org.tetram26.commands.basecommand.MusicCommand;
 import org.tetram26.commands.musiccommand.*;
 import org.tetram26.commands.basecommand.MusicPlayerCommand;
 import org.tetram26.languageHandler.LanguageHandler;
+import org.tetram26.listener.BlockListener;
 import org.tetram26.listener.ConnectionListener;
 import org.tetram26.startup.StartupLoader;
 
@@ -65,7 +66,8 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
             getComponentLogger().error(Component.text("FATAL -- PLASMO VOICE ISN'T INSTALLED ON THIS SERVER."));
             return;
         }
-		PlasmoVoiceServer.getAddonsLoader().load(addon);
+		PlasmoVoiceServer.getAddonsLoader().load(addon);// Init configfiles
+
 		// Registering commands !
 
 		Map<String, MusicCommand> subCommands = new HashMap<>();
@@ -96,19 +98,30 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		subCommands.put("multiplaymus",new MultiPlayCommand());
 		subCommands.put("playmuson",new PlayMusOnCommand());
 		subCommands.put("stopallmus",new StopAllCommand());
-
+		subCommands.put("speaker", new SpeakerCommand(addon.getController().getSpeakerManager()));
 		MusicPlayerCommand mainCommand = new MusicPlayerCommand(subCommands);
 
 		// Main command
 		getCommand("music").setExecutor(mainCommand);
 		getCommand("music").setTabCompleter(mainCommand);
 
+
+		initConfig();
+        addon.getController().initSpeakers();
+
 		// Init event listener
 		getServer().getPluginManager().registerEvents(new ConnectionListener(), this);
-		// Init configfiles
-		
+		getServer().getPluginManager().registerEvents(new BlockListener(addon.getController().getSpeakerManager(), this), this);
+
+		getComponentLogger().info(Component.text("Hello Server :)"));
+
+
+	}
+
+
+	public void initConfig() {
 		saveDefaultConfig();
-        reloadConfig();
+		reloadConfig();
 		try {
 			// Register config path
 			this.configPath = this.getDataPath().toRealPath();
@@ -118,13 +131,10 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 			getMusicPath().toFile().mkdir();
 			Path startup = startupLoader.getStartupJSONPath("startup.json");
 			startupLoader.loadPCMfromJSON(startup.toString());
-            this.languageHandler = new LanguageHandler(new File(getDataFolder(), "languages"));
+			this.languageHandler = new LanguageHandler(new File(getDataFolder(), "languages"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-        getComponentLogger().info(Component.text("Hello Server :)"));
-
 	}
 
 	public static ComponentLogger logger() {

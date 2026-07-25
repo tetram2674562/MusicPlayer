@@ -22,22 +22,22 @@ public interface IController {
 	 * @param sourceLine the source line to play the audio on
 	 * @param threadName the name of the thread
 	 */
-	public void broadcastAudio(List<String> playerList, Supplier<short[]> PCMdata, ServerSourceLine sourceLine,
-			String threadName);
+    void broadcastAudio(List<String> playerList, Supplier<short[]> PCMdata, ServerSourceLine sourceLine,
+                        String threadName);
 
 	/**
 	 * Get the music loader
 	 *
 	 * @return The music loader
 	 */
-	public IMusicLoader getMusicLoader();
+    IMusicLoader getMusicLoader();
 
 	/**
 	 * Get the source manager
 	 *
 	 * @return The source manager
 	 */
-	public ISourceManager getSourceManager();
+    ISourceManager getSourceManager();
 
 	/**
 	 * Get the music sender that is running in the thread.
@@ -45,14 +45,14 @@ public interface IController {
 	 * @param string The thread name
 	 * @return The Music Sender that is ran inside the equivalent thread
 	 */
-	public MusicSender getThread(@NotNull String string);
+    MusicSender getThread(@NotNull String string);
 
 	/**
 	 * Get a set a all threads name
 	 *
 	 * @return All active threads names
 	 */
-	public Set<String> getThreadsName();
+    Set<String> getThreadsName();
 
 	/**
 	 * Play an audio at a player
@@ -62,7 +62,7 @@ public interface IController {
 	 * @param sourceLine the source line to play the audio on
 	 * @param threadName the name of the thread
 	 */
-	public void playAudio(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName);
+    void playAudio(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName);
 
 	/**
 	 * Play an audio on a player and everyone near him
@@ -73,17 +73,16 @@ public interface IController {
 	 * @param threadName the name of the thread
 	 * @param distance   the distance you want people to hear it
 	 */
-	public void playAudioOn(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
-			int distance);
+    void playAudioOn(String username, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
+                     int distance);
+
+	String playAudioAt(Location location, String trackName, ServerSourceLine sourceLine, int distance);
 
 	/**
 	 *
 	 * @param string
 	 * @return
 	 */
-	public boolean removeThread(@NotNull String string);
-	public Optional<MusicSender> checkForMusicThreadAtLocation(Location location);
-
-	void playAudioAt(Location location, Supplier<short[]> PCMdata, ServerSourceLine sourceLine, String threadName,
-			int distance);
+    boolean removeThread(@NotNull String string);
+	Optional<MusicSender> checkForMusicThreadAtLocation(Location location);
 }

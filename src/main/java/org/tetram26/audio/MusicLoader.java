@@ -206,4 +206,8 @@ public class MusicLoader implements IMusicLoader {
         });
         return size.get();
     }
+
+    public boolean isPresent(String trackName) {
+        return !this.loadedMusic.parallelStream().filter(track -> track.getName().equals(trackName)).toList().isEmpty();
+    }
 }
