@@ -137,6 +137,11 @@ public class MusicPlayerPlugin extends JavaPlugin implements IMusicPlayerAPI {
 		}
 	}
 
+	@Override
+	public void onDisable() {
+		getController().reset();
+	}
+
 	public static ComponentLogger logger() {
 		return getInstance().getComponentLogger();
 	}

@@ -2,15 +2,13 @@ package org.tetram26.world;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import io.papermc.paper.persistence.PersistentDataContainerView;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.tetram26.controller.Controller;
 import org.tetram26.plugin.MusicPlayerPlugin;
@@ -56,6 +54,8 @@ public class SpeakerType {
         NamespacedKey key = NamespacedKey.fromString("speaker-type", plugin);
         if (key != null)
             container.set(key, PersistentDataType.STRING, id);
+        meta.displayName(Component.text("Speaker", NamedTextColor.AQUA));
+        meta.lore(List.of(Component.text("speaker id : " + id, NamedTextColor.GRAY)));
         head.setItemMeta(meta);
         return head;
     }
