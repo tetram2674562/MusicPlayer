@@ -19,17 +19,22 @@ public class ConnectionListener implements Listener {
 		}
 	}
 
+	/*
+
+	Should not be, because we want to keep the music playing while the player is disconnected :< ?
+	Maybe It's whitec4d bug he was talking about ?
+
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onLeave(PlayerQuitEvent e) {
 		for (String thread : MusicPlayerPlugin.getInstance().getController().getThreadsName()) {
 
 			MusicSender musicThread = MusicPlayerPlugin.getInstance().getController().getThread(thread);
 			if (musicThread.hasPlayer(e.getPlayer().getName()) && !musicThread.isBroadcast()) {
-
 				musicThread.stop();
 				MusicPlayerPlugin.getInstance().getController().removeThread(thread);
 			}
 
 		}
 	}
+	 */
 }

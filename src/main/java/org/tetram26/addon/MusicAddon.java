@@ -5,7 +5,6 @@ package org.tetram26.addon;
 import lombok.Getter;
 import org.tetram26.controller.Controller;
 
-import org.tetram26.plugin.MusicPlayerPlugin;
 import su.plo.voice.api.addon.AddonInitializer;
 import su.plo.voice.api.addon.InjectPlasmoVoice;
 import su.plo.voice.api.addon.annotation.Addon;
